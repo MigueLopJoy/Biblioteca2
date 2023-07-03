@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
     
-    @GetMapping("/getuser-by-name")
+    @GetMapping("/get-user-by-name")
     public ResponseEntity<List<User>> getUserByUserName(UserDTO userDTO) {
         List<User> users = userService.findByUserName(userDTO.getFirstName() + ' ' + userDTO.getLastName());
         return ResponseEntity.ok(users);

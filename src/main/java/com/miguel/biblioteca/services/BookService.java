@@ -14,13 +14,23 @@ public class BookService implements IBookService{
     private IBookRepository bookRepository;
     
     @Override
-    public Book findByTitle(String title) {
+    public List<Book> searchByBookCode(String bookCode){
+        return bookRepository.findByBookCode(bookCode);
+    }
+    
+    @Override
+    public List<Book> searchByTitle(String title) {
         return bookRepository.findByTitle(title);
     }
 
     @Override
-    public List<Book> findByAuthor(Author author) {
+    public List<Book> searchByAuthor(Author author) {
         return bookRepository.findByAuthor(author);
+    }
+    
+    @Override
+    public List<Book> searchByTitleAndAuthor(String title, Author author) {
+        return bookRepository.findByTitleAndAuthor(title, author);
     }
 
     @Override

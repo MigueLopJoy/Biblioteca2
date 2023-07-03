@@ -1,5 +1,6 @@
 package com.miguel.biblioteca.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,8 @@ public class Book {
    @Id
    @GeneratedValue(strategy=GenerationType.SEQUENCE)
    private Integer idBook;
+   @Column(unique=true)
+   private String bookCode;
    private String title;
    
    @OneToMany

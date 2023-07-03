@@ -29,7 +29,7 @@ public class UserService implements IUserService{
 
     @Override
     public void saveNewUser(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        userRepository.save(user);
     }
     
 }
