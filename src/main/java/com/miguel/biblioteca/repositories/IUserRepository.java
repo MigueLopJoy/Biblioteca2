@@ -6,10 +6,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface IUserRepository extends JpaRepository<Integer, User> {
+@Repository
+public interface IUserRepository extends JpaRepository<User, Integer> {
     public Optional<User> findByUserCode(String userCode);   
     
     @Query("SELECT u FROM User u WHERE CONCAT(u.firstName, ' ', u.lastNames) = :userName")
-    public List<User> findByUserName(@Param("fullName") String userName);
+    public List<User> findByUserName(@Param("userName") String userName);
 }

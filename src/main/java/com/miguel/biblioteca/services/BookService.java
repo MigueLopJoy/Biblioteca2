@@ -39,8 +39,7 @@ public class BookService implements IBookService{
     }
 
     @Override
-    public void saveNewBook(Book book) {
-        bookRepository.save(book);
-    }
-    
+    public Book saveNewBook(Book book) {
+        return bookRepository.save(book);
+    }   
 }

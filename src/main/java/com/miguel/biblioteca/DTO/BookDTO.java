@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookDTO {
-    private String title;
-    private AuthorDTO authorDTO;
-    private LocalDate publicationDate;
-    private String publisher;
+   private String bookCode;
+   private String title;  
+   private AuthorDTO authorDTO;
+   private LocalDate publicationDate;
+   private String publisher;
 }

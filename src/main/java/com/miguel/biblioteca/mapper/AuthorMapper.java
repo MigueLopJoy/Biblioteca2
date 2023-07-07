@@ -1,8 +1,7 @@
-
 package com.miguel.biblioteca.mapper;
 
-import com.miguel.biblioteca.DTO.UserDTO;
-import com.miguel.biblioteca.model.User;
+import com.miguel.biblioteca.DTO.AuthorDTO;
+import com.miguel.biblioteca.model.Author;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -10,26 +9,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper {
-    
+public class AuthorMapper {
     @Autowired
     private final ModelMapper modelMapper;
     
     @Autowired
-    public UserMapper(ModelMapper modelMapper) {
+    public AuthorMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
-    public User mapDtoToEntity(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
+    public Author mapDtoToEntity(AuthorDTO authorDTO) {
+        return modelMapper.map(authorDTO, Author.class);
     }
-
-    public UserDTO mapEntityToDto(User user) {
-        return modelMapper.map(user, UserDTO.class);
+  
+    public AuthorDTO mapEntityToDto(Author author) {
+        return modelMapper.map(author, AuthorDTO.class);
     }
     
-    public List<UserDTO> mapEntityListToDtoList(List<User> users) {
-        return users.stream()
+    public List<AuthorDTO> mapEntityListToDtoList(List<Author> authors) {
+        return authors.stream()
                 .map(this::mapEntityToDto)
                 .collect(Collectors.toList());
     }

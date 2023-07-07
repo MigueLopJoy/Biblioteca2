@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    private Integer IdUser;
+    private Integer idUser;
     
     @Column(unique=true)
     private String userCode;
     private String firstName;
-    private String lastName;
+    private String lastNames;
     private LocalDate dateOfBirth;
     private String email;
 }

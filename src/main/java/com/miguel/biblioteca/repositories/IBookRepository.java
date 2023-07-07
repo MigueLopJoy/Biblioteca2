@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IBookRepository extends JpaRepository<Integer, Book>{
+public interface IBookRepository extends JpaRepository<Book, Integer>{
     public List<Book> findByBookCode(String bookCode);
     public List<Book> findByTitle(String title);
     public List<Book> findByAuthor(Author author);

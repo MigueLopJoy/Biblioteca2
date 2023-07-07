@@ -10,5 +10,5 @@ public interface IBookService {
     public List<Book> searchByAuthor(Author author);    
     public List<Book> searchByTitleAndAuthor(String title, Author author);
     public List<Book> findAllBooks();
-    public void saveNewBook(Book book);
+    public Book saveNewBook(Book book);
 }
