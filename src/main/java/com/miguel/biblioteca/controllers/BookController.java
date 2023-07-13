@@ -1,6 +1,5 @@
 package com.miguel.biblioteca.controllers;
 
-import com.miguel.biblioteca.DTO.AuthorDTO;
 import com.miguel.biblioteca.DTO.BookDTO;
 import com.miguel.biblioteca.mapper.AuthorMapper;
 import com.miguel.biblioteca.mapper.BookMapper;
@@ -13,7 +12,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,23 +34,24 @@ public class BookController {
     @Autowired
     private AuthorMapper authorMapper;   
     
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<BookDTO>> searchBooks(@RequestBody BookDTO bookDTO) {
         String bookCode = bookDTO.getBookCode();
         String title = bookDTO.getTitle();  
         String authorName = "";        
-        if (bookDTO.getAuthorDTO() != null) {
+        
+        if (!bookDTO.getAuthorDTO().getFirstName().equals("")) {
             authorName = authorService.getFullAuthorName(authorMapper.mapDtoToEntity(bookDTO.getAuthorDTO()));            
         }
         
-        if (bookCode != null) {
+        if (!bookCode.equals("")) {
             return ResponseEntity.ok(bookMapper.mapEntityListToDtoList(bookService.searchByBookCode(bookCode)));
-        } else if (title != null && !authorName.equals("")) {
+        } else if (!title.equals("") && !authorName.equals("")) {
             Author author = authorService.findByAuthorName(authorName).orElse(null);
             if (author != null) {
                 return ResponseEntity.ok(bookMapper.mapEntityListToDtoList(bookService.searchByTitleAndAuthor(title, author)));
             }
-        } else if (title != null) {
+        } else if (!title.equals("")) {
             return ResponseEntity.ok(bookMapper.mapEntityListToDtoList(bookService.searchByTitle(title)));
         } else if (!authorName.equals("")) {
             Author author = authorService.findByAuthorName(authorName).orElse(null);
@@ -68,6 +67,7 @@ public class BookController {
         Book book = bookMapper.mapDtoToEntity(bookDTO);       
         Author author = authorService.getOrCreateAuthor(book.getAuthor());                    
         book.setAuthor(author);
+        book.setBookCode(bookService.generateBookCode());
         Book savedBook = bookService.saveNewBook(book);
         BookDTO savedBookDTO = bookMapper.mapEntityToDto(savedBook);
                        

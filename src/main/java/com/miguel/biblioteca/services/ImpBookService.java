@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookService implements IBookService{
+public class ImpBookService implements IBookService{
 
     @Autowired
     private IBookRepository bookRepository;
@@ -41,5 +41,11 @@ public class BookService implements IBookService{
     @Override
     public Book saveNewBook(Book book) {
         return bookRepository.save(book);
-    }   
+    }
+    
+    @Override
+    public String generateBookCode(){
+        char letter = (char)(Math.random() * (90 - 65 + 1) + 65);
+        return "" + (int)(Math.random() * (9999 - 1000 + 1) + 1000) + letter;
+    }
 }

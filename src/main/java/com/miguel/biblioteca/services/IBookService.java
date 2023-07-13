@@ -11,4 +11,5 @@ public interface IBookService {
     public List<Book> searchByTitleAndAuthor(String title, Author author);
     public List<Book> findAllBooks();
     public Book saveNewBook(Book book);
+    public String generateBookCode();
 }

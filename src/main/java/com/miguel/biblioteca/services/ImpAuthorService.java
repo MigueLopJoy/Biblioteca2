@@ -1,6 +1,5 @@
 package com.miguel.biblioteca.services;
 
-import com.miguel.biblioteca.DTO.AuthorDTO;
 import com.miguel.biblioteca.model.Author;
 import com.miguel.biblioteca.repositories.IAuthorRepository;
 import java.util.Optional;
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthorService implements IAuthorService{
+public class ImpAuthorService implements IAuthorService{
 
     @Autowired
     private IAuthorRepository authorRepository;
