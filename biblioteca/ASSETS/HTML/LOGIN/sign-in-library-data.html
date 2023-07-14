@@ -1,0 +1,27 @@
+<div class="container">
+
+    <h2>Sing in</h2>
+
+    <form id="form">
+
+        <div class="form-section library-information">
+            <h3>Library information</h3>
+            <input type="text" id="library_name" name="library_name" placeholder="Library Name" />
+            <input type="text" id="library_phone_number" name="library_phone_number" pattern="[0-9]*" placeholder="Library Phone Number" />    
+            <input type="email" id="library_email" name="library_email" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" placeholder="Library Email" />                
+            <input type="text" id="address_name" name="address[name]" placeholder="Address Name" />
+            <input type="text" id="address_number" name="address[number]" placeholder="Address Number" />
+            <input type="text" id="address_locality" name="address[locality]" placeholder="Locality" />
+            <input type="text" id="address_province" name="address[province]" placeholder="Province" />
+            <input type="text" id="address_postal_code" name="address[postal_code]" placeholder="Postal Code" /> 
+        </div>    
+
+    </form>
+
+    <div class="sub-option continue-option">
+        <a><p>Next</p><i class="fa fa-caret-right" aria-hidden="true"></i></a> 
+    </div>
+
+    <button type="submit" class="send-data-btn" id="sign-in" disabled="true">SIGN IN</button>
+
+</div>

@@ -5,7 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,16 +16,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    private Integer idUser;
-    
-    @Column(unique=true)
-    private String userCode;
+    private Integer idUser;    
     private String firstName;
-    private String lastNames;
-    private LocalDate dateOfBirth;
-    private String email;
+    private String lastName;
+    @Column(unique=true)    
+    private String userPhoneNumber;
+    @Column(unique=true)    
+    private String userEmail;
+    private String userPassword;
+
 }

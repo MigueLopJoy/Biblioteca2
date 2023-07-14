@@ -48,4 +48,27 @@ public class ImpBookService implements IBookService{
         char letter = (char)(Math.random() * (90 - 65 + 1) + 65);
         return "" + (int)(Math.random() * (9999 - 1000 + 1) + 1000) + letter;
     }
+
+    @Override
+    public boolean validateCode() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    /**
+     * Valida una cadena de texto contra un formato de codigo de ejemplar o numero de lector
+     * establecido por una expresion regular
+     *
+     * @param code cadena de texto que quiere ser validada contra el formato de codigo establecido
+     * @return booleano que indica si el codigo es valido o no
+     */
+    public static boolean validateCode(String code) {
+        boolean codigoValido = false;
+
+        if (code.matches("^[0-9]{4}[A-Z]$")) {
+            codigoValido = true;
+        } else {
+            System.out.println("Codigo no valido");
+        }
+        return codigoValido;
+    }
 }

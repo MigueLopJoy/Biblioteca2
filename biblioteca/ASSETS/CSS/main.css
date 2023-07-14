@@ -11,10 +11,18 @@ body{
     background-color: #F2F2F2;
 }
 
-#wrapper {
-    display: table;
+#index-wrapper {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#program-wrapper {
+    width: 100%;
+    height: 100%;
+    display: table;
     padding: 1rem;
 }
 
@@ -76,7 +84,11 @@ body{
     vertical-align: top;
 }
 
-#main-content .container {
+#main-content.login-page{
+    width: 60%;
+}
+
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;  
@@ -84,7 +96,7 @@ body{
 }
 
 .container h2 {
-    text-transform: capitalize;
+    text-transform: uppercase;
     margin-bottom: 1.5rem;
 }
 
@@ -94,9 +106,22 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-bottom: .75rem;
 }
 
-input{
+#form .form-section{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#form h3 {
+    margin-bottom: 1rem;
+}
+
+#form input{
     width: 90%;
     margin-bottom: .75rem;
     padding: 1rem;
@@ -105,8 +130,57 @@ input{
     outline: none;
 }
 
+.sub-option {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sub-option a > * {
+    pointer-events: none;
+}
+
+.sub-option a,
+.sub-option .fa-caret-right,
+.sub-option .fa-caret-left {
+    font-size: 1.15rem;
+    color: #818181;
+    cursor: pointer;
+}
+
+.sub-option a:hover,
+.sub-option a:hover .fa-caret-right,
+.sub-option a:hover .fa-caret-left {
+    color: #262626;
+}
+
+.sub-option.continue-option > a,
+.sub-option.back-option > a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sub-option .fa-caret-right {
+    margin-left: .75rem;
+}
+
+.sub-option .fa-caret-left {
+    margin-right: .75rem;
+}
+
+.sub-option.continue-option {
+    justify-content: right;
+}
+
+.sub-option.back-option {
+    justify-content: left;
+}
+
 .send-data-btn {
     width: 90%;
+    margin-bottom: 1.5rem;
     cursor: pointer;
     border: none;
     padding: 1rem;
@@ -129,17 +203,46 @@ input{
 #table td {
     padding: 1.5rem;
     background-color: #F2F2F2;
-    box-shadow: 0.15rem 0.15rem 0.5rem 0.05rem #ccc;  
+    box-shadow: 0.15rem 0.15rem 0.5rem 0.05rem #A2A2A2;  
 }
 
-.result-container{
+#result-container{
     width: 100%;
     height: 100%;
     display: none;
+    z-index: 1;
 }
 
-.result-message {
+#result-container {
+    width: 60vw;
+    height: 40vh;
+    margin: 0px auto;
+    box-shadow: 0.15rem 0.15rem 0.5rem 0.05rem #A2A2A2;  
+    background-color: #F2F2F2;
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: fadein 0.5s ease-in-out;
+}
+  
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#result-container p{
     color: #00FF00;
-    font-size: 2rem;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 900;
 }

@@ -29,6 +29,6 @@ public class Book {
    @ManyToOne
    @JoinColumn(name = "id_author")   
    private Author author;
-   private LocalDate publicationDate;
+   private Integer publicationYear;
    private String publisher;
 }

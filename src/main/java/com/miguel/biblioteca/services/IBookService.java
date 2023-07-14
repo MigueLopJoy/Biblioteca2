@@ -12,4 +12,5 @@ public interface IBookService {
     public List<Book> findAllBooks();
     public Book saveNewBook(Book book);
     public String generateBookCode();
+    public boolean validateCode();
 }
