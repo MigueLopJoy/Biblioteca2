@@ -6,22 +6,20 @@ import com.miguel.biblioteca.model.Author;
 import com.miguel.biblioteca.model.Book;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class BookMapper {
     
+    @Autowired
     private final ModelMapper modelMapper;
     
-    private final AuthorMapper authorMapper;
-    
     @Autowired
-    public BookMapper(ModelMapper modelMapper, AuthorMapper authorMapper) {
-        this.modelMapper = modelMapper;
-        this.authorMapper = authorMapper;
-    }
+    private final AuthorMapper authorMapper;
 
     public Book mapDtoToEntity(BookDTO bookDto) {
         Book book = modelMapper.map(bookDto, Book.class);        

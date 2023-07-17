@@ -7,18 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-public class User {
+@Table(name = "Users")
+public abstract class User {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Integer idUser;    
@@ -28,6 +28,4 @@ public class User {
     private String userPhoneNumber;
     @Column(unique=true)    
     private String userEmail;
-    private String userPassword;
-
 }

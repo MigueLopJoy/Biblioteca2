@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
-    private String userCode;
-    private String firstName;
-    private String lastName;
+public class RegistrationDTO {
+    private LibraryDTO libraryDTO;
+    private ULibrarianDTO uLibrarianDTO;
 }

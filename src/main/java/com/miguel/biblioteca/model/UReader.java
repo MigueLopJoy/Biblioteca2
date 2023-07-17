@@ -1,23 +1,23 @@
 package com.miguel.biblioteca.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
-@Data
+@Getter @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-@DiscriminatorValue("reader")
-public class Reader extends User{
-    private String userCode;    
+@Table(name = "Readers")
+public class UReader extends User{
+    private String readerCode;  
+    private String gender;
     private LocalDate dateOfBirth;
 }
