@@ -1,5 +1,7 @@
 package com.miguel.biblioteca.services;
 
+import com.miguel.biblioteca.DTO.LibraryDTO;
+import com.miguel.biblioteca.mapper.LibraryMapper;
 import com.miguel.biblioteca.model.Library;
 import com.miguel.biblioteca.model.LibraryAddress;
 import com.miguel.biblioteca.model.Role;
@@ -8,16 +10,14 @@ import com.miguel.biblioteca.repositories.ILibraryAddressRepository;
 import com.miguel.biblioteca.repositories.ILibraryRepository;
 import com.miguel.biblioteca.repositories.IRoleRepository;
 import com.miguel.biblioteca.repositories.IULibrarianRepository;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImpAuthenticationService implements IAuthenticationService{
+public class ImpLibraryRegistrationService implements ILibraryRegistrationService{
 
     @Autowired
     private ILibraryRepository libraryRepository;
@@ -30,21 +30,25 @@ public class ImpAuthenticationService implements IAuthenticationService{
     
     @Autowired
     private IRoleRepository roleRepository;
-    
+
+    @Autowired
+    private LibraryMapper libraryMapper;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
     
     @Override
-    public Library SignUpNewLibrary(Library library) {
+    public LibraryDTO SignUpNewLibrary(LibraryDTO libraryDTO) {
+
+        Library library = libraryMapper.mapDtoToEntity(libraryDTO);
+
         LibraryAddress libraryAddress = libraryAddressRepository.save(library.getLibraryAddress());
         library.setLibraryAddress(libraryAddress);
-        
-        ULibrarian libraryManager = signUpLibraryManager(library.getLibrarians().get(0));
-        List<ULibrarian> currentLibrarians = new ArrayList<>();
-        currentLibrarians.add(libraryManager);
-        library.setLibrarians(currentLibrarians);
-        
-        return libraryRepository.save(library);
+
+        ULibrarian libraryManager = signUpLibraryManager(library.getLibraryManager());
+        library.setLibraryManager(libraryManager);
+
+        return libraryMapper.mapEntityToDto(libraryRepository.save(library));
     }
 
     @Override
@@ -59,16 +63,4 @@ public class ImpAuthenticationService implements IAuthenticationService{
 
         return uLibrarianRepository.save(uLibrarian);
     }
-
-    @Override
-    public ULibrarian signUpNewLibrarian(ULibrarian uLibrarian) {
-        String encodedPassword = passwordEncoder.encode(uLibrarian.getPassword());
-        uLibrarian.setPassword(encodedPassword);
-        
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(roleRepository.findByAuthority("LIBRARIAN").get());
-        uLibrarian.setAuthorities(authorities);
-
-        return uLibrarianRepository.save(uLibrarian);        
-    }    
 }

@@ -1,31 +1,39 @@
 package com.miguel.biblioteca.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@Entity
-@Table(name = "Users")
-public abstract class User {
+@MappedSuperclass
+public abstract class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    private Integer idUser;    
+    private Integer idUser;
+
+    @NonNull
+    @NotBlank
+    @Column(nullable = false)
     private String firstName;
+
+    @NonNull
+    @NotBlank
+    @Column(nullable = false)
     private String lastName;
-    @Column(unique=true)    
+
+    @NonNull
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String userPhoneNumber;
-    @Column(unique=true)    
+
+    @NonNull
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String userEmail;
 }

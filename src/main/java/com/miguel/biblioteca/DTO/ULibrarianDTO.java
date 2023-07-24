@@ -5,14 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+import javax.validation.constraints.NotBlank;
+
 @AllArgsConstructor
 @Getter @Setter
 public class ULibrarianDTO {
+
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @NotBlank
     private String userPhoneNumber;
-    private String userEmail;    
-    private String password;  
-    private LibraryDTO libraryDTO;
+
+    @NotBlank
+    private String userEmail;
+
+    @NotBlank
+    private String password;
 }

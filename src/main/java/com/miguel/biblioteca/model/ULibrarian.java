@@ -1,41 +1,60 @@
 package com.miguel.biblioteca.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(force = true)
 @Entity
-@Table(name = "Librarians")
+@Table(name = "librarians")
 public class ULibrarian extends User implements UserDetails {
 
-    private String password;  
+    @NotBlank
+    private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "library_id")
-    Library library;
-    
+    @NotEmpty
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
-        name="user_role_junction",
-        joinColumns = {@JoinColumn(name="user_id")},
-        inverseJoinColumns = {@JoinColumn(name="role_id")}
+        name="librarian_role_junction",
+        joinColumns = {@JoinColumn(name="id_librarian")},
+        inverseJoinColumns = {@JoinColumn(name="id_role")}
     )
     private Set<Role> authorities;
+
+    public ULibrarian(
+            Integer id,
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String password,
+            Set<Role> authorities
+    ){
+        super(id, firstName, lastName, userPhoneNumber, userEmail);
+        this.password = password;
+        this.authorities = authorities;
+    }
+    public ULibrarian(
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String password,
+            Set<Role> authorities
+    ){
+        super(firstName, lastName, userPhoneNumber, userEmail);
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

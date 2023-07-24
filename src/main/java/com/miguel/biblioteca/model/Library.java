@@ -9,27 +9,36 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 @Getter @Setter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Libraries")
-public class Library {    
+@Table(name = "libraries")
+public class Library {
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Integer idLibrary;
+
+    @NonNull
     private String libraryName;
+
+    @NonNull
     @OneToOne
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "id_library_address")
     private LibraryAddress libraryAddress;
-    
-    @OneToMany(mappedBy = "library")
+
+    @NonNull
+    @OneToOne
+    @JoinColumn(name = "id_librarian")
+    private ULibrarian libraryManager;
+
+    @NonNull
+    @OneToMany
     private List<ULibrarian> librarians;
 }

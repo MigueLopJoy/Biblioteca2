@@ -27,16 +27,16 @@ public class LibraryMapper {
     public Library mapDtoToEntity(LibraryDTO libraryDTO) {
         Library library = modelMapper.map(libraryDTO, Library.class);
         LibraryAddressDTO libraryAdressDTO = libraryDTO.getLibraryAddressDTO();
-        List<ULibrarianDTO> uLibrariansDTO = libraryDTO.getLibrarians();
-        
+        ULibrarianDTO libraryManagerDTO = libraryDTO.getLibraryManagerDTO();
+
         if (libraryAdressDTO != null) {
             LibraryAddress libraryAddress = libraryAddressMapper.mapDtoToEntity(libraryAdressDTO);
             library.setLibraryAddress(libraryAddress);
         }
         
-        if (uLibrariansDTO != null) {
-            List<ULibrarian> uLibrarians = uLibrarianMapper.mapDtoListToEntityList(uLibrariansDTO);
-            library.setLibrarians(uLibrarians);
+        if (libraryManagerDTO != null) {
+            ULibrarian libraryManager = uLibrarianMapper.mapDtoToEntity(libraryManagerDTO);
+            library.setLibraryManager(libraryManager);
         }        
         return library;
     }
@@ -44,16 +44,16 @@ public class LibraryMapper {
     public LibraryDTO mapEntityToDto(Library library) {
         LibraryDTO libraryDTO = modelMapper.map(library, LibraryDTO.class);
         LibraryAddress libraryAdress = library.getLibraryAddress();
-        List<ULibrarian> uLibrarians = library.getLibrarians();
+        ULibrarian libraryManager = library.getLibraryManager();
         
         if (libraryAdress != null) {
             LibraryAddressDTO libraryAddressDTO = libraryAddressMapper.mapEntityToDto(libraryAdress);
             libraryDTO.setLibraryAddressDTO(libraryAddressDTO);
         }
         
-        if (uLibrarians != null) {
-            List<ULibrarianDTO> uLibrariansDTO = uLibrarianMapper.mapEntityListToDtoList(uLibrarians);
-            libraryDTO.setLibrarians(uLibrariansDTO);
+        if (libraryManager != null) {
+            ULibrarianDTO libraryManagerDTO = uLibrarianMapper.mapEntityToDto(libraryManager);
+            libraryDTO.setLibraryManagerDTO(libraryManagerDTO);
         }    
         
         return libraryDTO;

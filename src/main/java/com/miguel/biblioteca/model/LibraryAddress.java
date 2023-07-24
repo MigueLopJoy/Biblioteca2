@@ -5,24 +5,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
+import java.util.UUID;
+
+@Getter @Setter
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Addresses")
+@Table(name = "addresses")
 public class LibraryAddress {
+
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Integer idLibraryAddress;
+
+    @NonNull
     private String libraryAdressName;
-    private String libraryAdressNumber;
+
+    @NonNull
+    private Integer libraryAdressNumber;
+
+    @NonNull
     private String libraryLocality;
+
+    @NonNull
     private String libraryProvince;
+
+    @NonNull
     private String libraryPostalCode;
 }

@@ -6,27 +6,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.validation.constraints.NotBlank;
+import java.util.UUID;
+
 @Getter @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name="Roles")
+@Table(name="roles")
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="role_id")
     private Integer roleId;
 
-    @Autowired
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String authority;
 }

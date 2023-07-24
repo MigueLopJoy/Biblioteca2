@@ -1,23 +1,61 @@
 package com.miguel.biblioteca.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
+
+import javax.validation.constraints.NotBlank;
 
 
 @Getter @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(force = true)
 @Entity
-@Table(name = "Readers")
+@Table(name = "readers")
 public class UReader extends User{
-    private String readerCode;  
-    private String gender;
+
+    @NonNull
+    @NotBlank
+    @Column(unique = true)
+    private String readerCode;
+
+    @NonNull
+    private Character gender;
+
+    @NonNull
+    @NotBlank
     private LocalDate dateOfBirth;
+
+    public UReader(
+            Integer id,
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String readerCode,
+            Character gender,
+            LocalDate dateOfBirth
+    ) {
+        super(id, firstName, lastName, userPhoneNumber, userEmail);
+        this.readerCode = readerCode;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public UReader(
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String readerCode,
+            Character gender,
+            LocalDate dateOfBirth
+    ) {
+        super(firstName, lastName, userPhoneNumber, userEmail);
+        this.readerCode = readerCode;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+    }
 }
