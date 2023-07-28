@@ -7,8 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
-@NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
 public abstract class User implements Serializable {
@@ -17,23 +16,31 @@ public abstract class User implements Serializable {
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Integer idUser;
 
-    @NonNull
     @NotBlank
     @Column(nullable = false)
     private String firstName;
 
-    @NonNull
     @NotBlank
     @Column(nullable = false)
     private String lastName;
 
-    @NonNull
     @NotBlank
     @Column(unique = true, nullable = false)
     private String userPhoneNumber;
 
-    @NonNull
     @NotBlank
     @Column(unique = true, nullable = false)
     private String userEmail;
+
+    public User(
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userPhoneNumber = userPhoneNumber;
+        this.userEmail = userEmail;
+    }
 }

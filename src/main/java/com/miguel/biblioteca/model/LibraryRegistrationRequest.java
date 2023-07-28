@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class LibraryRegistrationRequest {
 
     private LibraryDTO libraryDTO;
+    private ULibrarianDTO uLibrarianDTO;
 
     public LibraryRegistrationRequest(
-            @JsonProperty("libraryDTO") LibraryDTO libraryDTO
+            @JsonProperty("libraryDTO") LibraryDTO libraryDTO,
+            @JsonProperty("libraryManagerDTO") ULibrarianDTO uLibrarianDTO
     ) {
         this.libraryDTO = libraryDTO;
+        this.uLibrarianDTO = uLibrarianDTO;
     }
 }

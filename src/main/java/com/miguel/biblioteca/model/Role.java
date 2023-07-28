@@ -22,9 +22,13 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer roleId;
+    private Integer idRole;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String authority;
+
+    public Role(String authority) {
+        this.authority = authority;
+    }
 }

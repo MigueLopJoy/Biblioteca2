@@ -1,21 +1,17 @@
 package com.miguel.biblioteca.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Getter @Setter
-@Builder
-@NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "libraries")
@@ -25,20 +21,42 @@ public class Library {
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Integer idLibrary;
 
-    @NonNull
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String libraryName;
 
-    @NonNull
-    @OneToOne
-    @JoinColumn(name = "id_library_address")
-    private LibraryAddress libraryAddress;
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String libraryAddress;
 
-    @NonNull
-    @OneToOne
-    @JoinColumn(name = "id_librarian")
-    private ULibrarian libraryManager;
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String city;
 
-    @NonNull
-    @OneToMany
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String province;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String postalCode;
+
+    @NotEmpty
+    @Column(nullable = false)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="library_librarians_junction",
+            joinColumns = {@JoinColumn(name="id_library")},
+            inverseJoinColumns = {@JoinColumn(name="id_librarian")}
+    )
     private List<ULibrarian> librarians;
+
+    public Library(String libraryName, String libraryAddress, String city, String province, String postalCode) {
+        this.libraryName = libraryName;
+        this.libraryAddress = libraryAddress;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.librarians = new ArrayList<>();
+    }
 }

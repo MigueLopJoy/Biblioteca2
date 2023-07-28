@@ -25,23 +25,22 @@ class IULibrarianRepositoryTest {
     private Integer id;
     private String email;
 
+    private Set<Role> authorities;
+
     @BeforeEach
     void setUp() {
         email = "example_email@example.com";
 
         id = 10;
 
-        Role role = roleRepository.save(new Role(1, "ADMIN"));
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(role);
-
-        uLibrarian = new ULibrarian("Miguel", "López", "626100833", email, "1234", authorities);
+        uLibrarian = new ULibrarian("Miguel", "López", "626100833", email, "1234");
     }
 
 
     @Test
     void itShouldSaveULibrarian() {
         // Given
+        Integer id = 1;
         ULibrarian savedLibrarian;
 
         // When
@@ -51,33 +50,33 @@ class IULibrarianRepositoryTest {
         assertThat(savedLibrarian)
                 .isNotNull()
                 .isEqualToComparingFieldByField(uLibrarian);
+
+        Optional<ULibrarian> fetchedLibrarian = underTest.findByUserEmail(email);
+
+        assertThat(fetchedLibrarian)
+                .isPresent()
+                .hasValueSatisfying(l -> {
+                    assertThat(l).isEqualToComparingFieldByField(savedLibrarian);
+                });
     }
 
     @Test
-    void itShouldNotSaveULibrarianWhenAuthoritiesAreNull() {
+    void itShouldNotSaveULibrarianWhenPasswordIsNull() {
         // Given
-        ULibrarian nullAuthoritiesLibrarian = new ULibrarian("Miguel", "López", "626100833", email, null, null);
+        ULibrarian nullPasswordLibrarian = new ULibrarian("Miguel", "López", "626100833", email, null);
 
         // When
-
-        ULibrarian savedLibrarian = underTest.save(nullAuthoritiesLibrarian);
-
         // Then
 
-        assertThat(savedLibrarian)
-                .isNull();
-
-        assertThatThrownBy(() -> underTest.save(nullAuthoritiesLibrarian))
-                .hasMessageContaining("not-null property references a null or transient value : com.miguel.biblioteca.model.ULibrarian.authorities")
+        assertThatThrownBy(() -> underTest.save(nullPasswordLibrarian))
+                .hasMessageContaining("not-null property references a null or transient value : com.miguel.biblioteca.model.ULibrarian.password")
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void itShouldFindByUserEmail() {
         // Given
-
        // When
-
         underTest.save(uLibrarian);
 
         // Then

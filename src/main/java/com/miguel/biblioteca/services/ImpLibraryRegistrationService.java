@@ -1,7 +1,9 @@
 package com.miguel.biblioteca.services;
 
 import com.miguel.biblioteca.DTO.LibraryDTO;
+import com.miguel.biblioteca.DTO.ULibrarianDTO;
 import com.miguel.biblioteca.mapper.LibraryMapper;
+import com.miguel.biblioteca.mapper.ULibrarianMapper;
 import com.miguel.biblioteca.model.Library;
 import com.miguel.biblioteca.model.LibraryAddress;
 import com.miguel.biblioteca.model.Role;
@@ -10,57 +12,47 @@ import com.miguel.biblioteca.repositories.ILibraryAddressRepository;
 import com.miguel.biblioteca.repositories.ILibraryRepository;
 import com.miguel.biblioteca.repositories.IRoleRepository;
 import com.miguel.biblioteca.repositories.IULibrarianRepository;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class ImpLibraryRegistrationService implements ILibraryRegistrationService{
 
-    @Autowired
-    private ILibraryRepository libraryRepository;
+    private final ILibraryRepository libraryRepository;
     
-    @Autowired
-    private ILibraryAddressRepository libraryAddressRepository;
+    private final IULibrarianService uLibrarianService;
     
-    @Autowired
-    private IULibrarianRepository uLibrarianRepository;
-    
-    @Autowired
-    private IRoleRepository roleRepository;
+    private final IRoleRepository roleRepository;
 
-    @Autowired
-    private LibraryMapper libraryMapper;
+    private final LibraryMapper libraryMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final ULibrarianMapper uLibrarianMapper;
     
     @Override
-    public LibraryDTO SignUpNewLibrary(LibraryDTO libraryDTO) {
-
+    public LibraryDTO SignUpNewLibrary(LibraryDTO libraryDTO, ULibrarianDTO librarianDTO) {
         Library library = libraryMapper.mapDtoToEntity(libraryDTO);
 
-        LibraryAddress libraryAddress = libraryAddressRepository.save(library.getLibraryAddress());
-        library.setLibraryAddress(libraryAddress);
-
-        ULibrarian libraryManager = signUpLibraryManager(library.getLibraryManager());
-        library.setLibraryManager(libraryManager);
-
-        return libraryMapper.mapEntityToDto(libraryRepository.save(library));
-    }
-
-    @Override
-    public ULibrarian signUpLibraryManager(ULibrarian uLibrarian) {
-        String encodedPassword = passwordEncoder.encode(uLibrarian.getPassword());
-        uLibrarian.setPassword(encodedPassword);
-        
         Set<Role> authorities = new HashSet<>();
         authorities.add(roleRepository.findByAuthority("LIBRARIAN").get());
         authorities.add(roleRepository.findByAuthority("MANAGER").get());
-        uLibrarian.setAuthorities(authorities);
 
-        return uLibrarianRepository.save(uLibrarian);
+        ULibrarianDTO libraryManagerDTO = uLibrarianService.signUpNewLibrarian(librarianDTO, authorities);
+        ULibrarian libraryManager = uLibrarianMapper.mapDtoToEntity(libraryManagerDTO);
+
+        List<ULibrarian> libraryCurrentLibrarians = new ArrayList<>();
+        libraryCurrentLibrarians.add(libraryManager);
+        library.setLibrarians(libraryCurrentLibrarians);
+
+        Library savedLibrary = libraryRepository.save(library);
+        return libraryMapper.mapEntityToDto(savedLibrary);
     }
 }

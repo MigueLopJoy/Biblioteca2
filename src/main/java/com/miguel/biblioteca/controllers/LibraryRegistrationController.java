@@ -25,6 +25,6 @@ public class LibraryRegistrationController {
     public ResponseEntity<LibraryDTO> signUpNewLibrary(
             @Valid @RequestBody LibraryRegistrationRequest request
             ) {
-        return ResponseEntity.ok(libraryRegistrationService.SignUpNewLibrary(request.getLibraryDTO()));
+        return ResponseEntity.ok(libraryRegistrationService.SignUpNewLibrary(request.getLibraryDTO(), request.getULibrarianDTO()));
     }
 }

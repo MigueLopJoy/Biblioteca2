@@ -3,6 +3,7 @@ package com.miguel.biblioteca.model;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.*;
@@ -13,15 +14,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @Getter @Setter
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "librarians")
+@AttributeOverride(name = "idUser", column = @Column(name = "id_librarian"))
 public class ULibrarian extends User implements UserDetails {
 
     @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @NotEmpty
+    @Column(nullable = false)
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
         name="librarian_role_junction",
@@ -29,31 +34,16 @@ public class ULibrarian extends User implements UserDetails {
         inverseJoinColumns = {@JoinColumn(name="id_role")}
     )
     private Set<Role> authorities;
-
-    public ULibrarian(
-            Integer id,
-            String firstName,
-            String lastName,
-            String userPhoneNumber,
-            String userEmail,
-            String password,
-            Set<Role> authorities
-    ){
-        super(id, firstName, lastName, userPhoneNumber, userEmail);
-        this.password = password;
-        this.authorities = authorities;
-    }
     public ULibrarian(
             String firstName,
             String lastName,
             String userPhoneNumber,
             String userEmail,
-            String password,
-            Set<Role> authorities
+            String password
     ){
         super(firstName, lastName, userPhoneNumber, userEmail);
         this.password = password;
-        this.authorities = authorities;
+        this.authorities = new HashSet<>();
     }
 
     @Override

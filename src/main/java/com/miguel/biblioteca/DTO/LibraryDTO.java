@@ -1,5 +1,6 @@
 package com.miguel.biblioteca.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.miguel.biblioteca.model.ULibrarian;
@@ -14,9 +15,19 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Getter @Setter
 public class LibraryDTO {
-
-    @NotBlank
     private String libraryName;
-    private LibraryAddressDTO libraryAddressDTO;
-    private ULibrarianDTO libraryManagerDTO;
+    private String libraryAddress;
+    private String city;
+    private String postalCode;
+    private List<ULibrarianDTO> librariansDTO;
+
+    public LibraryDTO(String libraryName,
+                      String libraryAddress,
+                      String city,
+                      String postalCode) {
+        this.libraryName = libraryName;
+        this.libraryAddress = libraryAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+    }
 }

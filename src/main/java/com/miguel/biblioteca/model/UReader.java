@@ -1,5 +1,6 @@
 package com.miguel.biblioteca.model;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(force = true)
 @Entity
 @Table(name = "readers")
+@AttributeOverride(name = "idUser", column = @Column(name = "id_reader"))
 public class UReader extends User{
 
     @NonNull

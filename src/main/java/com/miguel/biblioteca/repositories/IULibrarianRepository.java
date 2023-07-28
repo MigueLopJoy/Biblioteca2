@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface IULibrarianRepository extends JpaRepository<ULibrarian, Repository> {
+public interface IULibrarianRepository extends JpaRepository<ULibrarian, Integer> {
     public Optional<ULibrarian> findByUserEmail(String userEmail);
+
+    public Optional<ULibrarian> findByUserPhoneNumber(String phoneNumber);
 }

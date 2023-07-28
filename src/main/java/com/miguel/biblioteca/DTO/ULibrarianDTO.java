@@ -6,23 +6,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter @Setter
 public class ULibrarianDTO {
 
-    @NotBlank
     private String firstName;
 
-    @NotBlank
     private String lastName;
 
-    @NotBlank
     private String userPhoneNumber;
 
-    @NotBlank
     private String userEmail;
 
-    @NotBlank
     private String password;
+
+    private Set<RoleDTO> authoritiesDTO;
+
+    public ULibrarianDTO(String firstName,
+                         String lastName,
+                         String userPhoneNumber,
+                         String userEmail,
+                         String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userPhoneNumber = userPhoneNumber;
+        this.userEmail = userEmail;
+        this.password = password;
+    }
 }
