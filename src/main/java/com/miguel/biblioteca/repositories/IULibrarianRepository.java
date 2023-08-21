@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface IULibrarianRepository extends JpaRepository<ULibrarian, Integer> {
     public Optional<ULibrarian> findByUserEmail(String userEmail);
 
-    public Optional<ULibrarian> findByUserPhoneNumber(String phoneNumber);
+    public Optional<ULibrarian> findByUserPhoneNumber(String userPhoneNumber);
 }

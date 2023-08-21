@@ -22,6 +22,7 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "id_role")
     private Integer idRole;
 
     @NotBlank

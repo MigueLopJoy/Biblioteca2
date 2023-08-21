@@ -27,18 +27,26 @@ public class Library {
 
     @NotBlank
     @Column(unique = true, nullable = false)
+    private String libraryPhoneNumber;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String libraryEmail;
+
+    @NotBlank
+    @Column(nullable = false)
     private String libraryAddress;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String city;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String province;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String postalCode;
 
     @NotEmpty
@@ -51,12 +59,37 @@ public class Library {
     )
     private List<ULibrarian> librarians;
 
-    public Library(String libraryName, String libraryAddress, String city, String province, String postalCode) {
+    public Library(String libraryName,
+                   String libraryPhoneNumber,
+                   String libraryEmail,
+                   String libraryAddress,
+                   String city,
+                   String province,
+                   String postalCode) {
         this.libraryName = libraryName;
+        this.libraryPhoneNumber = libraryPhoneNumber;
+        this.libraryEmail = libraryEmail;
         this.libraryAddress = libraryAddress;
         this.city = city;
         this.province = province;
         this.postalCode = postalCode;
-        this.librarians = new ArrayList<>();
+    }
+
+    public Library(String libraryName,
+                   String libraryPhoneNumber,
+                   String libraryEmail,
+                   String libraryAddress,
+                   String city,
+                   String province,
+                   String postalCode,
+                   List<ULibrarian> librarians) {
+        this.libraryName = libraryName;
+        this.libraryPhoneNumber = libraryPhoneNumber;
+        this.libraryEmail = libraryEmail;
+        this.libraryAddress = libraryAddress;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.librarians = librarians;
     }
 }

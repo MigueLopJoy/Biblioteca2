@@ -25,18 +25,19 @@ public class ULibrarianMapper {
         ULibrarian uLibrarian = modelMapper.map(uLibrarianDTO, ULibrarian.class);
         Set<RoleDTO> authoritiesDTO = uLibrarianDTO.getAuthoritiesDTO();
 
-        if (authoritiesDTO != null) {
+        if (authoritiesDTO != null && authoritiesDTO.size() > 0) {
             Set<Role> authorities = roleMapper.mapDtoSetToEntitySet(authoritiesDTO);
             uLibrarian.setAuthorities(authorities);
         }
+
         return uLibrarian;
     }
 
     public ULibrarianDTO mapEntityToDto(ULibrarian uLibrarian) {
         ULibrarianDTO uLibrarianDTO = modelMapper.map(uLibrarian, ULibrarianDTO.class);
-        Set<Role> authorities = uLibrarian.getAuthorities();
+        Set<Role> authorities = (Set<Role>) uLibrarian.getAuthorities();
 
-        if (authorities != null) {
+        if (authorities != null && authorities.size() > 0) {
             Set<RoleDTO> authoritiesDTO = roleMapper.mapEntitySetToDtoSet(authorities);
             uLibrarianDTO.setAuthoritiesDTO(authoritiesDTO);
         }

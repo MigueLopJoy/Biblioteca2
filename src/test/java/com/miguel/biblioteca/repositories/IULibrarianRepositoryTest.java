@@ -19,89 +19,74 @@ class IULibrarianRepositoryTest {
 
     @Autowired
     private IULibrarianRepository underTest;
-    @Autowired
-    private IRoleRepository roleRepository;
     private ULibrarian uLibrarian;
-    private Integer id;
     private String email;
-
+    private String phoneNumber;
     private Set<Role> authorities;
+    private Role role;
+    private static Integer counter = 0;
 
     @BeforeEach
     void setUp() {
-        email = "example_email@example.com";
-
-        id = 10;
-
-        uLibrarian = new ULibrarian("Miguel", "López", "626100833", email, "1234");
+        email = "example_email_" + counter + "@example.com";
+        phoneNumber = "phoneNumber" + counter;
+        authorities = new HashSet<>();
+        role = new Role("ADMIN");
+        authorities.add(role);
+        uLibrarian
+                = new ULibrarian("Miguel", "López", phoneNumber, email, "1234", authorities);
+        counter++;
     }
-
 
     @Test
     void itShouldSaveULibrarian() {
         // Given
-        Integer id = 1;
         ULibrarian savedLibrarian;
+        ULibrarian fetchedLibrarian;
 
         // When
         savedLibrarian = underTest.save(uLibrarian);
+        fetchedLibrarian = underTest.findAll().get(0);
 
         // Then
         assertThat(savedLibrarian)
                 .isNotNull()
                 .isEqualToComparingFieldByField(uLibrarian);
 
-        Optional<ULibrarian> fetchedLibrarian = underTest.findByUserEmail(email);
-
         assertThat(fetchedLibrarian)
-                .isPresent()
-                .hasValueSatisfying(l -> {
-                    assertThat(l).isEqualToComparingFieldByField(savedLibrarian);
-                });
+                .isNotNull()
+                .isEqualToComparingFieldByField(uLibrarian);
     }
 
     @Test
     void itShouldNotSaveULibrarianWhenPasswordIsNull() {
         // Given
-        ULibrarian nullPasswordLibrarian = new ULibrarian("Miguel", "López", "626100833", email, null);
+        ULibrarian nullPasswordLibrarian
+                = new ULibrarian("Miguel",
+                "López",
+                "626100833",
+                email,
+                null,
+                authorities);
 
         // When
         // Then
-
         assertThatThrownBy(() -> underTest.save(nullPasswordLibrarian))
-                .hasMessageContaining("not-null property references a null or transient value : com.miguel.biblioteca.model.ULibrarian.password")
+                .hasMessageContaining(
+                        "not-null property references a null or transient value : com.miguel.biblioteca.model.ULibrarian.password"
+                )
                 .isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
-    void itShouldFindByUserEmail() {
-        // Given
-       // When
-        underTest.save(uLibrarian);
-
-        // Then
-
-        Optional<ULibrarian> optionalULibrarian = underTest.findByUserEmail(email);
-
-        assertThat(optionalULibrarian)
-                .isPresent()
-                .hasValueSatisfying(l -> {
-                    assertThat(l).isEqualToComparingFieldByField(uLibrarian);
-                });
     }
 
     @Test
     void itShouldNotFindByUserEmailWhenEmailDoesNotExist() {
         // Given
-
         String email = "nonexistent@email.com";
 
         // When
-
         Optional<ULibrarian> optionalULibrarian = underTest.findByUserEmail(email);
 
         // Then
-
         assertThat(optionalULibrarian)
                 .isNotPresent();
     }

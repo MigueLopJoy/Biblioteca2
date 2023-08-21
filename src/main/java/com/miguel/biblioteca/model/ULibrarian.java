@@ -3,7 +3,7 @@ package com.miguel.biblioteca.model;
 import jakarta.persistence.*;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import lombok.*;
@@ -16,6 +16,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "librarians")
 @AttributeOverride(name = "idUser", column = @Column(name = "id_librarian"))
@@ -34,6 +35,12 @@ public class ULibrarian extends User implements UserDetails {
         inverseJoinColumns = {@JoinColumn(name="id_role")}
     )
     private Set<Role> authorities;
+
+    @NotEmpty
+    @Column(nullable = false)
+    @OneToMany(mappedBy = "uLibrarian", fetch = FetchType.EAGER)
+    private List<JWT> tokens;
+
     public ULibrarian(
             String firstName,
             String lastName,
@@ -43,7 +50,34 @@ public class ULibrarian extends User implements UserDetails {
     ){
         super(firstName, lastName, userPhoneNumber, userEmail);
         this.password = password;
-        this.authorities = new HashSet<>();
+    }
+
+    public ULibrarian(
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String password,
+            Set<Role> authorities
+    ){
+        super(firstName, lastName, userPhoneNumber, userEmail);
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public ULibrarian(
+            String firstName,
+            String lastName,
+            String userPhoneNumber,
+            String userEmail,
+            String password,
+            Set<Role> authorities,
+            List<JWT> tokens
+    ){
+        super(firstName, lastName, userPhoneNumber, userEmail);
+        this.password = password;
+        this.authorities = authorities;
+        this.tokens = tokens;
     }
 
     @Override

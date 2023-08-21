@@ -7,5 +7,7 @@ import com.miguel.biblioteca.model.ULibrarian;
 import java.util.Set;
 
 public interface IULibrarianService {
-    public ULibrarianDTO signUpNewLibrarian(ULibrarianDTO uLibrarianDTO, Set<Role> authorities);
+    public ULibrarianDTO signUpNewLibrarian(ULibrarianDTO uLibrarianDTO);
+
+    public ULibrarianDTO signUpLibraryManager(ULibrarianDTO uLibrarianDTO);
 }
