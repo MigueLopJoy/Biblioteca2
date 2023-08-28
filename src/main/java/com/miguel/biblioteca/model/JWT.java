@@ -1,16 +1,16 @@
 package com.miguel.biblioteca.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import javax.persistence.Entity;
 
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class JWT {
+public class JWToken {
 
     @Id
     @GeneratedValue
@@ -20,7 +20,7 @@ public class JWT {
     public String token;
 
     @Enumerated(EnumType.STRING)
-    public JWTType JWTType = com.miguel.biblioteca.model.JWTType.BEARER;
+    public JWTType jwtType = JWTType.BEARER;
 
     public boolean revoked;
 

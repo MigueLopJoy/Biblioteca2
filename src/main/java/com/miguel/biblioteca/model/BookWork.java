@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "Books")
-public class Book {
+public class BookWork {
    @Id
    @GeneratedValue(strategy=GenerationType.SEQUENCE)
    private Integer idBook;
