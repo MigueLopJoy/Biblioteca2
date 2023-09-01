@@ -31,7 +31,7 @@ public class ImpULibrarianService implements IULibrarianService{
         ULibrarian uLibrarian = uLibrarianMapper.mapDtoToEntity(uLibrarianDTO);
 
         Set<Role> authorities = new HashSet<>();
-        Optional<Role> optionalLibrarianRole = roleRepository.findByAuthority("LIBRARIAN");
+        Optional<Role> optionalLibrarianRole = roleRepository.findByAuthority("ROLE_LIBRARIAN");
         if (optionalLibrarianRole.isPresent()) {
             authorities.add(optionalLibrarianRole.get());
         }
@@ -61,8 +61,8 @@ public class ImpULibrarianService implements IULibrarianService{
         ULibrarian uLibrarian = uLibrarianMapper.mapDtoToEntity(uLibrarianDTO);
 
         Set<Role> authorities = new HashSet<>();
-        Optional<Role> optionalManagerRole = roleRepository.findByAuthority("LIBRARIAN");
-        Optional<Role> optionalLibrarianRole = roleRepository.findByAuthority("MANAGER");
+        Optional<Role> optionalManagerRole = roleRepository.findByAuthority("ROLE_LIBRARIAN");
+        Optional<Role> optionalLibrarianRole = roleRepository.findByAuthority("ROLE_MANAGER");
 
         if (optionalLibrarianRole.isPresent()) {
             authorities.add(optionalLibrarianRole.get());

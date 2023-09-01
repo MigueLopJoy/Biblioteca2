@@ -19,23 +19,23 @@ public class ImpAuthorService implements IAuthorService{
 
     @Override
     public Author saveNewAuthor(Author author) {
-        return authorRepository.save(author);
+        Author savedAuthor = null;
+        if (author != null) {
+
+            Optional<Author> optionalAuthor = authorRepository.findByAuthorName(this.getFullAuthorName(author));
+            if (!optionalAuthor.isPresent()) {
+                savedAuthor = authorRepository.save(author);
+            }
+
+        } else {
+            throw  new RuntimeException("Author data not provided");
+        }
+        return savedAuthor;
     }
     
-    @Override
-    public Author getOrCreateAuthor(Author author) {
-        Author searchedAuthor = authorRepository.findByAuthorName(this.getFullAuthorName(author)).orElse(null);
-        
-        if (searchedAuthor == null) {
-            return authorRepository.save(author);
-        }           
-        return searchedAuthor;
-    }
-    
-    @Override
-    public String getFullAuthorName(Author author) {
+    private String getFullAuthorName(Author author) {
         String authorFirstName = author.getFirstName() != null ? author.getFirstName() : "";
-        String authorLastName = author.getLastNames() != null ? author.getLastNames() : "";
+        String authorLastName = author.getLastName() != null ? author.getLastName() : "";
         return (authorFirstName + ' ' + authorLastName).trim();
     }
 

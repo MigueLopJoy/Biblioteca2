@@ -2,16 +2,15 @@ package com.miguel.biblioteca.controllers;
 
 import com.miguel.biblioteca.DTO.AuthenticationRequestDTO;
 import com.miguel.biblioteca.DTO.AuthenticationResponseDTO;
-import com.miguel.biblioteca.DTO.LibraryDTO;
 import com.miguel.biblioteca.DTO.LibraryRegistrationRequestDTO;
 import com.miguel.biblioteca.services.IAuthenticationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/auth")
@@ -20,7 +19,7 @@ public class authenticationController {
     @Autowired
     private IAuthenticationService authenticationService;
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<String> signUpNewLibrary(
             @Valid @RequestBody LibraryRegistrationRequestDTO request
             ) {

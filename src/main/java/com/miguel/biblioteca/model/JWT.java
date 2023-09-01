@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Builder
 @Entity
-public class JWToken {
+public class JWT {
 
     @Id
     @GeneratedValue

@@ -1,5 +1,6 @@
 package com.miguel.biblioteca.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookCopyDTO {
 
-   private String bookCopyCodeDTO;
+   private String bookCopyCode;
 
    private String title;
    private AuthorDTO authorDTO;
@@ -19,10 +20,9 @@ public class BookCopyDTO {
 
    private String editor;
    private Integer editionYear;
-
    public BookCopyDTO(
            String title,
-           AuthorDTO authorDTO,
+           @JsonProperty("author") AuthorDTO authorDTO,
            Integer publicationYear,
            String editor,
            Integer editionYear

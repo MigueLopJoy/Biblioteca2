@@ -64,33 +64,29 @@ public class ImpAuthenticationService implements IAuthenticationService {
         String password = request.getPassword();
         AuthenticationResponseDTO response = new AuthenticationResponseDTO();
 
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            userEmail,
-                            password
-                    )
-            );
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userEmail,
+                        password
+                )
+        );
 
-            Optional<ULibrarian> optionalLibrarian = uLibrarianRepository.findByUserEmail(userEmail);
+        Optional<ULibrarian> optionalLibrarian = uLibrarianRepository.findByUserEmail(userEmail);
 
-            if (optionalLibrarian.isPresent()) {
-                ULibrarian librarian = optionalLibrarian.get();
+        if (optionalLibrarian.isPresent()) {
+            ULibrarian librarian = optionalLibrarian.get();
 
-                jwtService.revokeAllLibrarianTokens(librarian);
+            jwtService.revokeAllLibrarianTokens(librarian);
 
-                String accessToken = jwtService.generateAccessToken(auth);
-                String refreshToken = jwtService.generateRefreshToken(auth);
+            String accessToken = jwtService.generateAccessToken(librarian);
+            String refreshToken = jwtService.generateRefreshToken(librarian);
 
-                jwtService.saveLibrarianToken(librarian, refreshToken);
+            jwtService.saveLibrarianToken(librarian, refreshToken);
 
-                response.setAccessToken(accessToken);
-                response.setRefreshToken(refreshToken);
-            } else {
+            response.setAccessToken(accessToken);
+            response.setRefreshToken(refreshToken);
+        } else {
                 response.setError("User is not a librarian");
-            }
-        } catch (AuthenticationException e) {
-            response.setError("Authentication failed");
         }
         return response;
     }

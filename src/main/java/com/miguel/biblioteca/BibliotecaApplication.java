@@ -20,8 +20,8 @@ public class BibliotecaApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		roleRepository.save(new Role("ADMIN"));
-		roleRepository.save(new Role("MANAGER"));
-		roleRepository.save(new Role("LIBRARIAN"));
+		roleRepository.save(new Role("ROLE_ADMIN"));
+		roleRepository.save(new Role("ROLE_MANAGER"));
+		roleRepository.save(new Role("ROLE_LIBRARIAN"));
 	}
 }

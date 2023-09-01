@@ -2,12 +2,12 @@ package com.miguel.biblioteca.services;
 
 import java.io.Reader;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
-@Service
+import com.miguel.biblioteca.model.UReader;
+
 public interface IUReaderService {
-    public Reader findByReaderCode(String readerCode);    
-    public List<Reader> findByReaderName(String readerName);
-    public List<Reader> getAllReaders();
-    public void saveNewReader(Reader reader);
+    public UReader findByReaderCode(String readerCode);
+    public List<UReader> findByReaderName(String readerName);
+    public List<UReader> getAllReaders();
+    public UReader saveNewReader(Reader reader);
 }

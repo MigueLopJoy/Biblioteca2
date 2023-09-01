@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthorDTO {
     private String firstName;
-    private String lastNames;
+    private String lastName;
 }

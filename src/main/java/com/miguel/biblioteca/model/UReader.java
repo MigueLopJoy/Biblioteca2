@@ -6,9 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
 
 
 @Getter @Setter
@@ -18,7 +17,6 @@ import javax.validation.constraints.NotBlank;
 @AttributeOverride(name = "idUser", column = @Column(name = "id_reader"))
 public class UReader extends User{
 
-    @NonNull
     @NotBlank
     @Column(unique = true)
     private String readerCode;
@@ -27,7 +25,6 @@ public class UReader extends User{
     private Character gender;
 
     @NonNull
-    @NotBlank
     private LocalDate dateOfBirth;
 
     public UReader(

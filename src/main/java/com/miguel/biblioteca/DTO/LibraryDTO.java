@@ -1,15 +1,11 @@
 package com.miguel.biblioteca.DTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.miguel.biblioteca.model.ULibrarian;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor

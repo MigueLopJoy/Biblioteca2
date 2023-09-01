@@ -23,8 +23,8 @@ public class Author {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer idAuthor;
     private String firstName;
-    private String lastNames;
+    private String lastName;
     
     @OneToMany(mappedBy = "author")
-    private List<Book> books;
+    private List<BookWork> books;
 }

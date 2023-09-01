@@ -7,11 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-
-import javax.validation.constraints.NotBlank;
-import java.util.UUID;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -25,7 +21,6 @@ public class Role implements GrantedAuthority {
     @Column(name = "id_role")
     private Integer idRole;
 
-    @NotBlank
     @Column(nullable = false, unique = true)
     private String authority;
 

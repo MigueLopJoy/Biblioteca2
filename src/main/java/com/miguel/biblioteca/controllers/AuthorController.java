@@ -21,27 +21,4 @@ public class AuthorController {
     
     @Autowired
     private AuthorMapper authorMapper;
-    
-    @GetMapping("search")
-    public ResponseEntity<AuthorDTO> searchAuthor(@RequestBody AuthorDTO authorDTO){
-        String authorName = authorService.getFullAuthorName(authorMapper.mapDtoToEntity(authorDTO));        
-        Author author = authorService.findByAuthorName(authorName).orElse(null);           
-        if (author == null) {
-            return ResponseEntity.notFound().build();
-        }        
-        return ResponseEntity.ok(authorMapper.mapEntityToDto(author));                       
-    }     
-        
-    @PostMapping("save")
-    public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody AuthorDTO authorDTO) {
-        ResponseEntity<AuthorDTO> searchResponse = searchAuthor(authorDTO);
-        
-        Author author;
-        if (searchResponse.getStatusCode().is4xxClientError()){
-            author = authorService.saveNewAuthor(authorMapper.mapDtoToEntity(authorDTO));
-        } else {
-            author =  authorMapper.mapDtoToEntity(authorDTO);
-        }       
-        return ResponseEntity.ok(authorMapper.mapEntityToDto(author));                     
-    }       
 }
