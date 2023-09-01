@@ -7,6 +7,7 @@ import com.miguel.library.repository.IBookWorkRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,8 +49,13 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Override
     public List<BookEdition> findEditionsByAuthorName(String authorName) {
-        List<BookWork> bookWork = bookWorkRepository.findBookWorkByAuthorName(authorName);
+        List<BookEdition> bookEditions = new ArrayList<>();
+        List<BookWork> authorBookWorks = bookWorkRepository.findBookWorkByAuthorName(authorName);
 
-        
+        if (authorBookWorks.size() > 0) {
+            authorBookWorks.forEach(authorBookWork -> {
+                
+            });
+        }
     }
 }
