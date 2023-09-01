@@ -3,9 +3,11 @@ package com.miguel.library.services;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
+import com.miguel.library.repository.IBookWorkRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -15,6 +17,8 @@ public class ImpBookEditionService implements IBookEditionService{
     private final IBookEditionRepository bookEditionRepository;
 
     private final IBookWorkService bookWorkService;
+
+    private final IBookWorkRepository bookWorkRepository;
 
 
     @Override
@@ -40,5 +44,12 @@ public class ImpBookEditionService implements IBookEditionService{
         }
 
         return savedBookEdition;
+    }
+
+    @Override
+    public List<BookEdition> findEditionsByAuthorName(String authorName) {
+        List<BookWork> bookWork = bookWorkRepository.findBookWorkByAuthorName(authorName);
+
+        
     }
 }
