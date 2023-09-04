@@ -3,59 +3,63 @@ package com.miguel.library.services;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
-import com.miguel.library.repository.IBookWorkRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class ImpBookEditionService implements IBookEditionService{
 
-    private final IBookEditionRepository bookEditionRepository;
+    @Autowired
+    private IBookEditionRepository bookEditionRepository;
 
-    private final IBookWorkService bookWorkService;
-
-    private final IBookWorkRepository bookWorkRepository;
-
+    @Autowired
+    private IBookWorkService bookWorkService;
 
     @Override
     public BookEdition saveNewBookEdition(BookEdition bookEdition) {
-        BookEdition savedBookEdition = null;
-        BookWork bookWork;
+        BookEdition savedBookEdition;
 
         if (bookEdition != null) {
-            bookWork = bookEdition.getBookWork();
-            bookWorkService.saveNewBookWork(bookWork);
+            BookWork savedBookWork = bookWorkService.saveNewBookWork(bookEdition.getBookWork());
 
             Optional<BookEdition> optionalBookEdition
-                    = bookEditionRepository.findByEditorAndEditionYear(
-                    bookEdition.getEditor(),
-                    bookEdition.getEditionYear()
-            );
+                    = bookEditionRepository.findByISBN(bookEdition.getISBN());
 
             if (!optionalBookEdition.isPresent()) {
+                bookEdition.setBookWork(savedBookWork);
                 savedBookEdition = bookEditionRepository.save(bookEdition);
+            } else {
+                savedBookEdition = optionalBookEdition.get();
             }
         } else {
             throw new RuntimeException("Book Edition information not provided");
         }
-
         return savedBookEdition;
     }
 
     @Override
-    public List<BookEdition> findEditionsByAuthorName(String authorName) {
-        List<BookEdition> bookEditions = new ArrayList<>();
-        List<BookWork> authorBookWorks = bookWorkRepository.findBookWorkByAuthorName(authorName);
+    public BookEdition findByISBN(String ISBN) {
+        return bookEditionRepository.findByISBN(ISBN).orElse(null);
+    }
 
-        if (authorBookWorks.size() > 0) {
-            authorBookWorks.forEach(authorBookWork -> {
-                
-            });
+    @Override
+    public List<BookEdition> findBookWorkEditions(BookWork bookWork) {
+        List<BookEdition> bookWorkEditions = new ArrayList<>();
+
+        if (bookWork != null) {
+            BookWork fetchedBookWork = this.fetchBookWork(bookWork);
+            if (fetchedBookWork != null) {
+                bookWorkEditions.addAll(bookEditionRepository.findByBookWork(fetchedBookWork));
+            }
         }
+        return bookWorkEditions;
+    }
+
+    private BookWork fetchBookWork(BookWork bookWork) {
+        return bookWorkService.findByTitleAndAuthor(bookWork);
     }
 }

@@ -8,5 +8,7 @@ import java.util.List;
 public interface IBookEditionService {
     public BookEdition saveNewBookEdition(BookEdition bookEdition);
 
-    public List<BookEdition> findEditionsByAuthorName(String authorName);
+    public BookEdition findByISBN(String ISBN);
+
+    public List<BookEdition> findBookWorkEditions(BookWork bookWork);
 }

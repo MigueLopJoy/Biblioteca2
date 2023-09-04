@@ -12,10 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface IBookWorkRepository extends JpaRepository<BookWork, Integer> {
+    public List<BookWork> findByAuthor(Author author);
 
-    @Query("SELECT bw FROM BookWork bw " +
-            "INNER JOIN bw.author a" +
-            "WHERE CONCAT(a.firstName, ' ', a.lastName) = :authorName")
-    public List<BookWork> findBookWorkByAuthorName(@Param("authorName") String authorName);
     public Optional<BookWork> findByTitleAndAuthor(String title, Author author);
+
 }

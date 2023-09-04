@@ -15,5 +15,9 @@ public interface IBookEditionRepository extends JpaRepository<BookEdition, Integ
 
     public Optional<BookEdition> findByEditorAndEditionYear(String editor, Integer editionYear);
 
+    public Optional<BookEdition> findByISBN(String ISBN);
+
+    public List<BookEdition> findByEditor(String editor);
+
     public List<BookEdition> findByBookWork(BookWork bookWork);
 }

@@ -3,41 +3,36 @@ package com.miguel.library.services;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookCopyRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-@AllArgsConstructor
 @Service
 public class ImpBookCopyService implements IBookCopyService{
 
-    private final IBookCopyRepository bookCopyRepository;
+    @Autowired
+    private IBookCopyRepository bookCopyRepository;
 
-    private final IBookEditionService bookEditionService;
+    @Autowired
+    private IBookEditionService bookEditionService;
 
     @Override
     public BookCopy saveNewBookCopy(BookCopy bookCopy) {
         BookCopy savedBookCopy;
-        BookEdition bookEdition;
 
         if (bookCopy != null) {
-            bookEdition = bookCopy.getBookEdition();
+            BookEdition savedBookEdition = bookEditionService.saveNewBookEdition(bookCopy.getBookEdition());
 
-            bookEditionService.saveNewBookEdition(bookEdition);
-
+            bookCopy.setBookEdition(savedBookEdition);
             bookCopy.setBookCopyCode(this.generateBookCode());
 
             savedBookCopy = bookCopyRepository.save(bookCopy);
         } else {
             throw new RuntimeException("Book Copy information not provided");
         }
-
         return savedBookCopy;
-    }
-
-    public BookCopy searchByBookCopyCode(String bookCopyCode){
-        return bookCopyRepository.findByBookCopyCode(bookCopyCode).orElse(null);
     }
 
     private String generateBookCode(){
@@ -55,12 +50,32 @@ public class ImpBookCopyService implements IBookCopyService{
     private boolean isCodeAlreadyUsed(String code) {
         Boolean codeAlreadyUsed = false;
 
-        BookCopy bookCopy = this.searchByBookCopyCode(code);
+        BookCopy bookCopy = this.findByBookCopyCode(code);
 
         if (bookCopy != null) {
             codeAlreadyUsed = true;
         }
 
         return codeAlreadyUsed;
+    }
+
+    @Override
+    public BookCopy findByBookCopyCode(String bookCopyCode) {
+        return bookCopyRepository.findByBookCopyCode(bookCopyCode).orElse(null);
+    }
+
+    @Override
+    public List<BookCopy> findBookEditionCopies(BookEdition bookEdition) {
+        List<BookCopy> bookEditionCopies = new ArrayList<>();
+
+        if (bookEdition != null) {
+
+            BookEdition fetchedBookEdition = bookEditionService.findByISBN(bookEdition.getISBN());
+
+            if (fetchedBookEdition != null) {
+                bookEditionCopies.addAll(bookCopyRepository.findByBookEdition(fetchedBookEdition));
+            }
+        }
+        return bookEditionCopies;
     }
 }

@@ -1,11 +1,16 @@
 package com.miguel.library.services;
 
-import com.miguel.library.model.BookCopy;
+import com.miguel.library.model.Author;
 import com.miguel.library.model.BookWork;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface IBookWorkService {
     public BookWork saveNewBookWork(BookWork bookWork);
+
+    public BookWork findByTitleAndAuthor(BookWork bookWork);
+
+    public List<BookWork> findAuthorBookWorks(Author author);
+
 
 }

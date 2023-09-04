@@ -17,6 +17,9 @@ public class BookEdition {
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Integer idBookEdition;
 
+    @Column(unique=true)
+    private String ISBN;
+
     private String editor;
 
     private Integer editionYear;
