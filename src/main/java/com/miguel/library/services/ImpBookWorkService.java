@@ -23,22 +23,28 @@ public class ImpBookWorkService implements IBookWorkService{
 
     @Override
     public BookWork saveNewBookWork(BookWork bookWork) {
-        BookWork savedBookWork;
+        BookWork savedBookWork = null;
 
         if (bookWork != null) {
-            Author savedAuthor = authorService.saveNewAuthor(bookWork.getAuthor());
+            Author bookAuthor = bookWork.getAuthor();
 
-            Optional<BookWork> optionalBookWork =
-                    bookWorkRepository.findByTitleAndAuthor(
-                            bookWork.getTitle(),
-                            savedAuthor
-                    );
+            if (bookAuthor != null)  {
+                Author savedAuthor = authorService.findByAuthorName(bookAuthor);
 
-            if (!optionalBookWork.isPresent()) {
-                bookWork.setAuthor(savedAuthor);
-                savedBookWork = bookWorkRepository.save(bookWork);
-            } else {
-                savedBookWork = optionalBookWork.get();
+                if (savedAuthor != null) {
+                    Optional<BookWork> optionalBookWork =
+                            bookWorkRepository.findByTitleAndAuthor(
+                                    bookWork.getTitle(),
+                                    savedAuthor
+                            );
+
+                    if (!optionalBookWork.isPresent()) {
+                        bookWork.setAuthor(savedAuthor);
+                        savedBookWork = bookWorkRepository.save(bookWork);
+                    } else {
+                        savedBookWork = optionalBookWork.get();
+                    }
+                }
             }
         } else {
             throw new RuntimeException("Book Work information not provided");
@@ -47,10 +53,15 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
+    public List<BookWork> findAll() {
+        return bookWorkRepository.findAll();
+    }
+
+    @Override
     public BookWork findByTitleAndAuthor(BookWork bookWork) {
         BookWork foundBookWork = null;
 
-        Author fetchedAuthor = this.fetchBookWorkAuthor(bookWork.getAuthor());
+        Author fetchedAuthor = authorService.findByAuthorName(bookWork.getAuthor());
         if (fetchedAuthor != null) {
             Optional<BookWork> optionalBookWork
                     = bookWorkRepository.findByTitleAndAuthor(bookWork.getTitle(), fetchedAuthor);
@@ -66,14 +77,11 @@ public class ImpBookWorkService implements IBookWorkService{
     public List<BookWork> findAuthorBookWorks(Author author) {
         List<BookWork> authorBookWorks = new ArrayList<>();
 
-        Author fetchedAuthor = this.fetchBookWorkAuthor(author);
+        Author fetchedAuthor = authorService.findByAuthorName(author);
         if (fetchedAuthor != null) {
             authorBookWorks.addAll(bookWorkRepository.findByAuthor(fetchedAuthor));
         }
         return authorBookWorks;
     }
 
-    private Author fetchBookWorkAuthor(Author author) {
-        return authorService.findByAuthorName(author);
-    }
 }

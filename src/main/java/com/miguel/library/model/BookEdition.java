@@ -24,6 +24,8 @@ public class BookEdition {
 
     private Integer editionYear;
 
+    private String language;
+
     @ManyToOne
     @JoinColumn(name = "id_Book_Work")
     private BookWork bookWork;

@@ -20,15 +20,21 @@ public class ImpBookCopyService implements IBookCopyService{
 
     @Override
     public BookCopy saveNewBookCopy(BookCopy bookCopy) {
-        BookCopy savedBookCopy;
+        BookCopy savedBookCopy = null;
 
         if (bookCopy != null) {
-            BookEdition savedBookEdition = bookEditionService.saveNewBookEdition(bookCopy.getBookEdition());
+            BookEdition bookEdition = bookCopy.getBookEdition();
 
-            bookCopy.setBookEdition(savedBookEdition);
-            bookCopy.setBookCopyCode(this.generateBookCode());
+            if (bookEdition != null) {
+                BookEdition savedBookEdition = bookEditionService.findByISBN(bookEdition.getISBN());
 
-            savedBookCopy = bookCopyRepository.save(bookCopy);
+                if (savedBookEdition != null) {
+                    bookCopy.setBookEdition(savedBookEdition);
+                    bookCopy.setBarCode(this.generateBookCode());
+
+                    savedBookCopy = bookCopyRepository.save(bookCopy);
+                }
+            }
         } else {
             throw new RuntimeException("Book Copy information not provided");
         }

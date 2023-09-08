@@ -5,20 +5,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
 public class BookSearchRequest {
-
-    private String bookCopyCode;
-
     private String title;
 
     private String author;
 
     private String editor;
 
-    private Integer maxPublicationYear;
+    private String language;
 
-    private Integer minPublicationYear;
+    private String ISBN;
+
+    private String barCode;
+
+    private Long minRegistrationNumber;
+
+    private Long maxRegistrationNumber;
+
+    private Date minRegistrationDate;
+
+    private Date maxRegistrationDate;
+
+    private String signature;
+
 }

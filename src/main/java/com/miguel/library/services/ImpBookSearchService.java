@@ -25,9 +25,9 @@ public class ImpBookSearchService implements IBookSearchService{
 
         List<Object> searchResults = new ArrayList<>();
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getBookCopyCode())) {
+        if (isBookCopySearch(bookSearchRequest)) {
             searchResults.addAll(searchBookCopies(bookSearchRequest));
-        } else if (!StringUtils.isEmpty(bookSearchRequest.getEditor())) {
+        } else if (isBookEditionSearch(bookSearchRequest)) {
             searchResults.addAll(searchBookEditions(bookSearchRequest));
         } else if (isBookWorkSearch(bookSearchRequest)) {
             searchResults.addAll(searchBookWorks(bookSearchRequest));
@@ -46,12 +46,66 @@ public class ImpBookSearchService implements IBookSearchService{
         Join<BookWork, Author> bookWorkauthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get("bookCopyCode"), bookSearchRequest.getBookCopyCode()));
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getEditor())) {
-            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("editor"), bookSearchRequest.getEditor()));
+        if (!StringUtils.isEmpty(bookSearchRequest.getBarCode())) {
+            predicates.add(criteriaBuilder.equal(root.get("barCode"), bookSearchRequest.getBarCode()));
+        }
 
-            if (this.isBookWorkSearch(bookSearchRequest)) {
+        if (!StringUtils.isEmpty(bookSearchRequest.getSignature())) {
+            predicates.add(criteriaBuilder.equal(root.get("signature"), bookSearchRequest.getSignature()));
+        }
+
+
+        if (bookSearchRequest.getMaxRegistrationNumber() != null && bookSearchRequest.getMinRegistrationNumber() != null) {
+
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("registrationNumber"),
+                            bookSearchRequest.getMaxRegistrationNumber()
+                    )
+            );
+
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get("registrationNumber"),
+                            bookSearchRequest.getMinRegistrationNumber()
+                    )
+            );
+        }
+
+
+        if (bookSearchRequest.getMinRegistrationDate() != null && bookSearchRequest.getMaxRegistrationDate() != null) {
+
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("registrationDate"),
+                            bookSearchRequest.getMinRegistrationDate()
+                    )
+            );
+
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get("registrationDate"),
+                            bookSearchRequest.getMaxRegistrationDate()
+                    )
+            );
+        }
+
+        if (isBookEditionSearch(bookSearchRequest)) {
+
+            if (!StringUtils.isEmpty(bookSearchRequest.getISBN())) {
+                predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("ISBN"), bookSearchRequest.getISBN()));
+            }
+
+            if (!StringUtils.isEmpty(bookSearchRequest.getEditor())) {
+                predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("editor"), bookSearchRequest.getEditor()));
+            }
+
+            if (!StringUtils.isEmpty(bookSearchRequest.getLanguage())) {
+                predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("language"), bookSearchRequest.getLanguage()));
+            }
+
+            if (isBookWorkSearch(bookSearchRequest)) {
 
                 if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())) {
 
@@ -79,27 +133,9 @@ public class ImpBookSearchService implements IBookSearchService{
                             )
                     );
                 }
-
-                if (bookSearchRequest.getMinPublicationYear() != null &&
-                        bookSearchRequest.getMaxPublicationYear() != null) {
-
-                    predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    bookEditionToBookWorkJoin.get("publicationYear"),
-                                    bookSearchRequest.getMinPublicationYear()
-                            )
-                    );
-
-                    predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    bookEditionToBookWorkJoin.get("publicationYear"),
-                                    bookSearchRequest.getMaxPublicationYear()
-                            )
-                    );
-                }
             }
         } else {
-            if (this.isBookWorkSearch(bookSearchRequest)) {
+            if (isBookWorkSearch(bookSearchRequest)) {
                 if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())) {
 
                     Expression<String> authorName = criteriaBuilder.concat(
@@ -126,24 +162,6 @@ public class ImpBookSearchService implements IBookSearchService{
                             )
                     );
                 }
-
-                if (bookSearchRequest.getMinPublicationYear() != null &&
-                        bookSearchRequest.getMaxPublicationYear() != null) {
-
-                    predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(
-                                    bookEditionToBookWorkJoin.get("publicationYear"),
-                                    bookSearchRequest.getMinPublicationYear()
-                            )
-                    );
-
-                    predicates.add(
-                            criteriaBuilder.lessThanOrEqualTo(
-                                    bookEditionToBookWorkJoin.get("publicationYear"),
-                                    bookSearchRequest.getMaxPublicationYear()
-                            )
-                    );
-                }
             }
         }
 
@@ -161,8 +179,19 @@ public class ImpBookSearchService implements IBookSearchService{
         Join<BookWork, Author> bookWorkauthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get("editor"), bookSearchRequest.getEditor()));
 
+        if (!StringUtils.isEmpty(bookSearchRequest.getISBN())) {
+            predicates.add(criteriaBuilder.equal(root.get("ISBN"), bookSearchRequest.getISBN()));
+        }
+
+        if (!StringUtils.isEmpty(bookSearchRequest.getEditor())) {
+            predicates.add(criteriaBuilder.equal(root.get("editor"), bookSearchRequest.getEditor()));
+        }
+
+
+        if (!StringUtils.isEmpty(bookSearchRequest.getLanguage())) {
+            predicates.add(criteriaBuilder.equal(root.get("language"), bookSearchRequest.getLanguage()));
+        }
 
         if (isBookWorkSearch(bookSearchRequest)) {
             if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())) {
@@ -188,24 +217,6 @@ public class ImpBookSearchService implements IBookSearchService{
                         criteriaBuilder.equal(
                                 bookEditionToBookWorkJoin.get("title"),
                                 bookSearchRequest.getTitle()
-                        )
-                );
-            }
-
-            if (bookSearchRequest.getMinPublicationYear() != null &&
-                    bookSearchRequest.getMaxPublicationYear() != null) {
-
-                predicates.add(
-                        criteriaBuilder.greaterThanOrEqualTo(
-                                bookEditionToBookWorkJoin.get("publicationYear"),
-                                bookSearchRequest.getMinPublicationYear()
-                        )
-                );
-
-                predicates.add(
-                        criteriaBuilder.lessThanOrEqualTo(
-                                bookEditionToBookWorkJoin.get("publicationYear"),
-                                bookSearchRequest.getMaxPublicationYear()
                         )
                 );
             }
@@ -252,34 +263,30 @@ public class ImpBookSearchService implements IBookSearchService{
             );
         }
 
-        if (bookSearchRequest.getMinPublicationYear() != null &&
-                bookSearchRequest.getMaxPublicationYear() != null) {
-
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("publicationYear"),
-                            bookSearchRequest.getMinPublicationYear()
-                    )
-            );
-
-            predicates.add(
-                    criteriaBuilder.lessThanOrEqualTo(
-                            root.get("publicationYear"),
-                            bookSearchRequest.getMaxPublicationYear()
-                    )
-            );
-        }
-
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
         TypedQuery<BookWork> typedQuery = entityManager.createQuery(criteriaQuery);
         return typedQuery.getResultList();
     }
 
+    private boolean isBookCopySearch(BookSearchRequest bookSearchRequest) {
+        return (!StringUtils.isEmpty(bookSearchRequest.getBarCode()) ||
+                (bookSearchRequest.getMinRegistrationNumber() != null &&
+                    bookSearchRequest.getMaxRegistrationNumber() != null) ||
+                (bookSearchRequest.getMinRegistrationDate() != null &&
+                    bookSearchRequest.getMaxRegistrationDate() != null) ||
+                !StringUtils.isEmpty(bookSearchRequest.getSignature()));
+    }
+
+    private boolean isBookEditionSearch(BookSearchRequest bookSearchRequest) {
+        return (!StringUtils.isEmpty(bookSearchRequest.getEditor()) ||
+                !StringUtils.isEmpty(bookSearchRequest.getISBN())) ||
+                !StringUtils.isEmpty(bookSearchRequest.getLanguage());
+    }
+
+
     private boolean isBookWorkSearch(BookSearchRequest bookSearchRequest) {
         return (!StringUtils.isEmpty(bookSearchRequest.getTitle()) ||
-                !StringUtils.isEmpty(bookSearchRequest.getAuthor()) ||
-                !StringUtils.isEmpty(bookSearchRequest.getMinPublicationYear()) ||
-                !StringUtils.isEmpty(bookSearchRequest.getMaxPublicationYear()));
+                !StringUtils.isEmpty(bookSearchRequest.getAuthor()));
     }
 }
 

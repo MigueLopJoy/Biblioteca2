@@ -21,19 +21,25 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Override
     public BookEdition saveNewBookEdition(BookEdition bookEdition) {
-        BookEdition savedBookEdition;
+        BookEdition savedBookEdition = null;
 
         if (bookEdition != null) {
-            BookWork savedBookWork = bookWorkService.saveNewBookWork(bookEdition.getBookWork());
+            BookWork bookWork = bookEdition.getBookWork();
 
-            Optional<BookEdition> optionalBookEdition
-                    = bookEditionRepository.findByISBN(bookEdition.getISBN());
+            if (bookWork != null) {
+                BookWork savedBookWork = bookWorkService.findByTitleAndAuthor(bookWork);
 
-            if (!optionalBookEdition.isPresent()) {
-                bookEdition.setBookWork(savedBookWork);
-                savedBookEdition = bookEditionRepository.save(bookEdition);
-            } else {
-                savedBookEdition = optionalBookEdition.get();
+                if (savedBookWork != null) {
+                    Optional<BookEdition> optionalBookEdition
+                            = bookEditionRepository.findByISBN(bookEdition.getISBN());
+
+                    if (!optionalBookEdition.isPresent()) {
+                        bookEdition.setBookWork(savedBookWork);
+                        savedBookEdition = bookEditionRepository.save(bookEdition);
+                    } else {
+                        savedBookEdition = optionalBookEdition.get();
+                    }
+                }
             }
         } else {
             throw new RuntimeException("Book Edition information not provided");

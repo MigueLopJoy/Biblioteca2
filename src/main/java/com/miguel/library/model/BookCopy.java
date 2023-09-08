@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +20,14 @@ public class BookCopy {
     private Integer idBookCopy;
 
     @Column(unique=true)
-    private String bookCopyCode;
+    private String barCode;
+
+    @Column(unique = true)
+    private Long registrationNumber;
+
+    private Date registrationDate;
+
+    private String signature;
 
     @ManyToOne
     @JoinColumn(name = "id_Book_Edition")
