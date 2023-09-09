@@ -1,10 +1,12 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.BookEditBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class ImpBookEditionService implements IBookEditionService{
             BookWork bookWork = bookEdition.getBookWork();
 
             if (bookWork != null) {
-                BookWork savedBookWork = bookWorkService.findByTitleAndAuthor(bookWork);
+                BookWork savedBookWork = bookWorkService.searchByTitleAndAuthor(bookWork);
 
                 if (savedBookWork != null) {
                     Optional<BookEdition> optionalBookEdition
@@ -48,12 +50,12 @@ public class ImpBookEditionService implements IBookEditionService{
     }
 
     @Override
-    public BookEdition findByISBN(String ISBN) {
+    public BookEdition searchByISBN(String ISBN) {
         return bookEditionRepository.findByISBN(ISBN).orElse(null);
     }
 
     @Override
-    public List<BookEdition> findBookWorkEditions(BookWork bookWork) {
+    public List<BookEdition> searchBookWorkEditions(BookWork bookWork) {
         List<BookEdition> bookWorkEditions = new ArrayList<>();
 
         if (bookWork != null) {
@@ -65,7 +67,52 @@ public class ImpBookEditionService implements IBookEditionService{
         return bookWorkEditions;
     }
 
+    @Override
+    public BookEdition editBookEdition(Integer bookEditionId, BookEditBookEdition bookEdit) {
+
+        BookEdition editedBookEdition = null;
+        String isbn = bookEdit.getISBN();
+        String editor = bookEdit.getEditor();
+        Integer editionYear = bookEdit.getEditionYear();
+        String language = bookEdit.getLanguage();
+
+        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
+
+        if (optionalBookEdition.isPresent()) {
+            BookEdition savedBookEdition = optionalBookEdition.get();
+
+            if (!StringUtils.isEmpty(isbn) && !isbn.trim().isBlank()) {
+                savedBookEdition.setISBN(isbn);
+            }
+
+            if (!StringUtils.isEmpty(editor) && !editor.trim().isBlank()) {
+                savedBookEdition.setEditor(editor);
+            }
+
+            if (editionYear != null) {
+                savedBookEdition.setEditionYear(editionYear);
+            }
+
+            if (!StringUtils.isEmpty(language) && !language.trim().isBlank()) {
+                savedBookEdition.setLanguage(language);
+            }
+
+            editedBookEdition = this.saveNewBookEdition(savedBookEdition);
+        }
+
+        return editedBookEdition;
+    }
+
+    @Override
+    public void deleteBookEdition(Integer bookEditionId) {
+        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
+
+        if (optionalBookEdition.isPresent()) {
+            bookEditionRepository.deleteById(bookEditionId);
+        }
+    }
+
     private BookWork fetchBookWork(BookWork bookWork) {
-        return bookWorkService.findByTitleAndAuthor(bookWork);
+        return bookWorkService.searchByTitleAndAuthor(bookWork);
     }
 }

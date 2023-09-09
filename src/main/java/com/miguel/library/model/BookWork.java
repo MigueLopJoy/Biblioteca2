@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name = "BookWorks")
 public class BookWork {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idBookWork;
 
     private String title;

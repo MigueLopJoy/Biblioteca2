@@ -1,18 +1,14 @@
 package com.miguel.library.services;
 
-import com.miguel.library.model.Author;
+import com.miguel.library.DTO.BookEditBookWork;
 import com.miguel.library.model.BookWork;
-
-import java.util.List;
 
 public interface IBookWorkService {
     public BookWork saveNewBookWork(BookWork bookWork);
 
-    public List<BookWork> findAll();
+    public BookWork searchByTitleAndAuthor(BookWork bookWork);
 
-    public BookWork findByTitleAndAuthor(BookWork bookWork);
+    public BookWork editBookWork(Integer idBookWork, BookEditBookWork bookEdit);
 
-    public List<BookWork> findAuthorBookWorks(Author author);
-
-
+    public void deleteBookWork(Integer idBookWork);
 }

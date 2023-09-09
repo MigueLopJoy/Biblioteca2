@@ -26,7 +26,7 @@ public class ImpBookCopyService implements IBookCopyService{
             BookEdition bookEdition = bookCopy.getBookEdition();
 
             if (bookEdition != null) {
-                BookEdition savedBookEdition = bookEditionService.findByISBN(bookEdition.getISBN());
+                BookEdition savedBookEdition = bookEditionService.searchByISBN(bookEdition.getISBN());
 
                 if (savedBookEdition != null) {
                     bookCopy.setBookEdition(savedBookEdition);
@@ -56,7 +56,7 @@ public class ImpBookCopyService implements IBookCopyService{
     private boolean isCodeAlreadyUsed(String code) {
         Boolean codeAlreadyUsed = false;
 
-        BookCopy bookCopy = this.findByBookCopyCode(code);
+        BookCopy bookCopy = this.searchByBarCode(code);
 
         if (bookCopy != null) {
             codeAlreadyUsed = true;
@@ -66,17 +66,17 @@ public class ImpBookCopyService implements IBookCopyService{
     }
 
     @Override
-    public BookCopy findByBookCopyCode(String bookCopyCode) {
-        return bookCopyRepository.findByBookCopyCode(bookCopyCode).orElse(null);
+    public BookCopy searchByBarCode(String barCode) {
+        return bookCopyRepository.findByBarCode(barCode).orElse(null);
     }
 
     @Override
-    public List<BookCopy> findBookEditionCopies(BookEdition bookEdition) {
+    public List<BookCopy> searchBookEditionCopies(BookEdition bookEdition) {
         List<BookCopy> bookEditionCopies = new ArrayList<>();
 
         if (bookEdition != null) {
 
-            BookEdition fetchedBookEdition = bookEditionService.findByISBN(bookEdition.getISBN());
+            BookEdition fetchedBookEdition = bookEditionService.searchByISBN(bookEdition.getISBN());
 
             if (fetchedBookEdition != null) {
                 bookEditionCopies.addAll(bookCopyRepository.findByBookEdition(fetchedBookEdition));

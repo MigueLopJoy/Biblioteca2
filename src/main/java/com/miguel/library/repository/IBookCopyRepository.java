@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface IBookCopyRepository extends JpaRepository<BookCopy, Integer> {
-    public Optional<BookCopy> findByBookCopyCode(String bookCopyCode);
+    public Optional<BookCopy> findByBarCode(String barCode);
 
     public List<BookCopy> findByBookEdition(BookEdition bookEdition);
 

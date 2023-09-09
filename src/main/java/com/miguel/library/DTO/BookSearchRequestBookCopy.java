@@ -10,16 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-public class BookSearchRequest {
-    private String title;
-
-    private String author;
-
-    private String editor;
-
-    private String language;
-
-    private String ISBN;
+public class BookSearchRequestBookCopy extends BookSearchRequestBookEdition {
 
     private String barCode;
 

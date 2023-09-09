@@ -1,15 +1,13 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.BookEditBookWork;
 import com.miguel.library.model.Author;
 import com.miguel.library.model.BookWork;
-import com.miguel.library.repository.IAuthorRepository;
 import com.miguel.library.repository.IBookWorkRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,7 +27,7 @@ public class ImpBookWorkService implements IBookWorkService{
             Author bookAuthor = bookWork.getAuthor();
 
             if (bookAuthor != null)  {
-                Author savedAuthor = authorService.findByAuthorName(bookAuthor);
+                Author savedAuthor = authorService.searchByAuthorName(bookAuthor);
 
                 if (savedAuthor != null) {
                     Optional<BookWork> optionalBookWork =
@@ -53,15 +51,10 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public List<BookWork> findAll() {
-        return bookWorkRepository.findAll();
-    }
-
-    @Override
-    public BookWork findByTitleAndAuthor(BookWork bookWork) {
+    public BookWork searchByTitleAndAuthor(BookWork bookWork) {
         BookWork foundBookWork = null;
 
-        Author fetchedAuthor = authorService.findByAuthorName(bookWork.getAuthor());
+        Author fetchedAuthor = authorService.searchByAuthorName(bookWork.getAuthor());
         if (fetchedAuthor != null) {
             Optional<BookWork> optionalBookWork
                     = bookWorkRepository.findByTitleAndAuthor(bookWork.getTitle(), fetchedAuthor);
@@ -74,14 +67,37 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public List<BookWork> findAuthorBookWorks(Author author) {
-        List<BookWork> authorBookWorks = new ArrayList<>();
+    public BookWork editBookWork(Integer bookWorkId, BookEditBookWork bookEdit) {
+        BookWork editedBookWork = null;
+        String title = bookEdit.getTitle();
+        Integer publicationYear = bookEdit.getPublicationYear();
 
-        Author fetchedAuthor = authorService.findByAuthorName(author);
-        if (fetchedAuthor != null) {
-            authorBookWorks.addAll(bookWorkRepository.findByAuthor(fetchedAuthor));
+        Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
+
+        if (optionalBookWork.isPresent()) {
+            BookWork savedBookWork = optionalBookWork.get();
+
+            if (!StringUtils.isEmpty(title) && !title.trim().isBlank()) {
+                savedBookWork.setTitle(title);
+            }
+
+            if (publicationYear != null) {
+                savedBookWork.setPublicationYear(publicationYear);
+            }
+
+            editedBookWork = this.saveNewBookWork(savedBookWork);
         }
-        return authorBookWorks;
+
+        return editedBookWork;
+    }
+
+    @Override
+    public void deleteBookWork(Integer bookWorkId) {
+        Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
+
+        if (optionalBookWork.isPresent()) {
+            bookWorkRepository.deleteById(bookWorkId);
+        }
     }
 
 }

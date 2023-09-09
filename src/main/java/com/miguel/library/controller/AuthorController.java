@@ -1,6 +1,5 @@
 package com.miguel.library.controller;
 
-import com.miguel.library.DTO.AuthorDTO;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
 import com.miguel.library.services.IAuthorService;
@@ -8,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/authors-catalog")
@@ -33,23 +34,31 @@ public class AuthorController {
 
     @GetMapping("/search-author")
     public ResponseEntity<?> searchAuthor(
-            @RequestBody Author author
+            @RequestParam(required = true, name = "author-name") String authorName
     ) {
-        Author foundAuthor = authorService.findByCustomizedSearch(author);
+        List<Author> foundAuthors = authorService.searchByCustomizedSearch(authorName);
 
-        if (foundAuthor == null) {
+        if (foundAuthors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
         } else {
-            return ResponseEntity.ok(foundAuthor);
+            return ResponseEntity.ok(foundAuthors);
         }
     }
 
-    @PostMapping("/edit-author/{authorId}")
+    @PutMapping("/edit-author/{authorId}")
     public ResponseEntity<Author> editAuthor(
             @PathVariable Integer authorId,
-            @RequestBody AuthorDTO authorDTO
-        ) {
-        return null;
+            @RequestParam(required = false, name = "first-name") String firstName,
+            @RequestParam(required = false, name = "last-name") String lastName
+    ) {
+        return ResponseEntity.ok(authorService.editAuthor(authorId, firstName, lastName));
     }
 
+    @DeleteMapping("/delete-author/{authorId}")
+    public ResponseEntity<String> deleteAuthor(
+            @PathVariable Integer authorId
+    ) {
+        authorService.deleteAuthor(authorId);
+        return ResponseEntity.ok("Author deleted successfully");
+    }
 }

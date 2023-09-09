@@ -2,24 +2,29 @@ package com.miguel.library.services;
 
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class ImpAuthorService implements IAuthorService{
 
-    private final IAuthorRepository authorRepository;
+    @Autowired
+    private IAuthorRepository authorRepository;
 
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public Author saveNewAuthor(Author author) {
         Author savedAuthor = null;
 
         if (author != null) {
-            Author fetchedAuthor = this.findByAuthorName(author);
+            Author fetchedAuthor = this.searchByAuthorName(author);
 
             if (fetchedAuthor == null) {
                 savedAuthor = authorRepository.save(author);
@@ -31,29 +36,45 @@ public class ImpAuthorService implements IAuthorService{
     }
 
     @Override
-    public Author findByAuthorName(Author author) {
+    public Author searchByAuthorName(Author author) {
         return authorRepository.findByAuthorName(this.getFullAuthorName(author)).orElse(null);
     }
 
     @Override
-    public Author findByCustomizedSearch(Author author) {
-        return null;
+    public List<Author> searchByCustomizedSearch(String authorName) {
+        return authorRepository.findByCustomizedSearch(authorName);
     }
 
     @Override
-    public Author editAuthor(Integer authorId, Author author) {
-        Author editedAuthor;
+    public Author editAuthor(Integer authorId, String firstName, String lastName) {
+        Author editedAuthor = null;
 
-        if (author != null) {
-            Author savedAuthor = this.findByAuthorName(author);
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
-            if (savedAuthor != null) {
+        if (optionalAuthor.isPresent()) {
+            Author savedAuthor = optionalAuthor.get();
 
+            if (!StringUtils.isEmpty(firstName) && !firstName.trim().isEmpty()) {
+                savedAuthor.setFirstName(firstName);
             }
+
+            if (!StringUtils.isEmpty(lastName) && !firstName.trim().isEmpty()) {
+                savedAuthor.setLastName(lastName);
+            }
+
+            editedAuthor = this.saveNewAuthor(savedAuthor);
         }
 
+        return editedAuthor;
+    }
 
-        return author;
+    @Override
+    public void deleteAuthor(Integer authorId) {
+        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+
+        if (optionalAuthor.isPresent()) {
+            authorRepository.deleteById(authorId);
+        }
     }
 
     private String getFullAuthorName(Author author) {

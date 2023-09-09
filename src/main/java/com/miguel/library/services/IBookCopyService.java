@@ -8,8 +8,8 @@ import java.util.List;
 public interface IBookCopyService {
     public BookCopy saveNewBookCopy(BookCopy bookCopy);
 
-    public BookCopy findByBookCopyCode(String bookCopyCode);
+    public BookCopy searchByBarCode(String barCode);
 
-    public List<BookCopy> findBookEditionCopies(BookEdition bookEdition);
+    public List<BookCopy> searchBookEditionCopies(BookEdition bookEdition);
 
 }
