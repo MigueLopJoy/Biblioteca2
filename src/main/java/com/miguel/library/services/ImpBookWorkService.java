@@ -30,22 +30,16 @@ public class ImpBookWorkService implements IBookWorkService{
                 Author savedAuthor = authorService.searchByAuthorName(bookAuthor);
 
                 if (savedAuthor != null) {
-                    Optional<BookWork> optionalBookWork =
-                            bookWorkRepository.findByTitleAndAuthor(
-                                    bookWork.getTitle(),
-                                    savedAuthor
-                            );
+                    BookWork bookWorkWithTitleAndAuthor = this.searchByTitleAndAuthor(bookWork);
 
-                    if (!optionalBookWork.isPresent()) {
+                    if (bookWorkWithTitleAndAuthor == null) {
                         bookWork.setAuthor(savedAuthor);
                         savedBookWork = bookWorkRepository.save(bookWork);
-                    } else {
-                        savedBookWork = optionalBookWork.get();
                     }
+                } else {
+
                 }
             }
-        } else {
-            throw new RuntimeException("Book Work information not provided");
         }
         return savedBookWork;
     }
@@ -54,13 +48,15 @@ public class ImpBookWorkService implements IBookWorkService{
     public BookWork searchByTitleAndAuthor(BookWork bookWork) {
         BookWork foundBookWork = null;
 
-        Author fetchedAuthor = authorService.searchByAuthorName(bookWork.getAuthor());
-        if (fetchedAuthor != null) {
-            Optional<BookWork> optionalBookWork
-                    = bookWorkRepository.findByTitleAndAuthor(bookWork.getTitle(), fetchedAuthor);
+        if (bookWork.getAuthor() != null) {
+            Author fetchedAuthor = authorService.searchByAuthorName(bookWork.getAuthor());
+            if (fetchedAuthor != null) {
+                Optional<BookWork> optionalBookWork
+                        = bookWorkRepository.findByTitleAndAuthor(bookWork.getTitle(), fetchedAuthor);
 
-            if (optionalBookWork.isPresent()) {
-                foundBookWork = optionalBookWork.get();
+                if (optionalBookWork.isPresent()) {
+                    foundBookWork = optionalBookWork.get();
+                }
             }
         }
         return foundBookWork;

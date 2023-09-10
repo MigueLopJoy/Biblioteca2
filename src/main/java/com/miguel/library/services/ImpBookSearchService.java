@@ -98,6 +98,15 @@ public class ImpBookSearchService implements IBookSearchService {
             );
         }
 
+        if (!StringUtils.isEmpty(bookSearchRequest.getStatus())
+                && !bookSearchRequest.getStatus().trim().isEmpty()){
+            predicates.add(criteriaBuilder.equal(root.get("status"), bookSearchRequest.getStatus()));
+        }
+
+        if (bookSearchRequest.getBorrowed() != null){
+            predicates.add(criteriaBuilder.equal(root.get("borrowed"), bookSearchRequest.getBorrowed()));
+        }
+
         if (!StringUtils.isEmpty(bookSearchRequest.getISBN())
                 && !bookSearchRequest.getISBN().trim().isEmpty()) {
             predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("ISBN"), bookSearchRequest.getISBN()));

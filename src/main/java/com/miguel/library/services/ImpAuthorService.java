@@ -1,13 +1,18 @@
 package com.miguel.library.services;
 
+import com.miguel.library.Exceptions.AuthorsExceptions;
+import com.miguel.library.Exceptions.ExceptionAuthorAlreadyExists;
+import com.miguel.library.Exceptions.ExceptionAuthorNotFound;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,10 +31,12 @@ public class ImpAuthorService implements IAuthorService{
         if (author != null) {
             Author fetchedAuthor = this.searchByAuthorName(author);
 
+            if (Objects.nonNull(fetchedAuthor)) {
+                throw new ExceptionAuthorAlreadyExists();
+            }
+
             if (fetchedAuthor == null) {
                 savedAuthor = authorRepository.save(author);
-            } else {
-                savedAuthor = fetchedAuthor;
             }
         }
         return savedAuthor;
@@ -63,6 +70,8 @@ public class ImpAuthorService implements IAuthorService{
             }
 
             editedAuthor = this.saveNewAuthor(savedAuthor);
+        } else {
+            throw new ExceptionAuthorNotFound();
         }
 
         return editedAuthor;

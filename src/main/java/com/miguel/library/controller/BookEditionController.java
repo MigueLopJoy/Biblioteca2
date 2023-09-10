@@ -44,7 +44,7 @@ public class BookEditionController {
         }
     }
 
-    @GetMapping("/search-bookedition")
+    @GetMapping("/search-bookeditions")
     public ResponseEntity<?> searchBookEditions(
             @RequestBody BookSearchRequestBookEdition bookSearchRequest
         ){
@@ -57,7 +57,7 @@ public class BookEditionController {
         }
     }
 
-    @PutMapping("/edit-bookedition")
+    @PutMapping("/edit-bookedition/{bookEditionId}")
     public ResponseEntity<BookEdition> editBookEdition(
             @PathVariable Integer bookEditionId,
             @RequestBody BookEditBookEdition bookEdit
@@ -65,7 +65,7 @@ public class BookEditionController {
         return ResponseEntity.ok(bookEditionService.editBookEdition(bookEditionId, bookEdit));
     }
 
-    @DeleteMapping("/delete-bookedition")
+    @DeleteMapping("/delete-bookedition/{BookEditionId}")
     public ResponseEntity<String> deleteBookEdition(
             @PathVariable Integer bookEditionId
     ) {

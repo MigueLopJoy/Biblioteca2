@@ -32,14 +32,12 @@ public class ImpBookEditionService implements IBookEditionService{
                 BookWork savedBookWork = bookWorkService.searchByTitleAndAuthor(bookWork);
 
                 if (savedBookWork != null) {
-                    Optional<BookEdition> optionalBookEdition
-                            = bookEditionRepository.findByISBN(bookEdition.getISBN());
+                    BookEdition bookEditionWithISBN
+                            = this.searchByISBN(bookEdition.getISBN());
 
-                    if (!optionalBookEdition.isPresent()) {
+                    if (bookEditionWithISBN == null) {
                         bookEdition.setBookWork(savedBookWork);
                         savedBookEdition = bookEditionRepository.save(bookEdition);
-                    } else {
-                        savedBookEdition = optionalBookEdition.get();
                     }
                 }
             }

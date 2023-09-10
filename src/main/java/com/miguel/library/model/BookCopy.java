@@ -29,6 +29,10 @@ public class BookCopy {
 
     private String signature;
 
+    private String status;
+
+    private boolean borrowed;
+
     @ManyToOne
     @JoinColumn(name = "id_Book_Edition")
     private BookEdition bookEdition;

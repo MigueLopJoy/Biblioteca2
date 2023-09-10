@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface IBookCopyRepository extends JpaRepository<BookCopy, Integer> {
     public Optional<BookCopy> findByBarCode(String barCode);
 
+    public Optional<BookCopy> findByRegistrationNumber(Long registrationNumber);
+
     public List<BookCopy> findByBookEdition(BookEdition bookEdition);
 
 }

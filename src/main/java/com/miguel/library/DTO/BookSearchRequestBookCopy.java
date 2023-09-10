@@ -24,4 +24,7 @@ public class BookSearchRequestBookCopy extends BookSearchRequestBookEdition {
 
     private String signature;
 
+    private String status;
+
+    private Boolean borrowed;
 }
