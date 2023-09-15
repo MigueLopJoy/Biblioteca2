@@ -1,13 +1,17 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.BookEditBookCopy;
+import com.miguel.library.DTO.BookSaveBookCopy;
+import com.miguel.library.DTO.BookSaveBookEdition;
 import com.miguel.library.model.BookCopy;
+import com.miguel.library.model.BookCopyStatus;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,6 +117,19 @@ public class ImpBookCopyService implements IBookCopyService {
         if (!optionalBookCopy.isPresent()) {
             bookCopyRepository.deleteById(bookCopyId);
         }
+    }
+
+    @Override
+    public BookCopy createBookCopyFromBookSaveDTO(BookSaveBookCopy bookCopy) {
+        return BookCopy.builder()
+                .barCode(this.generateBarCode())
+                .registrationNumber(bookCopy.getRegistrationNumber())
+                .registrationDate(LocalDate.now())
+                .signature(bookCopy.getSignature())
+                .bookCopyStatus(BookCopyStatus.OUT_OF_CIRCULATION)
+                .borrowed(false)
+                .bookEdition(bookEditionService.createBookEditionFromBookSaveDTO(bookCopy.getBookEdition()))
+                .build();
     }
 
 

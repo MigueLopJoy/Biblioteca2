@@ -1,5 +1,6 @@
 package com.miguel.library.controller;
 
+import com.miguel.library.DTO.AuthorDTO;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
 import com.miguel.library.services.IAuthorService;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,9 +24,9 @@ public class AuthorController {
 
     @PostMapping("/save-author")
     public ResponseEntity<Author> saveNewAuthor(
-            @RequestBody Author author
+            @Valid @RequestBody AuthorDTO author
         ) {
-        return ResponseEntity.ok(authorService.saveNewAuthor(author));
+        return ResponseEntity.ok(authorService.saveNewAuthor(authorService.createAuthorFromDTO(author)));
     }
 
     @GetMapping("/get-all")

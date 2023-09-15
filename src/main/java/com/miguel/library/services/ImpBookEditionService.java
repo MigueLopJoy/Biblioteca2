@@ -1,6 +1,7 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.BookEditBookEdition;
+import com.miguel.library.DTO.BookSaveBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -110,7 +111,20 @@ public class ImpBookEditionService implements IBookEditionService{
         }
     }
 
+    @Override
+    public BookEdition createBookEditionFromBookSaveDTO(BookSaveBookEdition bookEdition) {
+        return BookEdition.builder()
+                    .ISBN(bookEdition.getISBN())
+                    .editor(bookEdition.getEditor())
+                    .language(bookEdition.getLanguage())
+                    .editionYear(bookEdition.getEditionYear())
+                    .bookWork(bookWorkService.createBookWorkFromBookSaveDTO(bookEdition.getBookWork()))
+                .build();
+    }
+
     private BookWork fetchBookWork(BookWork bookWork) {
         return bookWorkService.searchByTitleAndAuthor(bookWork);
     }
+
+
 }

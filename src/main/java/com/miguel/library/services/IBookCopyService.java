@@ -1,6 +1,7 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.BookEditBookCopy;
+import com.miguel.library.DTO.BookSaveBookCopy;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 
@@ -19,5 +20,7 @@ public interface IBookCopyService {
     public BookCopy editBookCopy(Integer bookCopyId, BookEditBookCopy bookEdit);
 
     public void deleteBookCopy(Integer bookCopyId);
+
+    public BookCopy createBookCopyFromBookSaveDTO(BookSaveBookCopy bookCopy);
 
 }

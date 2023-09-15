@@ -1,12 +1,10 @@
 package com.miguel.library.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

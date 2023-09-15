@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +25,11 @@ public class BookCopy {
     @Column(unique = true)
     private Long registrationNumber;
 
-    private Date registrationDate;
+    private LocalDate registrationDate;
 
     private String signature;
 
-    private String status;
+    private BookCopyStatus bookCopyStatus;
 
     private boolean borrowed;
 

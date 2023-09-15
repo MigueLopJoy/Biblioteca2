@@ -1,6 +1,7 @@
 package com.miguel.library.controller;
 
 import com.miguel.library.DTO.BookEditBookEdition;
+import com.miguel.library.DTO.BookSaveBookEdition;
 import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,9 +30,9 @@ public class BookEditionController {
 
     @PostMapping("/save-bookedition")
     public ResponseEntity<BookEdition> saveNewBookEdition(
-            @RequestBody BookEdition bookEdition
+            @Valid @RequestBody BookSaveBookEdition bookEdition
     ) {
-        return ResponseEntity.ok(bookEditionService.saveNewBookEdition(bookEdition));
+        return ResponseEntity.ok(bookEditionService.saveNewBookEdition(bookEditionService.createBookEditionFromBookSaveDTO(bookEdition)));
     }
 
     @GetMapping("/get-all")

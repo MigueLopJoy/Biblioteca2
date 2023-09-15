@@ -1,6 +1,7 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.BookEditBookEdition;
+import com.miguel.library.DTO.BookSaveBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 
@@ -17,4 +18,6 @@ public interface IBookEditionService {
     public BookEdition editBookEdition(Integer bookEditionId, BookEditBookEdition bookEdit);
 
     public void deleteBookEdition(Integer bookEditionId);
+
+    public BookEdition createBookEditionFromBookSaveDTO(BookSaveBookEdition bookEdition);
 }

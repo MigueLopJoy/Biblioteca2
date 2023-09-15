@@ -1,5 +1,6 @@
 package com.miguel.library.controller;
 
+import com.miguel.library.DTO.BookSaveBookCopy;
 import com.miguel.library.DTO.BookEditBookCopy;
 import com.miguel.library.DTO.BookSearchRequestBookCopy;
 import com.miguel.library.model.BookCopy;
@@ -7,12 +8,12 @@ import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookCopyRepository;
 import com.miguel.library.services.IBookCopyService;
 import com.miguel.library.services.IBookSearchService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,9 @@ public class BookCopyController {
 
     @PostMapping("save-bookcopy")
     public ResponseEntity<BookCopy> saveNewBookCopy(
-            @RequestBody BookCopy bookCopy
+            @Valid @RequestBody BookSaveBookCopy bookCopy
     ) {
-        return ResponseEntity.ok(bookCopyService.saveNewBookCopy(bookCopy));
+        return ResponseEntity.ok(bookCopyService.saveNewBookCopy(bookCopyService.createBookCopyFromBookSaveDTO(bookCopy)));
     }
 
     @GetMapping("/get-all")

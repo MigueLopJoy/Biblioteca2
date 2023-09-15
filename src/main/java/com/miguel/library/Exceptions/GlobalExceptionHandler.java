@@ -1,7 +1,5 @@
 package com.miguel.library.Exceptions;
 
-import com.miguel.library.Exceptions.ErrorResponse;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -37,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.unprocessableEntity().body(errorResponse);
     }
 
-    @ExceptionHandler(ExceptionAuthorNotFound.class)
+    @ExceptionHandler(ExceptionObjectNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handleExceptionAuthorNotFound() {
         return this.buildErrorResponse(
