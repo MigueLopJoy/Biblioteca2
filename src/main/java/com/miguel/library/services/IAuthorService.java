@@ -15,7 +15,7 @@ public interface IAuthorService {
 
     public Author editAuthor(Integer authorId, String firstName, String lastName);
 
-    public void deleteAuthor(Integer authorId);
+    public String deleteAuthor(Integer authorId);
 
     public Author createAuthorFromDTO(AuthorDTO author);
 

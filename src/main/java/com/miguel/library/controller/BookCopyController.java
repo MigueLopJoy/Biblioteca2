@@ -33,7 +33,12 @@ public class BookCopyController {
     public ResponseEntity<BookCopy> saveNewBookCopy(
             @Valid @RequestBody BookSaveBookCopy bookCopy
     ) {
-        return ResponseEntity.ok(bookCopyService.saveNewBookCopy(bookCopyService.createBookCopyFromBookSaveDTO(bookCopy)));
+        return ResponseEntity.ok(
+                bookCopyService.saveNewBookCopy(
+                        bookCopyService.createBookCopyFromBookSaveDTO(bookCopy)
+                )
+        );
+
     }
 
     @GetMapping("/get-all")

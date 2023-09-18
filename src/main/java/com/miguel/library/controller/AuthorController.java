@@ -26,7 +26,11 @@ public class AuthorController {
     public ResponseEntity<Author> saveNewAuthor(
             @Valid @RequestBody AuthorDTO author
         ) {
-        return ResponseEntity.ok(authorService.saveNewAuthor(authorService.createAuthorFromDTO(author)));
+        return ResponseEntity.ok(
+                authorService.saveNewAuthor(
+                        authorService.createAuthorFromDTO(author)
+                )
+        );
     }
 
     @GetMapping("/get-all")

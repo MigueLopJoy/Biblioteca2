@@ -36,4 +36,5 @@ public class BookCopy {
     @ManyToOne
     @JoinColumn(name = "id_Book_Edition")
     private BookEdition bookEdition;
+
 }

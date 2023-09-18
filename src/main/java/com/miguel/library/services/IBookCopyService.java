@@ -19,7 +19,7 @@ public interface IBookCopyService {
 
     public BookCopy editBookCopy(Integer bookCopyId, BookEditBookCopy bookEdit);
 
-    public void deleteBookCopy(Integer bookCopyId);
+    public String deleteBookCopy(Integer bookCopyId);
 
     public BookCopy createBookCopyFromBookSaveDTO(BookSaveBookCopy bookCopy);
 

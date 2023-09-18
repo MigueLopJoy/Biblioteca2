@@ -32,7 +32,11 @@ public class BookEditionController {
     public ResponseEntity<BookEdition> saveNewBookEdition(
             @Valid @RequestBody BookSaveBookEdition bookEdition
     ) {
-        return ResponseEntity.ok(bookEditionService.saveNewBookEdition(bookEditionService.createBookEditionFromBookSaveDTO(bookEdition)));
+        return ResponseEntity.ok(
+                bookEditionService.saveNewBookEdition(
+                        bookEditionService.createBookEditionFromBookSaveDTO(bookEdition)
+                )
+        );
     }
 
     @GetMapping("/get-all")

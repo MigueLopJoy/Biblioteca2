@@ -1,11 +1,11 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.AuthorDTO;
-import com.miguel.library.Exceptions.ExceptionAuthorAlreadyExists;
+import com.miguel.library.Exceptions.ExceptionNullObject;
+import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
-import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,29 +15,27 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class ImpAuthorService implements IAuthorService{
+public class ImpAuthorService implements IAuthorService {
 
     @Autowired
     private IAuthorRepository authorRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Override
     public Author saveNewAuthor(Author author) {
         Author savedAuthor = null;
 
-        if (author != null) {
-            Author fetchedAuthor = this.searchByAuthorName(author);
-
-            if (Objects.nonNull(fetchedAuthor)) {
-                throw new ExceptionAuthorAlreadyExists();
-            }
-
-            if (fetchedAuthor == null) {
-                savedAuthor = authorRepository.save(author);
-            }
+        if (Objects.isNull(author)) {
+            throw new ExceptionNullObject("Author should not be null");
         }
+
+        Author fetchedAuthor = this.searchByAuthorName(author);
+
+        if (Objects.nonNull(fetchedAuthor)) {
+            throw new ExceptionObjectAlreadyExists("Author already exists");
+        }
+
+        savedAuthor = authorRepository.save(author);
+
         return savedAuthor;
     }
 
@@ -57,39 +55,41 @@ public class ImpAuthorService implements IAuthorService{
 
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
-        if (optionalAuthor.isPresent()) {
-            Author savedAuthor = optionalAuthor.get();
-
-            if (!StringUtils.isEmpty(firstName) && !firstName.trim().isEmpty()) {
-                savedAuthor.setFirstName(firstName);
-            }
-
-            if (!StringUtils.isEmpty(lastName) && !firstName.trim().isEmpty()) {
-                savedAuthor.setLastName(lastName);
-            }
-
-            editedAuthor = this.saveNewAuthor(savedAuthor);
-        } else {
-            throw new ExceptionObjectNotFound();
+        if (!optionalAuthor.isPresent()) {
+            throw new ExceptionObjectNotFound("Searched author not found");
         }
+
+        Author savedAuthor = optionalAuthor.get();
+
+        if (!StringUtils.isEmpty(firstName) && !firstName.trim().isEmpty()) {
+            savedAuthor.setFirstName(firstName);
+        }
+
+        if (!StringUtils.isEmpty(lastName) && !firstName.trim().isEmpty()) {
+            savedAuthor.setLastName(lastName);
+        }
+
+        editedAuthor = this.saveNewAuthor(savedAuthor);
 
         return editedAuthor;
     }
 
     @Override
-    public void deleteAuthor(Integer authorId) {
+    public String deleteAuthor(Integer authorId) {
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
-        if (optionalAuthor.isPresent()) {
-            authorRepository.deleteById(authorId);
+        if (!optionalAuthor.isPresent()) {
+            throw new ExceptionObjectNotFound("Searched author not found");
         }
+        authorRepository.deleteById(authorId);
+        return "Author deleted successfully";
     }
 
     @Override
     public Author createAuthorFromDTO(AuthorDTO author) {
         return Author.builder()
-                    .firstName(author.getFirstName())
-                    .lastName(author.getLastName())
+                .firstName(author.getFirstName())
+                .lastName(author.getLastName())
                 .build();
     }
 

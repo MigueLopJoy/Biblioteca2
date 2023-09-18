@@ -2,6 +2,9 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.BookEditBookEdition;
 import com.miguel.library.DTO.BookSaveBookEdition;
+import com.miguel.library.Exceptions.ExceptionNullObject;
+import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
+import com.miguel.library.Exceptions.ExceptionObjectNotFound;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -11,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,25 +30,32 @@ public class ImpBookEditionService implements IBookEditionService{
     public BookEdition saveNewBookEdition(BookEdition bookEdition) {
         BookEdition savedBookEdition = null;
 
-        if (bookEdition != null) {
-            BookWork bookWork = bookEdition.getBookWork();
-
-            if (bookWork != null) {
-                BookWork savedBookWork = bookWorkService.searchByTitleAndAuthor(bookWork);
-
-                if (savedBookWork != null) {
-                    BookEdition bookEditionWithISBN
-                            = this.searchByISBN(bookEdition.getISBN());
-
-                    if (bookEditionWithISBN == null) {
-                        bookEdition.setBookWork(savedBookWork);
-                        savedBookEdition = bookEditionRepository.save(bookEdition);
-                    }
-                }
-            }
-        } else {
-            throw new RuntimeException("Book Edition information not provided");
+        if (Objects.isNull(bookEdition)) {
+            throw new ExceptionNullObject("Book edition should not be null");
         }
+
+        BookWork bookWork = bookEdition.getBookWork();
+
+        if (bookWork != null) {
+            throw new ExceptionNullObject("Book edition's book work should not be null");
+        }
+
+        BookWork savedBookWork = bookWorkService.searchByTitleAndAuthor(bookWork);
+
+        if (Objects.isNull(savedBookWork)) {
+            throw new ExceptionObjectNotFound("Book edition's book work not found");
+        }
+
+        BookEdition bookEditionWithISBN
+                = this.searchByISBN(bookEdition.getISBN());
+
+        if (Objects.nonNull(bookEditionWithISBN)) {
+            throw new ExceptionObjectAlreadyExists("Book edition already exists");
+        }
+
+        bookEdition.setBookWork(savedBookWork);
+        savedBookEdition = bookEditionRepository.save(bookEdition);
+
         return savedBookEdition;
     }
 
@@ -57,12 +68,17 @@ public class ImpBookEditionService implements IBookEditionService{
     public List<BookEdition> searchBookWorkEditions(BookWork bookWork) {
         List<BookEdition> bookWorkEditions = new ArrayList<>();
 
-        if (bookWork != null) {
-            BookWork fetchedBookWork = this.fetchBookWork(bookWork);
-            if (fetchedBookWork != null) {
-                bookWorkEditions.addAll(bookEditionRepository.findByBookWork(fetchedBookWork));
-            }
+        if (Objects.isNull(bookWork)) {
+            throw new ExceptionNullObject("Book work should not be null");
         }
+
+        BookWork fetchedBookWork = this.fetchBookWork(bookWork);
+
+        if (Objects.isNull(fetchedBookWork)) {
+            throw new ExceptionObjectNotFound("Book work not found");
+        }
+
+        bookWorkEditions.addAll(bookEditionRepository.findByBookWork(fetchedBookWork));
         return bookWorkEditions;
     }
 
@@ -77,38 +93,42 @@ public class ImpBookEditionService implements IBookEditionService{
 
         Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
 
-        if (optionalBookEdition.isPresent()) {
-            BookEdition savedBookEdition = optionalBookEdition.get();
-
-            if (!StringUtils.isEmpty(isbn) && !isbn.trim().isBlank()) {
-                savedBookEdition.setISBN(isbn);
-            }
-
-            if (!StringUtils.isEmpty(editor) && !editor.trim().isBlank()) {
-                savedBookEdition.setEditor(editor);
-            }
-
-            if (editionYear != null) {
-                savedBookEdition.setEditionYear(editionYear);
-            }
-
-            if (!StringUtils.isEmpty(language) && !language.trim().isBlank()) {
-                savedBookEdition.setLanguage(language);
-            }
-
-            editedBookEdition = this.saveNewBookEdition(savedBookEdition);
+        if (!optionalBookEdition.isPresent()) {
+            throw new ExceptionObjectNotFound("Book edition not found");
         }
+
+        BookEdition savedBookEdition = optionalBookEdition.get();
+
+        if (!StringUtils.isEmpty(isbn) && !isbn.trim().isBlank()) {
+            savedBookEdition.setISBN(isbn);
+        }
+
+        if (!StringUtils.isEmpty(editor) && !editor.trim().isBlank()) {
+            savedBookEdition.setEditor(editor);
+        }
+
+        if (editionYear != null) {
+            savedBookEdition.setEditionYear(editionYear);
+        }
+
+        if (!StringUtils.isEmpty(language) && !language.trim().isBlank()) {
+            savedBookEdition.setLanguage(language);
+        }
+
+        editedBookEdition = this.saveNewBookEdition(savedBookEdition);
 
         return editedBookEdition;
     }
 
     @Override
-    public void deleteBookEdition(Integer bookEditionId) {
+    public String deleteBookEdition(Integer bookEditionId) {
         Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
 
-        if (optionalBookEdition.isPresent()) {
-            bookEditionRepository.deleteById(bookEditionId);
+        if (!optionalBookEdition.isPresent()) {
+            throw new ExceptionObjectNotFound("Book edition not found");
         }
+        bookEditionRepository.deleteById(bookEditionId);
+        return "Book edition deleted successfully";
     }
 
     @Override

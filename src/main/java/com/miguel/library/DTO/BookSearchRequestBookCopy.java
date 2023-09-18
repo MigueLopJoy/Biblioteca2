@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,9 +18,9 @@ public class BookSearchRequestBookCopy extends BookSearchRequestBookEdition {
 
     private Long maxRegistrationNumber;
 
-    private Date minRegistrationDate;
+    private LocalDate minRegistrationDate;
 
-    private Date maxRegistrationDate;
+    private LocalDate maxRegistrationDate;
 
     private String signature;
 

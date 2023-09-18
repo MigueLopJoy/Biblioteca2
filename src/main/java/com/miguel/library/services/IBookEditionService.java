@@ -17,7 +17,7 @@ public interface IBookEditionService {
 
     public BookEdition editBookEdition(Integer bookEditionId, BookEditBookEdition bookEdit);
 
-    public void deleteBookEdition(Integer bookEditionId);
+    public String deleteBookEdition(Integer bookEditionId);
 
     public BookEdition createBookEditionFromBookSaveDTO(BookSaveBookEdition bookEdition);
 }

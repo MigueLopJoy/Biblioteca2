@@ -2,6 +2,7 @@ package com.miguel.library.controller;
 
 
 import com.miguel.library.DTO.BookEditBookWork;
+import com.miguel.library.DTO.BookSaveBookWork;
 import com.miguel.library.DTO.BookSearchRequestBookWork;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookWorkRepository;
@@ -29,9 +30,13 @@ public class BookWorkController {
 
     @PostMapping("/save-bookwork")
     public ResponseEntity<BookWork> saveNewBookWork(
-            @RequestBody BookWork bookWork
+            @RequestBody BookSaveBookWork bookWork
     ) {
-        return ResponseEntity.ok(bookWorkService.saveNewBookWork(bookWork));
+        return ResponseEntity.ok(
+                bookWorkService.saveNewBookWork(
+                        bookWorkService.createBookWorkFromBookSaveDTO(bookWork)
+                )
+        );
     }
 
     @GetMapping("/get-all")

@@ -20,6 +20,15 @@ public class BookSaveBookCopy {
 
     @NotBlank(message = "Signature required")
     private String signature;
+
     @NotNull(message = "Book edition should not be null")
     private BookSaveBookEdition bookEdition;
 }
+
+
+
+
+
+
+
+

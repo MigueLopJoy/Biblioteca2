@@ -2,7 +2,9 @@ package com.miguel.library.Exceptions;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,13 +14,17 @@ import java.util.Objects;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-    private Integer status;
     private String message;
+    private Throwable throwable;
+    private HttpStatus status;
+    private ZonedDateTime timestamp;
     private List<ValidationError> errors;
 
-    public ErrorResponse(Integer status, String message) {
-        this.status = status;
+    public ErrorResponse(String message, Throwable throwable, HttpStatus status, ZonedDateTime timestamp) {
         this.message = message;
+        this.throwable = throwable;
+        this.status = status;
+        this.timestamp = timestamp;
     }
 
     @Getter @Setter
@@ -29,7 +35,7 @@ public class ErrorResponse {
     }
 
     public void addValidationError(String field, String message){
-        if (Objects.isNull(errors)){
+        if (Objects.isNull(this.errors)){
             errors = new ArrayList<>();
         }
         errors.add(new ValidationError(field, message));
