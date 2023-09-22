@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -25,31 +26,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatusCode status,
                                                                   WebRequest request
     ) {
+        HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+
         ErrorResponse errorResponse = new ErrorResponse(
                 "Validation error. Check 'errors' field for details.",
-                ex,
-                HttpStatus.UNPROCESSABLE_ENTITY,
-                ZonedDateTime.now()
+                HttpStatus.UNPROCESSABLE_ENTITY
             );
 
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errorResponse.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
-        return ResponseEntity.unprocessableEntity().body(errorResponse);
+        return new ResponseEntity<>(errorResponse, httpStatus);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = ExceptionObjectNotFound.class)
     public ResponseEntity<Object> handleExceptionObjectNotFound(ExceptionObjectNotFound ex) {
 
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
 
         ErrorResponse errorResponse = new ErrorResponse(
             ex.getMessage(),
-                ex,
-                httpStatus,
-                ZonedDateTime.now()
+                httpStatus
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);
@@ -63,9 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 ex.getMessage(),
-                ex,
-                httpStatus,
-                ZonedDateTime.now()
+                httpStatus
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);
@@ -79,12 +76,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 ex.getMessage(),
-                ex,
-                httpStatus,
-                ZonedDateTime.now()
+                httpStatus
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
+    @ExceptionHandler(ExceptionNoInformationProvided.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public  ResponseEntity<Object> handleExceptionNoInformationProvided(ExceptionNoInformationProvided ex) {
+
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getMessage(),
+                httpStatus
+        );
+
+        return new ResponseEntity<>(errorResponse, httpStatus);
+
     }
 
     @ExceptionHandler(ExceptionInvalidObject.class)
@@ -95,9 +105,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 ex.getMessage(),
-                ex,
-                httpStatus,
-                ZonedDateTime.now()
+                httpStatus
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);
@@ -111,9 +119,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = new ErrorResponse(
                 ex.getMessage(),
-                ex,
-                httpStatus,
-                ZonedDateTime.now()
+                httpStatus
         );
 
         return new ResponseEntity<>(errorResponse, httpStatus);

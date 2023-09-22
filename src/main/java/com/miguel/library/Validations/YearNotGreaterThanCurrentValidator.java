@@ -1,7 +1,9 @@
 package com.miguel.library.Validations;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
 import java.time.Year;
 
 public class YearNotGreaterThanCurrentValidator implements ConstraintValidator<YearNotGreaterThanCurrent, Integer> {

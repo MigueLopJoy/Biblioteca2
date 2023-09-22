@@ -1,15 +1,16 @@
 package com.miguel.library.controller;
 
-import com.miguel.library.DTO.AuthorDTO;
+import com.miguel.library.DTO.AuthorsDTOEditAuthor;
+import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
 import com.miguel.library.services.IAuthorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class AuthorController {
 
     @PostMapping("/save-author")
     public ResponseEntity<Author> saveNewAuthor(
-            @Valid @RequestBody AuthorDTO author
+            @Valid @RequestBody AuthorsDTOSaveNewAuthor author
         ) {
         return ResponseEntity.ok(
                 authorService.saveNewAuthor(
@@ -54,10 +55,9 @@ public class AuthorController {
     @PutMapping("/edit-author/{authorId}")
     public ResponseEntity<Author> editAuthor(
             @PathVariable Integer authorId,
-            @RequestParam(required = false, name = "first-name") String firstName,
-            @RequestParam(required = false, name = "last-name") String lastName
+            @Valid @RequestBody AuthorsDTOEditAuthor authorEdit
     ) {
-        return ResponseEntity.ok(authorService.editAuthor(authorId, firstName, lastName));
+        return ResponseEntity.ok(authorService.editAuthor(authorId, authorEdit));
     }
 
     @DeleteMapping("/delete-author/{authorId}")

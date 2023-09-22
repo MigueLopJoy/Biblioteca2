@@ -1,6 +1,8 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.AuthorDTO;
+import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
+import com.miguel.library.DTO.AuthorsDTOEditAuthor;
+import com.miguel.library.Exceptions.ExceptionNoInformationProvided;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
@@ -22,7 +24,7 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public Author saveNewAuthor(Author author) {
-        Author savedAuthor = null;
+        Author savedAuthor;
 
         if (Objects.isNull(author)) {
             throw new ExceptionNullObject("Author should not be null");
@@ -50,8 +52,9 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     @Override
-    public Author editAuthor(Integer authorId, String firstName, String lastName) {
-        Author editedAuthor = null;
+    public Author editAuthor(Integer authorId, AuthorsDTOEditAuthor authorEdit) {
+        String firstName = authorEdit.getFirstName();
+        String lastName = authorEdit.getLastName();
 
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
@@ -61,6 +64,12 @@ public class ImpAuthorService implements IAuthorService {
 
         Author savedAuthor = optionalAuthor.get();
 
+        if ((StringUtils.isEmpty(firstName) || firstName.trim().isEmpty()) ||
+                (StringUtils.isEmpty(lastName) || firstName.trim().isEmpty())
+        ) {
+            throw new ExceptionNoInformationProvided("Author's new information not provided");
+        }
+
         if (!StringUtils.isEmpty(firstName) && !firstName.trim().isEmpty()) {
             savedAuthor.setFirstName(firstName);
         }
@@ -69,9 +78,7 @@ public class ImpAuthorService implements IAuthorService {
             savedAuthor.setLastName(lastName);
         }
 
-        editedAuthor = this.saveNewAuthor(savedAuthor);
-
-        return editedAuthor;
+        return this.saveNewAuthor(savedAuthor);
     }
 
     @Override
@@ -86,7 +93,7 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     @Override
-    public Author createAuthorFromDTO(AuthorDTO author) {
+    public Author createAuthorFromDTO(AuthorsDTOSaveNewAuthor author) {
         return Author.builder()
                 .firstName(author.getFirstName())
                 .lastName(author.getLastName())

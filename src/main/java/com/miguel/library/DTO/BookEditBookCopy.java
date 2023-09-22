@@ -1,11 +1,11 @@
 package com.miguel.library.DTO;
 
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.*;
 
 @Getter @Setter
 @NoArgsConstructor

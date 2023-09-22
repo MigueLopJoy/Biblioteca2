@@ -1,17 +1,16 @@
 package com.miguel.library.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthorDTO {
+public class AuthorsDTOSaveNewAuthor {
 
     @NotBlank(message = "Author's first name required")
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Invalid first name provided")

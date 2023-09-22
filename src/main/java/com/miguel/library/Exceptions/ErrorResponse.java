@@ -15,16 +15,12 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
     private String message;
-    private Throwable throwable;
     private HttpStatus status;
-    private ZonedDateTime timestamp;
     private List<ValidationError> errors;
 
-    public ErrorResponse(String message, Throwable throwable, HttpStatus status, ZonedDateTime timestamp) {
+    public ErrorResponse(String message, HttpStatus status) {
         this.message = message;
-        this.throwable = throwable;
         this.status = status;
-        this.timestamp = timestamp;
     }
 
     @Getter @Setter
