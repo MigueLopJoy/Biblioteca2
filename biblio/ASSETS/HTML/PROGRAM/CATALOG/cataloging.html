@@ -1,19 +1,19 @@
 <div class="container" id="cataloging-section">
 
     <menu class="cataloging-nav">
-        <a class="page-link" name="author-page">Author</a>
-        <a class="page-link" name="bookwork-page">Work</a>
-        <a class="page-link" name="edition-page">Edition</a>
+        <a class="page-link author-page">Author</a>
+        <a class="page-link bookwork-page">Work</a>
+        <a class="page-link edition-page">Edition</a>
     </menu>
 
     <div class="cataloging-window">
 
-        <div id="author-page" class="page">
+        <div class="page author-page">
 
             <h3>Search or create author</h3>
 
             <div class="author-option search-author">
-                <form id="search_author_form" class="form">
+                <form class="form search_author_form">
                     <legend>Search author</legend>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
                     <input type="submit" id="search_author_btn">
@@ -21,25 +21,45 @@
             </div>
 
             <div class="author-option create-author">
-                <form id="create_author_form" class="form">
+                <form class="form create_author_form">
                     <legend>Create new author</legend>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
                     <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
                     <input type="submit" id="create_author_btn">
                 </form>
             </div>
-
-            <table id="found-authors" class="found-authors">
-            </table>
-
         </div>
 
 
-        <div id="bookwork-page" class="page">
-            pagina 2
+        <div class="page bookwork-page">
+            <h3>Search or create book work</h3>
+
+            <div class="search-bookwork">
+                <form class="form search_bookwork_form">
+                    <legend>Search book work</legend>
+                    <input type="text" name="bookwork-title" name="bookwork-title" placeholder="Introduce book work's title">
+                    <input type="submit" id="search_bookwork_btn">
+                </form>
+            </div>
+
+            <div class="create-bookwork">
+                <form class="form create_bookwork_form">
+                    <legend>Create new book work</legend>
+                    <input type="text" name="title" id="bookwork-title" placeholder="Book work title">
+                    <input type="number" name="bookwork-publication-year" id="bookwork-publication-year" placeholder="Book work publication year">
+                    <input type="submit" id="create_bookwork_btn">
+                </form>
+            </div>
         </div>
+
         <div id="edition-page" class="page">
             pagina 3
+        </div>
+
+        <div id="modal">
+            <div class="modal-content">
+                <table id="results-table"></table>
+            </div>
         </div>
 
     </div>
