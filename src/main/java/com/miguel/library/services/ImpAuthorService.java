@@ -59,22 +59,20 @@ public class ImpAuthorService implements IAuthorService {
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
         if (!optionalAuthor.isPresent()) {
-            throw new ExceptionObjectNotFound("Searched author not found");
+            throw new ExceptionObjectNotFound("Author not found");
         }
 
         Author savedAuthor = optionalAuthor.get();
 
-        if ((StringUtils.isEmpty(firstName) || firstName.trim().isEmpty()) ||
-                (StringUtils.isEmpty(lastName) || firstName.trim().isEmpty())
-        ) {
-            throw new ExceptionNoInformationProvided("Author's new information not provided");
+        if (Objects.isNull(firstName) && Objects.isNull(lastName)) {
+            throw new ExceptionNoInformationProvided("No information provided. Author cannot be edited.");
         }
 
-        if (!StringUtils.isEmpty(firstName) && !firstName.trim().isEmpty()) {
+        if (Objects.nonNull(firstName)) {
             savedAuthor.setFirstName(firstName);
         }
 
-        if (!StringUtils.isEmpty(lastName) && !firstName.trim().isEmpty()) {
+        if (Objects.nonNull(lastName)) {
             savedAuthor.setLastName(lastName);
         }
 
@@ -86,7 +84,7 @@ public class ImpAuthorService implements IAuthorService {
         Optional<Author> optionalAuthor = authorRepository.findById(authorId);
 
         if (!optionalAuthor.isPresent()) {
-            throw new ExceptionObjectNotFound("Searched author not found");
+            throw new ExceptionObjectNotFound("Author not found");
         }
         authorRepository.deleteById(authorId);
         return "Author deleted successfully";

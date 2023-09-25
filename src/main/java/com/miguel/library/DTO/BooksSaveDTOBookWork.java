@@ -4,21 +4,19 @@ import com.miguel.library.Validations.YearNotGreaterThanCurrent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class BookEditBookWork {
+public class BooksSaveDTOBookWork {
 
-    @NotBlank(message = "Book title required")
+    @NotBlank(message = "Title required")
     private String title;
 
-    @NotNull(message = "Publication year required")
-    @Min(value = 1900, message = "Publication year should not be under 1900")
+    @NotNull(message = "Author should not be null")
+    private AuthorsDTOSaveNewAuthor author;
+
+    @Min(value = 1750, message = "Publication year should not be under 1750")
     @YearNotGreaterThanCurrent(message = "Publication year should not be greater than current year")
     private Integer publicationYear;
 }

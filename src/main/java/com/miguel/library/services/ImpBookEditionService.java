@@ -1,7 +1,7 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookEditBookEdition;
-import com.miguel.library.DTO.BookSaveBookEdition;
+import com.miguel.library.DTO.BooksEditDTOBookEdition;
+import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
@@ -83,7 +83,7 @@ public class ImpBookEditionService implements IBookEditionService{
     }
 
     @Override
-    public BookEdition editBookEdition(Integer bookEditionId, BookEditBookEdition bookEdit) {
+    public BookEdition editBookEdition(Integer bookEditionId, BooksEditDTOBookEdition bookEdit) {
 
         BookEdition editedBookEdition = null;
         String isbn = bookEdit.getISBN();
@@ -132,7 +132,7 @@ public class ImpBookEditionService implements IBookEditionService{
     }
 
     @Override
-    public BookEdition createBookEditionFromBookSaveDTO(BookSaveBookEdition bookEdition) {
+    public BookEdition createBookEditionFromBookSaveDTO(BooksSaveDTOBookEdition bookEdition) {
         return BookEdition.builder()
                     .ISBN(bookEdition.getISBN())
                     .editor(bookEdition.getEditor())

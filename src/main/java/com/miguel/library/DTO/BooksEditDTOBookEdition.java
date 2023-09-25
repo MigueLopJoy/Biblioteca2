@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Pattern;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookEditBookEdition {
+public class BooksEditDTOBookEdition {
 
     @NotBlank(message = "ISBN required")
     @Pattern(regexp = "^(978|979)-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$", message = "Invalid ISBN number")

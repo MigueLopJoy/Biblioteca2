@@ -1,7 +1,7 @@
 package com.miguel.library.controller;
 
-import com.miguel.library.DTO.BookEditBookEdition;
-import com.miguel.library.DTO.BookSaveBookEdition;
+import com.miguel.library.DTO.BooksEditDTOBookEdition;
+import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -30,7 +30,7 @@ public class BookEditionController {
 
     @PostMapping("/save-bookedition")
     public ResponseEntity<BookEdition> saveNewBookEdition(
-            @Valid @RequestBody BookSaveBookEdition bookEdition
+            @Valid @RequestBody BooksSaveDTOBookEdition bookEdition
     ) {
         return ResponseEntity.ok(
                 bookEditionService.saveNewBookEdition(
@@ -66,7 +66,7 @@ public class BookEditionController {
     @PutMapping("/edit-bookedition/{bookEditionId}")
     public ResponseEntity<BookEdition> editBookEdition(
             @PathVariable Integer bookEditionId,
-            @RequestBody BookEditBookEdition bookEdit
+            @RequestBody BooksEditDTOBookEdition bookEdit
     ) {
         return ResponseEntity.ok(bookEditionService.editBookEdition(bookEditionId, bookEdit));
     }

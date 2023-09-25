@@ -1,0 +1,57 @@
+.cataloging-nav {
+    width: 100%;
+    background-color: #111;
+    overflow: hidden;
+}
+
+.cataloging-nav a {
+    display: block;
+    float: left;
+    color: #818181;
+    text-align: center;
+    padding: .5rem .5rem .5rem 1rem;
+    text-decoration: none;
+    font-size: 1.25rem;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.cataloging-nav a:hover {
+    color: #f1f1f1;
+}
+
+.cataloging-nav a.active {
+    background-color: #393939;
+    color: white;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.cataloging-window {
+    width: 100%;
+    height: 100%;
+    padding-top: 3rem;
+    border: 2px solid #111;
+}
+
+.author-option {
+    width: 80%;
+    margin: 0px auto 2rem auto;
+    border: 2px solid #111;
+    padding: 1rem;
+}
+
+.cataloging-window h3 {
+    margin-bottom: 1.5rem;
+}
+
+.cataloging-window .form {
+    width: 60%;
+}

@@ -1,8 +1,7 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookEditBookCopy;
-import com.miguel.library.DTO.BookSaveBookCopy;
-import com.miguel.library.DTO.BookSaveBookEdition;
+import com.miguel.library.DTO.BooksEditDTOBookCopy;
+import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.Exceptions.ExceptionInvalidObject;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
@@ -94,7 +93,7 @@ public class ImpBookCopyService implements IBookCopyService {
     }
 
     @Override
-    public BookCopy editBookCopy(Integer bookCopyId, BookEditBookCopy bookEdit) {
+    public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
         BookCopy editedBookCopy = null;
         String signature = bookEdit.getSignature();
         Long registrationNumber = bookEdit.getRegistrationNumber();
@@ -142,7 +141,7 @@ public class ImpBookCopyService implements IBookCopyService {
     }
 
     @Override
-    public BookCopy createBookCopyFromBookSaveDTO(BookSaveBookCopy bookCopy) {
+    public BookCopy createBookCopyFromBookSaveDTO(BooksSaveDTOBookCopy bookCopy) {
         return BookCopy.builder()
                 .barCode(this.generateBarCode())
                 .registrationNumber(bookCopy.getRegistrationNumber())

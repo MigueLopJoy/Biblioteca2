@@ -1,13 +1,14 @@
 package com.miguel.library.controller;
 
 
-import com.miguel.library.DTO.BookEditBookWork;
-import com.miguel.library.DTO.BookSaveBookWork;
+import com.miguel.library.DTO.BooksEditDTOBookWork;
+import com.miguel.library.DTO.BooksSaveDTOBookWork;
 import com.miguel.library.DTO.BookSearchRequestBookWork;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookWorkRepository;
 import com.miguel.library.services.IBookSearchService;
 import com.miguel.library.services.IBookWorkService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class BookWorkController {
 
     @PostMapping("/save-bookwork")
     public ResponseEntity<BookWork> saveNewBookWork(
-            @RequestBody BookSaveBookWork bookWork
+            @Valid @RequestBody BooksSaveDTOBookWork bookWork
     ) {
         return ResponseEntity.ok(
                 bookWorkService.saveNewBookWork(
@@ -53,7 +54,7 @@ public class BookWorkController {
 
     @GetMapping("/search-bookwork")
     public ResponseEntity<?> searchBookWorks(
-            @RequestBody BookSearchRequestBookWork bookSearchRequest
+            @Valid @RequestBody BookSearchRequestBookWork bookSearchRequest
     ) {
         List<?> foundBookWorks = bookSearchService.searchBooks(bookSearchRequest);
 
@@ -67,7 +68,7 @@ public class BookWorkController {
     @PutMapping("/edit-bookwork/{bookWorkId}")
     public ResponseEntity<BookWork> editBookWork(
             @PathVariable Integer bookWorkId,
-            @RequestBody BookEditBookWork bookEdit
+            @Valid @RequestBody BooksEditDTOBookWork bookEdit
             ) {
         return ResponseEntity.ok(bookWorkService.editBookWork(bookWorkId, bookEdit));
     }

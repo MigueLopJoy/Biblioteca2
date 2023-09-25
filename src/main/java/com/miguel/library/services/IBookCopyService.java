@@ -1,11 +1,10 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookEditBookCopy;
-import com.miguel.library.DTO.BookSaveBookCopy;
+import com.miguel.library.DTO.BooksEditDTOBookCopy;
+import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 
-import java.awt.print.Book;
 import java.util.List;
 
 public interface IBookCopyService {
@@ -17,10 +16,10 @@ public interface IBookCopyService {
 
     public List<BookCopy> searchBookEditionCopies(BookEdition bookEdition);
 
-    public BookCopy editBookCopy(Integer bookCopyId, BookEditBookCopy bookEdit);
+    public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit);
 
     public String deleteBookCopy(Integer bookCopyId);
 
-    public BookCopy createBookCopyFromBookSaveDTO(BookSaveBookCopy bookCopy);
+    public BookCopy createBookCopyFromBookSaveDTO(BooksSaveDTOBookCopy bookCopy);
 
 }

@@ -1,12 +1,11 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookEditBookEdition;
-import com.miguel.library.DTO.BookSaveBookEdition;
+import com.miguel.library.DTO.BooksEditDTOBookEdition;
+import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IBookEditionService {
     public BookEdition saveNewBookEdition(BookEdition bookEdition);
@@ -15,9 +14,9 @@ public interface IBookEditionService {
 
     public List<BookEdition> searchBookWorkEditions(BookWork bookWork);
 
-    public BookEdition editBookEdition(Integer bookEditionId, BookEditBookEdition bookEdit);
+    public BookEdition editBookEdition(Integer bookEditionId, BooksEditDTOBookEdition bookEdit);
 
     public String deleteBookEdition(Integer bookEditionId);
 
-    public BookEdition createBookEditionFromBookSaveDTO(BookSaveBookEdition bookEdition);
+    public BookEdition createBookEditionFromBookSaveDTO(BooksSaveDTOBookEdition bookEdition);
 }

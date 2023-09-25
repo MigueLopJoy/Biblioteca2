@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookEditBookCopy {
+public class BooksEditDTOBookCopy {
 
     @NotNull(message = "Registration number required")
     @Min(value = 1, message = "Registration number should be greater than 1")

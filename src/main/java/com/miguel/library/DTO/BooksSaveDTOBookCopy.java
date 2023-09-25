@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookSaveBookCopy {
+public class BooksSaveDTOBookCopy {
 
     @NotNull(message = "Registration number required")
     @Min(value = 1, message = "Registration number should be greater than 1")
@@ -21,7 +21,7 @@ public class BookSaveBookCopy {
     private String signature;
 
     @NotNull(message = "Book edition should not be null")
-    private BookSaveBookEdition bookEdition;
+    private BooksSaveDTOBookEdition bookEdition;
 }
 
 

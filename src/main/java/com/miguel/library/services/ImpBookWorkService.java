@@ -1,7 +1,8 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookEditBookWork;
-import com.miguel.library.DTO.BookSaveBookWork;
+import com.miguel.library.DTO.BooksEditDTOBookWork;
+import com.miguel.library.DTO.BooksSaveDTOBookWork;
+import com.miguel.library.Exceptions.ExceptionNoInformationProvided;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
@@ -27,39 +28,30 @@ public class ImpBookWorkService implements IBookWorkService{
 
     @Override
     public BookWork saveNewBookWork(BookWork bookWork) {
-        BookWork savedBookWork = null;
 
         if (Objects.isNull(bookWork)) {
             throw new ExceptionNullObject("Book work should not be null");
         }
 
-            Author bookAuthor = bookWork.getAuthor();
+        Author fetchedAuthor = authorService.searchByAuthorName(bookWork.getAuthor());
 
-        if (Objects.isNull(bookAuthor)) {
-            throw new ExceptionNullObject("Book's author should not be null");
-        }
-
-        Author savedAuthor = authorService.searchByAuthorName(bookAuthor);
-
-        if (Objects.isNull(savedAuthor)) {
+        if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Book's author not found");
         }
 
-        BookWork bookWorkWithTitleAndAuthor = this.searchByTitleAndAuthor(bookWork);
-
-        if (Objects.nonNull(bookWorkWithTitleAndAuthor)) {
+        try {
+            this.searchByTitleAndAuthor(bookWork);
             throw new ExceptionObjectAlreadyExists("Book work already exists");
+        } catch (ExceptionObjectNotFound ex) {
+
+            bookWork.setAuthor(fetchedAuthor);
+
+            return bookWorkRepository.save(bookWork);
         }
-
-        bookWork.setAuthor(savedAuthor);
-        savedBookWork = bookWorkRepository.save(bookWork);
-
-        return savedBookWork;
     }
 
     @Override
     public BookWork searchByTitleAndAuthor(BookWork bookWork) {
-        BookWork foundBookWork = null;
 
         if (Objects.isNull(bookWork)) {
             throw new ExceptionNullObject("Book work should not be null");
@@ -67,7 +59,7 @@ public class ImpBookWorkService implements IBookWorkService{
         Author fetchedAuthor = authorService.searchByAuthorName(bookWork.getAuthor());
 
         if (Objects.isNull(fetchedAuthor)){
-            throw new ExceptionNullObject("Book's author should not be null");
+            throw new ExceptionObjectNotFound("Book's author not found");
         }
 
         Optional<BookWork> optionalBookWork
@@ -78,14 +70,11 @@ public class ImpBookWorkService implements IBookWorkService{
             throw new ExceptionObjectNotFound("Searched book work not found");
         }
 
-        foundBookWork = optionalBookWork.get();
-
-        return foundBookWork;
+        return optionalBookWork.get();
     }
 
     @Override
     public List<BookWork> searchAuthorBookWorks(Author author) {
-        List<BookWork> authorBookWorks;
 
         if (Objects.isNull(author)) {
             throw new ExceptionNullObject("Author should not be null");
@@ -97,35 +86,35 @@ public class ImpBookWorkService implements IBookWorkService{
             throw new ExceptionObjectNotFound("Searched author not found");
         }
 
-        authorBookWorks = bookWorkRepository.findByAuthor(author);
-        return authorBookWorks;
+        return bookWorkRepository.findByAuthor(author);
     }
 
     @Override
-    public BookWork editBookWork(Integer bookWorkId, BookEditBookWork bookEdit) {
-        BookWork editedBookWork = null;
+    public BookWork editBookWork(Integer bookWorkId, BooksEditDTOBookWork bookEdit) {
         String title = bookEdit.getTitle();
         Integer publicationYear = bookEdit.getPublicationYear();
 
         Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
 
         if (!optionalBookWork.isPresent()) {
-            throw new ExceptionObjectNotFound("Searched book work not found");
+            throw new ExceptionObjectNotFound("Book work not found");
         }
 
         BookWork savedBookWork = optionalBookWork.get();
 
-        if (!StringUtils.isEmpty(title) && !title.trim().isBlank()) {
+        if (Objects.isNull(title) && Objects.isNull(publicationYear)) {
+            throw new ExceptionNoInformationProvided("No information provided. Book work cannot be edited.");
+        }
+
+        if (Objects.nonNull(title)) {
             savedBookWork.setTitle(title);
         }
 
-        if (publicationYear != null) {
+        if (Objects.nonNull(publicationYear)) {
             savedBookWork.setPublicationYear(publicationYear);
         }
 
-        editedBookWork = this.saveNewBookWork(savedBookWork);
-
-        return editedBookWork;
+        return this.saveNewBookWork(savedBookWork);
     }
 
     @Override
@@ -141,7 +130,7 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public BookWork createBookWorkFromBookSaveDTO(BookSaveBookWork bookWork) {
+    public BookWork createBookWorkFromBookSaveDTO(BooksSaveDTOBookWork bookWork) {
         return new BookWork().builder()
                     .title(bookWork.getTitle())
                     .author(

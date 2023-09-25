@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.Year;
+import java.util.Objects;
 
 public class YearNotGreaterThanCurrentValidator implements ConstraintValidator<YearNotGreaterThanCurrent, Integer> {
 
@@ -17,11 +18,14 @@ public class YearNotGreaterThanCurrentValidator implements ConstraintValidator<Y
     public boolean isValid(Integer year, ConstraintValidatorContext constraintValidatorContext) {
         boolean isValidYear = false;
 
-        if (year != null) {
-            if (year <= Year.now().getValue()) {
-                isValidYear = true;
-            }
+        if (Objects.isNull(year)) {
+            year = 0;
         }
+
+        if (year <= Year.now().getValue()) {
+            isValidYear = true;
+        }
+
         return isValidYear;
     }
 }

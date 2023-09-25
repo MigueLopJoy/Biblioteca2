@@ -1,7 +1,7 @@
 package com.miguel.library.controller;
 
-import com.miguel.library.DTO.BookSaveBookCopy;
-import com.miguel.library.DTO.BookEditBookCopy;
+import com.miguel.library.DTO.BooksSaveDTOBookCopy;
+import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BookSearchRequestBookCopy;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
@@ -31,7 +31,7 @@ public class BookCopyController {
 
     @PostMapping("save-bookcopy")
     public ResponseEntity<BookCopy> saveNewBookCopy(
-            @Valid @RequestBody BookSaveBookCopy bookCopy
+            @Valid @RequestBody BooksSaveDTOBookCopy bookCopy
     ) {
         return ResponseEntity.ok(
                 bookCopyService.saveNewBookCopy(
@@ -68,7 +68,7 @@ public class BookCopyController {
     @PutMapping("edit-bookCopy/{bookCopyId}")
     public ResponseEntity<BookEdition> editBookEdition(
             @PathVariable Integer BookCopyId,
-            @RequestBody BookEditBookCopy bookEdit
+            @RequestBody BooksEditDTOBookCopy bookEdit
     ) {
         return ResponseEntity.ok(null);
     }

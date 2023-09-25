@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost/")
 @RestController
 @RequestMapping("/authors-catalog")
 public class AuthorController {
@@ -41,7 +42,7 @@ public class AuthorController {
 
     @GetMapping("/search-author")
     public ResponseEntity<?> searchAuthor(
-            @RequestParam(required = true, name = "author-name") String authorName
+            @RequestParam(name = "author_name") String authorName
     ) {
         List<Author> foundAuthors = authorService.searchByCustomizedSearch(authorName);
 
