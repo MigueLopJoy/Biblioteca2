@@ -37,7 +37,8 @@
             <div class="search-bookwork">
                 <form class="form search_bookwork_form">
                     <legend>Search book work</legend>
-                    <input type="text" name="bookwork-title" name="bookwork-title" placeholder="Introduce book work's title">
+                    <input type="text" name="bookwork-title" name="bookwork-title"
+                        placeholder="Introduce book work's title">
                     <input type="submit" id="search_bookwork_btn">
                 </form>
             </div>
@@ -46,7 +47,8 @@
                 <form class="form create_bookwork_form">
                     <legend>Create new book work</legend>
                     <input type="text" name="title" id="bookwork-title" placeholder="Book work title">
-                    <input type="number" name="bookwork-publication-year" id="bookwork-publication-year" placeholder="Book work publication year">
+                    <input type="number" name="bookwork-publication-year" id="bookwork-publication-year"
+                        placeholder="Book work publication year">
                     <input type="submit" id="create_bookwork_btn">
                 </form>
             </div>
@@ -58,7 +60,26 @@
 
         <div id="modal">
             <div class="modal-content">
-                <table id="results-table"></table>
+
+                <table class="results-table authors-results-table">
+                    <thead>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Select author</th>
+                    </thead>
+                    <tbody class="results-table-body"></tbody>
+                </table>
+
+                <table class="results-table bookworks-results-table">
+                    <thead>
+                        <th>Title</td>
+                        <th>Author</th>
+                        <th>Select book work</th>
+                    </thead>
+                    <tbody class="results-table-body"></tbody>
+                </table>
+
+                <button id="select-result">Select</button>
             </div>
         </div>
 

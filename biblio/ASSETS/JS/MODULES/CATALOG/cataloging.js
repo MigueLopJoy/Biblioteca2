@@ -6,33 +6,12 @@ const d = document,
     createAuthorForm = d.querySelector(".form.create_author_form"),
     searchBookworkForm = d.querySelector(".form.search_bookwork_form"),
     createBookworkForm = d.querySelector(".form.create_authorbookwork_form"),
+    authorsResultsTable = d.querySelector(".results-table.authors-results-table"),
+    bookworksResultsTable = d.querySelector(".results-table.bookworks-results-table"),
     modal = d.getElementById("modal"),
-    resultsTable = d.getElementById("results-table"),
-    template = d.getElementById("template"),
-    fragment = d.createDocumentFragment();
+    selectResultBtn = d.getElementById("select-result");
 
-const authorTHead = 
-    `
-        <thead>
-            <th>Author id</td>
-            <th>First name</th>
-            <th>Last name</th>
-        </thead>
-    `,
-
-
-    bookworkTHead = 
-    `
-        <thead>
-            <th>Book work id</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Publication Year</th>
-        </thead>
-    `;
-
-
-
+let author, bookwork;
 
 pageLinks.forEach(pageLink => {
     pageLink.addEventListener("click", e => {
@@ -40,6 +19,51 @@ pageLinks.forEach(pageLink => {
         showPage(e.target.name);
     });
 });
+
+
+d.addEventListener("submit", async e => {
+
+    e.preventDefault();
+
+    let results;
+    if (e.target === searchAuthorForm || e.target === createAuthorForm) {
+        if (e.target === searchAuthorForm) {
+
+            results = await fetchRequest(
+                "GET",
+                joinParamsToURL(
+                    "http://localhost:8080/authors-catalog/search-author",
+                    {
+                        author_name: e.target.author_name.value
+                    }
+                )
+            );
+        } else if (e.target === createAuthorForm) {
+
+            results = await fetchRequest(
+                "POST",
+                "http://localhost:8080/authors-catalog/save-author",
+                {
+                    firstName: e.target.firstName.value,
+                    lastName: e.target.lastName.value
+                }
+            );
+        }
+        console.log(results)
+        showResults(authorsResultsTable, results);
+    } else if (null) {
+
+    }
+
+})
+
+
+d.addEventListener("click", e => {
+    if (e.target === selectResultBtn) {
+
+    }
+})
+
 
 const showPage = pageOption => {
     pages.forEach(page => {
@@ -51,36 +75,6 @@ const showPage = pageOption => {
     d.querySelector(`.page-link.${pageOption}`).classList.toggle("active");
     document.querySelector(`.page.${pageOption}`).classList.add("active");
 }
-
-d.addEventListener("submit", async e => {
-
-    e.preventDefault();
-
-    let results;
-    if (e.target === searchAuthorForm) {
-
-        results = fetchRequest(
-            "GET",
-            joinParamsToURL(
-                "http://localhost:8080/authors-catalog/search-author",
-                {
-                    author_name: e.target.author_name.value
-                }
-            )
-        );
-    } else if (e.target === createAuthorForm) {
-
-        results = fetchRequest(
-            "POST",
-            "http://localhost:8080/authors-catalog/save-author",
-            {
-                firstName: e.target.firstName.value,
-                lastName: e.target.lastName.value
-            }
-        );
-    }
-    showResults(authorTHead, results);
-})
 
 
 const fetchRequest = async (method, url, bodyContent) => {
@@ -115,46 +109,87 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`;
 }
 
-const showResults = (thead, searchResults) => {
-    modal.style.display = "flex";
-    modal.style.alignItems = "center";
-    modal.style.justifyContent = "center";
-    generaTableContent(thead, searchResults);
+const showResults = (table, searchResults) => {
+    modal.style.display = "block";
+    table.style.display = "table";
+    generaTableContent(table, searchResults);
 }
 
-
-const generaTableContent = (thead, searchResults) => {
-
-    let tableContent = `${thead}<tbody>`;
-
+const generaTableContent = (table, searchResults) => {
 
     for (let i = 0; i < searchResults.length; i++) {
-        tableContent += '<tr>';
 
-        Object.keys(searchResults[i])
-            .map(key => {
-                console.log(searchResults[i])
-                console.log(searchResults[key])
-                console.log(searchResults[i][key])
+        let result = searchResults[i],
+            newRow;
 
-                tableContent += 
-                    `
-                    <td>
-                        ${searchResults[i][key]}
-                    </td>
-                    `;
-            });
-        tableContent += '</tr>';
+        if (table === authorsResultsTable) {
+            newRow = d.createElement("tr");
+
+            let firstName = d.createElement("td");
+            firstName.textContent = result.firstName;
+
+
+            let lastName = d.createElement("td");
+            lastName.textContent = result.lastName;
+
+            let selectAuthor = d.createElement("td"),
+                checkbox = d.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = `select-author`;
+            checkbox.name = `select-result select-author`;
+            checkbox.value = i;
+            selectAuthor.appendChild(checkbox);
+
+            newRow.appendChild(firstName);
+            newRow.appendChild(lastName);
+            newRow.appendChild(selectAuthor);
+
+        } else if (table === bookworksResultsTable) {
+            newRow = d.createElement("tr");
+
+            let title = d.createElement("td");
+            title.textContent = result.title;
+
+
+            let author = d.createElement("td");
+            author.textContent = `${result.author.firstName} ${result.author.lastName}`;
+
+            let selectBookwork = d.createElement("td"),
+                checkbox = d.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = `select-bookwork`;
+            checkbox.name = `select-result select-bookwork`;
+            checkbox.value = i;
+            selectBookwork.appendChild(checkbox);
+
+            newRow.appendChild(title);
+            newRow.appendChild(author);
+            newRow.appendChild(selectBookwork);
+        }
+        table.querySelector(".results-table-body").appendChild(newRow);
     }
+}
 
-    tableContent += '</tbody>';
+const generateAuthorsTableContent = () => {
 
-    resultsTable.innerHTML = tableContent;
+}
+
+const generateBookworksTableContent = () => {
 
 }
 
 const selectResult = () => {
+    const checkboxes = document.querySelectorAll('input[class="select-result"]');
 
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+            checkboxes.forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+        });
+    });
 }
 
 
