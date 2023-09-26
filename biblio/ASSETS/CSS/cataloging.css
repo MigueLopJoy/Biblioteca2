@@ -41,7 +41,8 @@
     border: 2px solid #111;
 }
 
-.author-option {
+.authors-option,
+.bookworks-option {
     width: 80%;
     margin: 0px auto 2rem auto;
     border: 2px solid #111;

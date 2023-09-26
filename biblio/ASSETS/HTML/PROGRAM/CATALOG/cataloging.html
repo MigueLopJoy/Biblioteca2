@@ -12,7 +12,7 @@
 
             <h3>Search or create author</h3>
 
-            <div class="author-option search-author">
+            <div class="authors-option search">
                 <form class="form search_author_form">
                     <legend>Search author</legend>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
@@ -20,7 +20,7 @@
                 </form>
             </div>
 
-            <div class="author-option create-author">
+            <div class="authors-option create">
                 <form class="form create_author_form">
                     <legend>Create new author</legend>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
@@ -34,28 +34,28 @@
         <div class="page bookwork-page">
             <h3>Search or create book work</h3>
 
-            <div class="search-bookwork">
+            <div class="bookworks-option search">
                 <form class="form search_bookwork_form">
                     <legend>Search book work</legend>
-                    <input type="text" name="bookwork-title" name="bookwork-title"
-                        placeholder="Introduce book work's title">
+                    <input type="text" name="title" placeholder="Introduce book work's title">
                     <input type="submit" id="search_bookwork_btn">
                 </form>
             </div>
 
-            <div class="create-bookwork">
+            <div class="bookworks-option create">
                 <form class="form create_bookwork_form">
                     <legend>Create new book work</legend>
-                    <input type="text" name="title" id="bookwork-title" placeholder="Book work title">
-                    <input type="number" name="bookwork-publication-year" id="bookwork-publication-year"
-                        placeholder="Book work publication year">
+                    <input type="text" name="title" placeholder="Book work title">
+                    <input type="number" name="publication_year" placeholder="Book work publication year">
                     <input type="submit" id="create_bookwork_btn">
                 </form>
             </div>
         </div>
 
-        <div id="edition-page" class="page">
-            pagina 3
+        <div class="page edition-page">
+            <form action="" class="form create_edition">
+                <legend>Create new book edition</legend>
+            </form>
         </div>
 
         <div id="modal">
@@ -74,12 +74,13 @@
                     <thead>
                         <th>Title</td>
                         <th>Author</th>
+                        <th>Publication year</th>
                         <th>Select book work</th>
                     </thead>
                     <tbody class="results-table-body"></tbody>
                 </table>
 
-                <button id="select-result">Select</button>
+                <button id="select-result" class="">Select</button>
             </div>
         </div>
 

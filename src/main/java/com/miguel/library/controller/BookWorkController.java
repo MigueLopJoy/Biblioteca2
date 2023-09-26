@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost/")
 @RestController
 @RequestMapping("/bookworks-catalog")
 public class BookWorkController {
@@ -52,7 +53,7 @@ public class BookWorkController {
     }
 
 
-    @GetMapping("/search-bookwork")
+    @PostMapping("/search-bookwork")
     public ResponseEntity<?> searchBookWorks(
             @Valid @RequestBody BookSearchRequestBookWork bookSearchRequest
     ) {
