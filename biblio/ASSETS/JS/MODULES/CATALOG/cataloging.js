@@ -6,10 +6,12 @@ const d = document,
     createAuthorForm = d.querySelector(".form.create_author_form"),
     searchBookworkForm = d.querySelector(".form.search_bookwork_form"),
     createBookworkForm = d.querySelector(".form.create_bookwork_form"),
-    authorsResultsTable = d.querySelector(".results-table.authors-results-table"),
-    bookworksResultsTable = d.querySelector(".results-table.bookworks-results-table"),
+    createBookEditionForm = d.querySelector(".form.create_edition_form"),
+    authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
+    bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
+    bookEditionTable = d.querySelector(".results_table.edition_results_table"),
     modal = d.getElementById("modal"),
-    selectResultBtn = d.getElementById("select-result");
+    selectResultBtn = d.querySelector(".select_result");
 
 let author, bookwork;
 
@@ -59,10 +61,6 @@ d.addEventListener("submit", async e => {
         resultsType = "bookwork";
 
         if (e.target === searchBookworkForm) {
-            console.log(                {
-                title: e.target.title.value,
-                author: `${author.firstName} ${author.lastName}`
-            })
             results = await fetchRequest(
                 "POST",
                 "http://localhost:8080/bookworks-catalog/search-bookwork",
@@ -86,8 +84,23 @@ d.addEventListener("submit", async e => {
                 }
             )]
         }
+    } else if (e.target === createBookEditionForm) {
+        resultsType = "edition";
+        table = bookEditionTable;
+
+        results = [await fetchRequest(
+            "POST",
+            "http://localhost:8080/general-catalog/save-bookedition",
+            {
+                ISBN: e.target.isbn.value,
+                editor: e.target.editor_name.value,
+                editionYear: e.target.edition_year.value,
+                language: e.target.edition_language.value,
+                bookwork: bookwork
+            }
+        )]
     }
-    showResults(table, results);
+    showSearchResults(table, results);
     selectResult(results, resultsType);
 })
 
@@ -132,10 +145,18 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`;
 }
 
-const showResults = (table, searchResults) => {
+const showSearchResults = (table, searchResults) => {
     modal.style.display = "block";
     table.style.display = "table";
     generaTableContent(table, searchResults);
+
+    if (table === authorsResultsTable) {
+        selectResultBtn.textContent = "Select author";
+    } else if (table === bookworksResultsTable) {
+        selectResultBtn.textContent = "Select book work";
+    } else if (table === bookEditionTable) {
+        selectResultBtn.textContent = "Save new edition";
+    }
     changeOption();
 }
 
@@ -144,7 +165,7 @@ const generaTableContent = (table, searchResults) => {
         generateAuthorsTableContent(table, searchResults)
     } else if (table === bookworksResultsTable) {
         generateBookworksTableContent(table, searchResults)
-    }    
+    }
 }
 
 const generateAuthorsTableContent = (table, searchResults) => {
@@ -172,7 +193,7 @@ const generateAuthorsTableContent = (table, searchResults) => {
         newRow.appendChild(firstName);
         newRow.appendChild(lastName);
         newRow.appendChild(selectAuthor);
-        table.querySelector(".results-table-body").appendChild(newRow);
+        table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
 
@@ -180,7 +201,7 @@ const generateBookworksTableContent = (table, searchResults) => {
     for (let i = 0; i < searchResults.length; i++) {
 
         let result = searchResults[i];
-            
+
         let newRow = d.createElement("tr");
 
         let title = d.createElement("td");
@@ -205,8 +226,7 @@ const generateBookworksTableContent = (table, searchResults) => {
         newRow.appendChild(bookAuthor);
         newRow.appendChild(publicationYear);
         newRow.appendChild(selectBookwork);
-        console.log(newRow)
-        table.querySelector(".results-table-body").appendChild(newRow);
+        table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
 
@@ -215,27 +235,46 @@ const selectResult = (searchResults, resultType) => {
         if (e.target === selectResultBtn) {
             if (resultType === "author") {
                 author = searchResults[findSelectedResult()];
-                authorsResultsTable.style.display = "none";
+                printSelectedResult(resultType)
             } else if (resultType === "bookwork") {
                 bookwork = searchResults[findSelectedResult()];
+                printSelectedResult(resultType)
                 bookworksResultsTable.style.display = "none";
             }
             modal.style.display = "none";
-            showPage(findCurrentPage().nextElementSibling.classList[1]);
         }
     });
 }
 
+const printSelectedResult = (resultType) => {
+    if (resultType === "author") {
+        d.querySelectorAll(".selected-result-holder .selected-author").forEach(el => {
+            el.textContent = `${author.firstName} ${author.lastName}`;
+            authorsResultsTable.style.display = "none";
+        })
+    } else if (resultType === "bookwork") {
+        d.querySelectorAll(".selected-result-holder .selected-bookwork").forEach(el => {
+            el.textContent = `${bookwork.title}`;
+            authorsResultsTable.style.display = "none";
+        })
+    }
+}
 
 const findSelectedResult = () => {
     const checkboxes = d.querySelectorAll('input.select-result');
-    for (const checkbox of checkboxes) {   
+    for (const checkbox of checkboxes) {
         if (checkbox.checked === true) {
             return checkbox.value
         }
     }
     return null
 }
+
+d.addEventListener("change", e => {
+    if (e.target === d.querySelector("input[type='checkbox'].select-result")) {
+        changeBtnState(document.querySelectorAll('input[class="select-result"]'));
+    }
+})
 
 const changeOption = () => {
     const checkboxes = document.querySelectorAll('input[class="select-result"]');
@@ -247,17 +286,14 @@ const changeOption = () => {
                     cb.checked = false;
                 }
             });
+            changeBtnState(checkbox);
         });
     });
 }
 
-const findCurrentPage = () => {
-    for (const page of pages) {
-        if (page.classList.contains("active")) 
-            return page
-    }
-    return null
+const changeBtnState = checkbox => {
+    const onceAtLeastSelected = [...checkboxes].some(checkbox => checkbox.checked);
+    selectResultBtn.disabled = !onceAtLeastSelected;
 }
-
 
 showPage("author-page");

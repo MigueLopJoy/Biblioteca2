@@ -1,5 +1,6 @@
 package com.miguel.library.DTO;
 
+import com.miguel.library.Validations.EditionYearNotBeforePublicationYear;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class BooksSaveDTOBookEdition {
     private String editor;
 
     @NotNull(message = "Edition year required")
-    @Min(value = 1900, message = "Edition year should not be under 1900")
+    @EditionYearNotBeforePublicationYear
     private Integer editionYear;
 
     @NotBlank(message = "Language required")

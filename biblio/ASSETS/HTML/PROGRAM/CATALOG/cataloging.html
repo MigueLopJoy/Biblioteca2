@@ -28,6 +28,10 @@
                     <input type="submit" id="create_author_btn">
                 </form>
             </div>
+
+            <div class="selected-result-holder">
+                <p class="selected-author"></p>
+            </div>
         </div>
 
 
@@ -50,37 +54,64 @@
                     <input type="submit" id="create_bookwork_btn">
                 </form>
             </div>
+
+            <div class="selected-result-holder">
+                <p class="selected-bookwork"></p>
+            </div>
         </div>
 
         <div class="page edition-page">
-            <form action="" class="form create_edition">
+            <div class="selected-result-holder">
+                <p class="selected-author"></p>
+                <span>/</span>
+                <p class="selected-bookwork"></p>
+            </div>
+            <form action="" class="form create_edition_form">
                 <legend>Create new book edition</legend>
+                <input type="text" name="isbn" placeholder="ISBN">
+                <input type="text" name="editor_name" placeholder="Editor name">
+                <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
+                <input type="text" name="edition_language" id="edition_language" placeholder="language">
+                <input type="submit" id="create_bookwork_btn">
             </form>
         </div>
 
         <div id="modal">
-            <div class="modal-content">
+            <div class="modal_content">
 
-                <table class="results-table authors-results-table">
+                <table class="results_table authors_results_table">
                     <thead>
                         <th>First name</th>
                         <th>Last name</th>
                         <th>Select author</th>
                     </thead>
-                    <tbody class="results-table-body"></tbody>
+                    <tbody class="results_table_body"></tbody>
                 </table>
 
-                <table class="results-table bookworks-results-table">
+                <table class="results_table bookworks_results_table">
                     <thead>
                         <th>Title</td>
                         <th>Author</th>
                         <th>Publication year</th>
                         <th>Select book work</th>
                     </thead>
-                    <tbody class="results-table-body"></tbody>
+                    <tbody class="results_table_body"></tbody>
                 </table>
 
-                <button id="select-result" class="">Select</button>
+                <table class="results_table edition_results_table">
+                    <thead>
+                        <th>Title</td>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Editor</th>
+                        <th>Edition Year</th>
+                        <th>Language</th>
+                        <th></th>
+                    </thead>
+                    <tbody class="results_table_body"></tbody>
+                </table>
+
+                <button class="select_result" role="button" disabled></button>
             </div>
         </div>
 
