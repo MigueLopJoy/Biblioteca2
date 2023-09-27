@@ -11,9 +11,9 @@ const d = document,
     bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
     bookEditionTable = d.querySelector(".results_table.edition_results_table"),
     modal = d.getElementById("modal"),
-    selectResultBtn = d.querySelector(".select_result");
+    selectResultBtn = d.querySelector(".select_result_btn");
 
-let author, bookwork;
+let author, bookwork, newEdition;
 
 pageLinks.forEach(pageLink => {
     pageLink.addEventListener("click", e => {
@@ -85,14 +85,15 @@ d.addEventListener("submit", async e => {
             )]
         }
     } else if (e.target === createBookEditionForm) {
+        console.log(e.target)
+
         resultsType = "edition";
         table = bookEditionTable;
-
         results = [await fetchRequest(
             "POST",
             "http://localhost:8080/general-catalog/save-bookedition",
             {
-                ISBN: e.target.isbn.value,
+                isbn: e.target.isbn.value,
                 editor: e.target.editor_name.value,
                 editionYear: e.target.edition_year.value,
                 language: e.target.edition_language.value,
@@ -100,19 +101,22 @@ d.addEventListener("submit", async e => {
             }
         )]
     }
+    debugger;
+    console.log(table, resultsType)
     showSearchResults(table, results);
+    console.log(resultsType)
     selectResult(results, resultsType);
 })
 
 const showPage = pageOption => {
     pages.forEach(page => {
-        page.classList.remove("active");
+        page.classList.add("hidden")
     });
     pageLinks.forEach(pageLink => {
         pageLink.classList.remove("active");
     })
     d.querySelector(`.page-link.${pageOption}`).classList.add("active");
-    d.querySelector(`.page.${pageOption}`).classList.add("active");
+    d.querySelector(`.page.${pageOption}`).classList.remove("hidden");
 }
 
 const fetchRequest = async (method, url, bodyContent) => {
@@ -146,8 +150,8 @@ const joinParamsToURL = (baseURL, params) => {
 }
 
 const showSearchResults = (table, searchResults) => {
-    modal.style.display = "block";
-    table.style.display = "table";
+    modal.classList.remove("hidden")
+    table.classList.remove("hidden")
     generaTableContent(table, searchResults);
 
     if (table === authorsResultsTable) {
@@ -158,6 +162,7 @@ const showSearchResults = (table, searchResults) => {
         selectResultBtn.textContent = "Save new edition";
     }
     changeOption();
+    enableCloseModalBtn();
 }
 
 const generaTableContent = (table, searchResults) => {
@@ -185,8 +190,8 @@ const generateAuthorsTableContent = (table, searchResults) => {
             checkbox = d.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = `select-author`;
-        checkbox.classList.add('select-result');
-        checkbox.classList.add('select-author');
+        checkbox.classList.add('result_option');
+        checkbox.classList.add('author_result_option');
         checkbox.value = i;
         selectAuthor.appendChild(checkbox);
 
@@ -217,8 +222,8 @@ const generateBookworksTableContent = (table, searchResults) => {
             checkbox = d.createElement("input");
         checkbox.type = "checkbox";
         checkbox.name = `select-bookwork`;
-        checkbox.classList.add('select-result');
-        checkbox.classList.add('select-bookwork');
+        checkbox.classList.add('result_option');
+        checkbox.classList.add('bookwork_result_option');
         checkbox.value = i;
         selectBookwork.appendChild(checkbox);
 
@@ -231,69 +236,102 @@ const generateBookworksTableContent = (table, searchResults) => {
 }
 
 const selectResult = (searchResults, resultType) => {
-    d.addEventListener("click", e => {
-        if (e.target === selectResultBtn) {
-            if (resultType === "author") {
-                author = searchResults[findSelectedResult()];
-                printSelectedResult(resultType)
-            } else if (resultType === "bookwork") {
-                bookwork = searchResults[findSelectedResult()];
-                printSelectedResult(resultType)
-                bookworksResultsTable.style.display = "none";
-            }
-            modal.style.display = "none";
+
+    console.log(resultType)
+
+    selectResultBtn.addEventListener("click", e => {
+        if (resultType === "author") {
+            author = searchResults[findSelectedResult()]
+        } else if (resultType === "bookwork") {
+            bookwork = searchResults[findSelectedResult()]
+            console.log(bookwork)
         }
+        console.log(resultType)
+
+        printSelectedResult(resultType)
+        closeModal()
+        enableNextPageBtn()
+
     });
 }
 
-const printSelectedResult = (resultType) => {
+const printSelectedResult = resultType => {
+    console.log(resultType)
     if (resultType === "author") {
-        d.querySelectorAll(".selected-result-holder .selected-author").forEach(el => {
+        d.querySelectorAll(".selected_result_holder .selected_author").forEach(el => {
             el.textContent = `${author.firstName} ${author.lastName}`;
-            authorsResultsTable.style.display = "none";
         })
     } else if (resultType === "bookwork") {
-        d.querySelectorAll(".selected-result-holder .selected-bookwork").forEach(el => {
-            el.textContent = `${bookwork.title}`;
-            authorsResultsTable.style.display = "none";
+        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
+            el.textContent = `${bookwork.title}`
         })
     }
 }
 
 const findSelectedResult = () => {
-    const checkboxes = d.querySelectorAll('input.select-result');
+    const checkboxes = d.querySelectorAll('input.result_option');
     for (const checkbox of checkboxes) {
         if (checkbox.checked === true) {
             return checkbox.value
         }
     }
-    return null
 }
 
-d.addEventListener("change", e => {
-    if (e.target === d.querySelector("input[type='checkbox'].select-result")) {
-        changeBtnState(document.querySelectorAll('input[class="select-result"]'));
-    }
-})
+const enableNextPageBtn = () => {
+    let nextStepBtn;
+
+    pages.forEach(page => {
+        if (!page.classList.contains("hidden")) {
+            nextStepBtn = page.querySelector(".next_step_btn")
+            nextStepBtn.classList.remove("hidden")
+        }
+    })
+
+    nextStepBtn.addEventListener("click", e => {
+        showPage(nextStepBtn.parentElement.nextElementSibling.classList[1])
+    })
+}
 
 const changeOption = () => {
-    const checkboxes = document.querySelectorAll('input[class="select-result"]');
+    const checkboxes = document.querySelectorAll('input.result_option');
 
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", () => {
+        checkbox.addEventListener("change", e => {
             checkboxes.forEach(cb => {
                 if (cb !== checkbox) {
                     cb.checked = false;
                 }
             });
-            changeBtnState(checkbox);
+            changeBtnState(e.target);
         });
     });
 }
 
 const changeBtnState = checkbox => {
-    const onceAtLeastSelected = [...checkboxes].some(checkbox => checkbox.checked);
-    selectResultBtn.disabled = !onceAtLeastSelected;
+    if (checkbox.checked === true) {
+        selectResultBtn.removeAttribute("disabled")
+    } else {
+        selectResultBtn.setAttribute("disabled", true)
+    }
+}
+
+const enableCloseModalBtn = () => {
+    d.addEventListener("click", e => {
+        if (e.target === modal.querySelector(".close_symbol")) {
+            closeModal()
+        }
+    })
+}
+
+const closeModal = () => {
+    d.querySelectorAll(".results_table").forEach(table => {
+        if (!table.classList.contains("hidden")) {
+            table.innerHTML = ""
+            table.classList.add("hidden")
+        }
+    })
+    modal.classList.add("hidden")
+    selectResultBtn.setAttribute("disabled", true)
 }
 
 showPage("author-page");

@@ -8,78 +8,98 @@
 
     <div class="cataloging-window">
 
-        <div class="page author-page">
+        <div class="page author-page hidden">
 
-            <h3>Search or create author</h3>
+            <div class="page_element_container">
+                <h3>Search or create author</h3>
+            </div>
 
-            <div class="authors-option search">
+            <div class="page_element_container search">
                 <form class="form search_author_form">
                     <legend>Search author</legend>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="submit" id="search_author_btn">
+                    <input type="submit" id="search_author_btn" value="Search">
                 </form>
             </div>
 
-            <div class="authors-option create">
+            <div class="page_element_container create">
                 <form class="form create_author_form">
                     <legend>Create new author</legend>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
                     <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
-                    <input type="submit" id="create_author_btn">
+                    <input type="submit" id="create_author_btn" value="Create">
                 </form>
             </div>
 
-            <div class="selected-result-holder">
-                <p class="selected-author"></p>
+            <div class="page_element_container selected_result_holder">
+                <p class="selected_author"></p>
             </div>
+
+            <button class="next_step_btn author-page hidden">Next step</button>
         </div>
 
 
-        <div class="page bookwork-page">
-            <h3>Search or create book work</h3>
+        <div class="page bookwork-page hidden">
 
-            <div class="bookworks-option search">
+            <div class="page_element_container">
+                <h3>Search or create book work</h3>
+            </div>
+
+            <div class="page_element_container search">
                 <form class="form search_bookwork_form">
                     <legend>Search book work</legend>
                     <input type="text" name="title" placeholder="Introduce book work's title">
-                    <input type="submit" id="search_bookwork_btn">
+                    <input type="submit" id="search_bookwork_btn" value="Search">
                 </form>
             </div>
 
-            <div class="bookworks-option create">
+            <div class="page_element_container create">
                 <form class="form create_bookwork_form">
                     <legend>Create new book work</legend>
                     <input type="text" name="title" placeholder="Book work title">
                     <input type="number" name="publication_year" placeholder="Book work publication year">
-                    <input type="submit" id="create_bookwork_btn">
+                    <input type="submit" id="create_bookwork_btn" value="Create">
                 </form>
             </div>
 
-            <div class="selected-result-holder">
+            <div class="page_element_container selected_result_holder">
                 <p class="selected-bookwork"></p>
+            </div>
+
+            <button class="next_step_btn bookwork-page hidden">Next step</button>
+        </div>
+
+        <div class="page edition-page hidden">
+
+            <div class="page_element_container">
+                <h3>Create new Book edition</h3>
+            </div>
+
+            <div class="page_element_container create">
+                <div class="selected-result-holder">
+                    <p class="selected-author"></p>
+                    <span>/</span>
+                    <p class="selected-bookwork"></p>
+                </div>
+                <form action="" class="form create_edition_form">
+                    <legend>Create new book edition</legend>
+                    <input type="text" name="isbn" placeholder="ISBN">
+                    <input type="text" name="editor_name" placeholder="Editor name">
+                    <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
+                    <input type="text" name="edition_language" id="edition_language" placeholder="language">
+                    <input type="submit" id="create_bookwork_btn">
+                </form>
             </div>
         </div>
 
-        <div class="page edition-page">
-            <div class="selected-result-holder">
-                <p class="selected-author"></p>
-                <span>/</span>
-                <p class="selected-bookwork"></p>
-            </div>
-            <form action="" class="form create_edition_form">
-                <legend>Create new book edition</legend>
-                <input type="text" name="isbn" placeholder="ISBN">
-                <input type="text" name="editor_name" placeholder="Editor name">
-                <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
-                <input type="text" name="edition_language" id="edition_language" placeholder="language">
-                <input type="submit" id="create_bookwork_btn">
-            </form>
-        </div>
+        <div id="modal" class="hidden">
 
-        <div id="modal">
             <div class="modal_content">
 
-                <table class="results_table authors_results_table">
+                <span class="close_symbol">X</span>
+
+
+                <table class="results_table authors_results_table hidden">
                     <thead>
                         <th>First name</th>
                         <th>Last name</th>
@@ -88,7 +108,7 @@
                     <tbody class="results_table_body"></tbody>
                 </table>
 
-                <table class="results_table bookworks_results_table">
+                <table class="results_table bookworks_results_table hidden">
                     <thead>
                         <th>Title</td>
                         <th>Author</th>
@@ -98,7 +118,7 @@
                     <tbody class="results_table_body"></tbody>
                 </table>
 
-                <table class="results_table edition_results_table">
+                <table class="results_table edition_results_table hidden">
                     <thead>
                         <th>Title</td>
                         <th>Author</th>
@@ -111,7 +131,7 @@
                     <tbody class="results_table_body"></tbody>
                 </table>
 
-                <button class="select_result" role="button" disabled></button>
+                <button class="select_result_btn" role="button" disabled></button>
             </div>
         </div>
 
