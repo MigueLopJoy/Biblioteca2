@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Pattern;
 
 @AllArgsConstructor
 @Getter @Setter
+@EditionYearNotBeforePublicationYear
 public class BooksSaveDTOBookEdition {
 
     @NotBlank(message = "ISBN required")
@@ -22,7 +23,6 @@ public class BooksSaveDTOBookEdition {
     private String editor;
 
     @NotNull(message = "Edition year required")
-    @EditionYearNotBeforePublicationYear
     private Integer editionYear;
 
     @NotBlank(message = "Language required")

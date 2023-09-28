@@ -1,11 +1,9 @@
 package com.miguel.library.Validations;
 
-import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.Year;
 import java.util.Objects;
 
 public class EditionYearNotBeforePublicationYearValidator implements ConstraintValidator<EditionYearNotBeforePublicationYear, BooksSaveDTOBookEdition> {

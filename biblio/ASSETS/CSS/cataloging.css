@@ -84,29 +84,37 @@
         background-color: #2c974b;
     }
 
+    .error_message {
+        color: #ff0000; 
+        padding-top: .25rem; 
+        padding-bottom: .25rem;
+    }
+    
 
-    .nextstep_container {
+    .change_page_container {
+        width: 100%;
+        padding: 0 2rem .5rem 2rem;
+        padding-right: 2.5rem;
         text-align: right;
-        padding: .5rem;
     }
 
-    .nextstep_container span {
+    .change_page_container span {
         font-size: 1.75rem;
         font-weight: 900;
         color: var(--secondary-color);
         cursor: pointer;
     }
 
-    .nextstep_container span.disabled {
+    .change_page_container span.disabled {
         color: #AAA;
         cursor: pointer;
     }
 
-    .nextstep_container span:hover {
+    .change_page_container span:hover {
         color: #AAA;
     }
 
-    .nextstep_container span.disabled:hover {
+    .change_page_container span.disabled:hover {
         color: #AAA;
     }
 
@@ -117,7 +125,6 @@
     }
 
 
-    /* Estilos para el modal */
     #modal {
         position: fixed;
         z-index: 1;

@@ -28,7 +28,7 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Override
     public BookEdition saveNewBookEdition(BookEdition bookEdition) {
-        BookEdition savedBookEdition = null;
+        BookEdition savedBookEdition;
 
         if (Objects.isNull(bookEdition)) {
             throw new ExceptionNullObject("Book edition should not be null");
@@ -36,7 +36,7 @@ public class ImpBookEditionService implements IBookEditionService{
 
         BookWork bookWork = bookEdition.getBookWork();
 
-        if (bookWork != null) {
+        if (Objects.isNull(bookWork)) {
             throw new ExceptionNullObject("Book edition's book work should not be null");
         }
 
@@ -138,7 +138,11 @@ public class ImpBookEditionService implements IBookEditionService{
                     .editor(bookEdition.getEditor())
                     .language(bookEdition.getLanguage())
                     .editionYear(bookEdition.getEditionYear())
-                    .bookWork(bookWorkService.createBookWorkFromBookSaveDTO(bookEdition.getBookWork()))
+                    .bookWork(
+                            bookWorkService.createBookWorkFromBookSaveDTO(
+                                    bookEdition.getBookWork()
+                            )
+                    )
                 .build();
     }
 

@@ -11,7 +11,7 @@
         <div class="page author_page hidden">
 
             <div class="page_element_container search_author">
-                <form class="form search_author_form">
+                <form class="form author_form search">
                     <legend>Search author</legend>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
                     <input type="submit" id="search_author_btn" value="Search">
@@ -19,9 +19,11 @@
             </div>
 
             <div class="page_element_container create_author">
-                <form class="form create_author_form">
+                <form class="form author_form create">
                     <legend>Create new author</legend>
+                    <p class="error_message firstName"></p>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
+                    <p class="error_message lastName"></p>
                     <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
                     <input type="submit" id="create_author_btn" value="Create">
                 </form>
@@ -31,8 +33,8 @@
                 <p class="selected_author"><span>Author: </span></p>
             </div>
 
-            <div class="page_element_container nextstep_container">
-                <span class="material-symbols-outlined author_page bookwork_page disabled">chevron_right</span>
+            <div class="page_element_container change_page_container">
+                <span class="material-symbols-outlined author_page bookwork_page next_page disabled">chevron_right</span>
             </div>
         </div>
 
@@ -40,7 +42,7 @@
         <div class="page bookwork_page hidden">
 
             <div class="page_element_container search_bookwork">
-                <form class="form search_bookwork_form">
+                <form class="form bookwork_form search">
                     <legend>Search book work</legend>
                     <input type="text" name="title" placeholder="Introduce book work's title">
                     <input type="submit" id="search_bookwork_btn" value="Search">
@@ -48,9 +50,11 @@
             </div>
 
             <div class="page_element_container create_bookwork">
-                <form class="form create_bookwork_form">
+                <form class="form bookwork_form create">
                     <legend>Create new book work</legend>
+                    <p class="error_message title"></p>
                     <input type="text" name="title" placeholder="Book work title">
+                    <p class="error_message publicationYear"></p>
                     <input type="number" name="publication_year" placeholder="Book work publication year">
                     <input type="submit" id="create_bookwork_btn" value="Create">
                 </form>
@@ -60,8 +64,9 @@
                 <p class="selected_bookwork"><span>Book work: </span></p>
             </div>
 
-            <div class="page_element_container nextstep_container">
-                <span class="material-symbols-outlined bookwork_page edition_page disabled">chevron_right</span>
+            <div class="page_element_container change_page_container">
+                <span class="material-symbols-outlined bookwork_page author_page previous_page">chevron_left</span>
+                <span class="material-symbols-outlined bookwork_page edition_page next_page disabled">chevron_right</span>
             </div>
         </div>
 
@@ -73,14 +78,22 @@
                     <span>/</span>
                     <p class="selected_bookwork"></p>
                 </div>
-                <form action="" class="form create_edition_form">
+                <form action="" class="form edition_form create">
                     <legend>Create new book edition</legend>
+                    <p class="error_message isbn"></p>
                     <input type="text" name="isbn" placeholder="ISBN">
+                    <p class="error_message editor"></p>
                     <input type="text" name="editor_name" placeholder="Editor name">
+                    <p class="error_message editionYear"></p>
                     <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
+                    <p class="error_message language"></p>
                     <input type="text" name="edition_language" id="edition_language" placeholder="language">
                     <input type="submit" id="create_bookwork_btn">
                 </form>
+            </div>
+            
+            <div class="page_element_container change_page_container">
+                <span class="material-symbols-outlined edition_page bookwork_page  previous_page">chevron_left</span>
             </div>
         </div>
 
@@ -118,7 +131,7 @@
                         <th>Editor</th>
                         <th>Edition Year</th>
                         <th>Language</th>
-                        <th></th>
+                        <th>Select book edition</th>
                     </thead>
                     <tbody class="results_table_body"></tbody>
                 </table>
