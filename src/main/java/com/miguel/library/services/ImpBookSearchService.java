@@ -245,7 +245,7 @@ public class ImpBookSearchService implements IBookSearchService {
 
         if (!StringUtils.isEmpty(bookSearchRequest.getTitle())
                 && !bookSearchRequest.getTitle().trim().isEmpty()) {
-            
+
             predicates.add(
                     criteriaBuilder.like(
                             root.get("title"),

@@ -13,7 +13,7 @@ const d = document,
     modal = d.getElementById("modal"),
     selectResultBtn = d.querySelector(".select_result_btn");
 
-let author, bookwork, newEdition;
+let author, bookwork, newEdition, results, resultsType;
 
 pageLinks.forEach(pageLink => {
     pageLink.addEventListener("click", e => {
@@ -26,7 +26,7 @@ d.addEventListener("submit", async e => {
 
     e.preventDefault();
 
-    let results, table, resultsType;
+    let table;
 
     if (e.target === searchAuthorForm || e.target === createAuthorForm) {
 
@@ -85,10 +85,10 @@ d.addEventListener("submit", async e => {
             )]
         }
     } else if (e.target === createBookEditionForm) {
-        console.log(e.target)
 
         resultsType = "edition";
         table = bookEditionTable;
+
         results = [await fetchRequest(
             "POST",
             "http://localhost:8080/general-catalog/save-bookedition",
@@ -101,11 +101,8 @@ d.addEventListener("submit", async e => {
             }
         )]
     }
-    debugger;
-    console.log(table, resultsType)
-    showSearchResults(table, results);
-    console.log(resultsType)
-    selectResult(results, resultsType);
+    showSearchResults(table);
+    selectResult();
 })
 
 const showPage = pageOption => {
@@ -149,10 +146,10 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`;
 }
 
-const showSearchResults = (table, searchResults) => {
+const showSearchResults = table => {
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
-    generaTableContent(table, searchResults);
+    generaTableContent(table)
 
     if (table === authorsResultsTable) {
         selectResultBtn.textContent = "Select author";
@@ -161,22 +158,23 @@ const showSearchResults = (table, searchResults) => {
     } else if (table === bookEditionTable) {
         selectResultBtn.textContent = "Save new edition";
     }
+
     changeOption();
     enableCloseModalBtn();
 }
 
-const generaTableContent = (table, searchResults) => {
+const generaTableContent = (table) => {
     if (table === authorsResultsTable) {
-        generateAuthorsTableContent(table, searchResults)
+        generateAuthorsTableContent(table)
     } else if (table === bookworksResultsTable) {
-        generateBookworksTableContent(table, searchResults)
+        generateBookworksTableContent(table)
     }
 }
 
-const generateAuthorsTableContent = (table, searchResults) => {
-    for (let i = 0; i < searchResults.length; i++) {
+const generateAuthorsTableContent = (table) => {
+    for (let i = 0; i < results.length; i++) {
 
-        let result = searchResults[i];
+        let result = results[i];
 
         let newRow = d.createElement("tr");
 
@@ -202,10 +200,10 @@ const generateAuthorsTableContent = (table, searchResults) => {
     }
 }
 
-const generateBookworksTableContent = (table, searchResults) => {
-    for (let i = 0; i < searchResults.length; i++) {
+const generateBookworksTableContent = table => {
+    for (let i = 0; i < results.length; i++) {
 
-        let result = searchResults[i];
+        let result = results[i];
 
         let newRow = d.createElement("tr");
 
@@ -235,37 +233,33 @@ const generateBookworksTableContent = (table, searchResults) => {
     }
 }
 
-const selectResult = (searchResults, resultType) => {
-
-    console.log(resultType)
-
-    selectResultBtn.addEventListener("click", e => {
-        if (resultType === "author") {
-            author = searchResults[findSelectedResult()]
-        } else if (resultType === "bookwork") {
-            bookwork = searchResults[findSelectedResult()]
-            console.log(bookwork)
-        }
-        console.log(resultType)
-
-        printSelectedResult(resultType)
-        closeModal()
-        enableNextPageBtn()
-
-    });
+const selectResult = () => {
+    selectResultBtn.addEventListener("click", executeSelectResultBtnListener)
 }
 
-const printSelectedResult = resultType => {
-    console.log(resultType)
-    if (resultType === "author") {
+const executeSelectResultBtnListener = () => {
+    if (resultsType === "author") {
+        author = results[findSelectedResult()]
+    } else if (resultsType === "bookwork") {
+        bookwork = results[findSelectedResult()]
+    }
+    printSelectedResult(resultsType)
+    closeModal()
+    enableNextPageBtn()
+    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
+}
+
+const printSelectedResult = () => {
+    if (resultsType === "author") {
         d.querySelectorAll(".selected_result_holder .selected_author").forEach(el => {
-            el.textContent = `${author.firstName} ${author.lastName}`;
+            el.textContent += `${author.firstName} ${author.lastName}`
         })
-    } else if (resultType === "bookwork") {
+    } else if (resultsType === "bookwork") {
         d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
-            el.textContent = `${bookwork.title}`
+            el.textContent += `${bookwork.title}`
         })
     }
+    results = "", resultsType = "";
 }
 
 const findSelectedResult = () => {
@@ -278,17 +272,46 @@ const findSelectedResult = () => {
 }
 
 const enableNextPageBtn = () => {
-    let nextStepBtn;
+    let nextStepBtn,
+        i = 0,
+        nextStepBtns = d.querySelectorAll(".nextstep_container span"),
+        found = false,
+        page, btn;
 
-    pages.forEach(page => {
-        if (!page.classList.contains("hidden")) {
-            nextStepBtn = page.querySelector(".next_step_btn")
-            nextStepBtn.classList.remove("hidden")
-        }
+    nextStepBtns.forEach(btn => {
+        btn.classList.add("disabled")
     })
 
+
+    do {
+        if (!pages[i].classList.contains("hidden")) {
+            page = pages[i]
+            found = true
+        } else {
+            i++
+        }
+    } while (!found && i < pages.length)
+
+    if (found) {
+        i = 0
+        found = false
+    }
+
+    do {
+        btn = nextStepBtns[i]
+
+        if (page.classList[1] === btn.classList[1]) {
+            nextStepBtn = btn
+            found = true
+        } else {
+            i++
+        }
+    } while (!found && i < nextStepBtns.length)
+
+    nextStepBtn.classList.remove("disabled")
+
     nextStepBtn.addEventListener("click", e => {
-        showPage(nextStepBtn.parentElement.nextElementSibling.classList[1])
+        showPage(nextStepBtn.classList[2])
     })
 }
 
@@ -326,7 +349,7 @@ const enableCloseModalBtn = () => {
 const closeModal = () => {
     d.querySelectorAll(".results_table").forEach(table => {
         if (!table.classList.contains("hidden")) {
-            table.innerHTML = ""
+            table.querySelector(".results_table_body").innerHTML = ""
             table.classList.add("hidden")
         }
     })
@@ -334,4 +357,4 @@ const closeModal = () => {
     selectResultBtn.setAttribute("disabled", true)
 }
 
-showPage("author-page");
+showPage("author_page");

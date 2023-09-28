@@ -1,20 +1,16 @@
 <div class="container" id="cataloging-section">
 
     <menu class="cataloging-nav">
-        <a class="page-link author-page">Author</a>
-        <a class="page-link bookwork-page">Work</a>
-        <a class="page-link edition-page">Edition</a>
+        <a class="page-link author_page">Author</a>
+        <a class="page-link bookwork_page">Work</a>
+        <a class="page-link edition_page">Edition</a>
     </menu>
 
     <div class="cataloging-window">
 
-        <div class="page author-page hidden">
+        <div class="page author_page hidden">
 
-            <div class="page_element_container">
-                <h3>Search or create author</h3>
-            </div>
-
-            <div class="page_element_container search">
+            <div class="page_element_container search_author">
                 <form class="form search_author_form">
                     <legend>Search author</legend>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
@@ -22,7 +18,7 @@
                 </form>
             </div>
 
-            <div class="page_element_container create">
+            <div class="page_element_container create_author">
                 <form class="form create_author_form">
                     <legend>Create new author</legend>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
@@ -32,20 +28,18 @@
             </div>
 
             <div class="page_element_container selected_result_holder">
-                <p class="selected_author"></p>
+                <p class="selected_author"><span>Author: </span></p>
             </div>
 
-            <button class="next_step_btn author-page hidden">Next step</button>
+            <div class="page_element_container nextstep_container">
+                <span class="material-symbols-outlined author_page bookwork_page disabled">chevron_right</span>
+            </div>
         </div>
 
 
-        <div class="page bookwork-page hidden">
+        <div class="page bookwork_page hidden">
 
-            <div class="page_element_container">
-                <h3>Search or create book work</h3>
-            </div>
-
-            <div class="page_element_container search">
+            <div class="page_element_container search_bookwork">
                 <form class="form search_bookwork_form">
                     <legend>Search book work</legend>
                     <input type="text" name="title" placeholder="Introduce book work's title">
@@ -53,7 +47,7 @@
                 </form>
             </div>
 
-            <div class="page_element_container create">
+            <div class="page_element_container create_bookwork">
                 <form class="form create_bookwork_form">
                     <legend>Create new book work</legend>
                     <input type="text" name="title" placeholder="Book work title">
@@ -63,23 +57,21 @@
             </div>
 
             <div class="page_element_container selected_result_holder">
-                <p class="selected-bookwork"></p>
+                <p class="selected_bookwork"><span>Book work: </span></p>
             </div>
 
-            <button class="next_step_btn bookwork-page hidden">Next step</button>
+            <div class="page_element_container nextstep_container">
+                <span class="material-symbols-outlined bookwork_page edition_page disabled">chevron_right</span>
+            </div>
         </div>
 
-        <div class="page edition-page hidden">
+        <div class="page edition_page hidden">
 
-            <div class="page_element_container">
-                <h3>Create new Book edition</h3>
-            </div>
-
-            <div class="page_element_container create">
-                <div class="selected-result-holder">
-                    <p class="selected-author"></p>
+            <div class="page_element_container create_bookedition">
+                <div class="selected_result_holder">
+                    <p class="selected_author"></p>
                     <span>/</span>
-                    <p class="selected-bookwork"></p>
+                    <p class="selected_bookwork"></p>
                 </div>
                 <form action="" class="form create_edition_form">
                     <legend>Create new book edition</legend>

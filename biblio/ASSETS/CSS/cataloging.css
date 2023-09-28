@@ -2,246 +2,237 @@
 
 /* Paleta de colores */
 :root {
-    --primary-color: #2ea44f; 
-    --secondary-color: #393939; 
-    --background-color: #f2f2f2; 
+    --primary-color: #2ea44f;
+    --secondary-color: #393939;
+    --background-color: #f2f2f2;
 
-/* Estilos para la barra de navegación */
-.cataloging-nav {
-    background-color: var(--secondary-color);
-    overflow: hidden;
-}
+    /* Estilos para la barra de navegación */
+    .cataloging-nav {
+        background-color: var(--secondary-color);
+        overflow: hidden;
+    }
 
-.cataloging-nav a {
-    color: #fff;
-    text-align: center;
-    padding: 1rem;
-    text-decoration: none;
-    font-size: 1.25rem;
-    transition: background-color 0.3s, color 0.3s;
-}
+    .cataloging-nav a {
+        color: #fff;
+        text-align: center;
+        padding: 1rem;
+        text-decoration: none;
+        font-size: 1.25rem;
+        transition: background-color 0.3s, color 0.3s;
+    }
 
-.cataloging-nav a:hover {
-    background-color: var(--primary-color);
-}
+    .cataloging-nav a:hover {
+        background-color: var(--primary-color);
+    }
 
-.cataloging-nav a.active {
-    background-color: var(--primary-color);
-}
+    .cataloging-nav a.active {
+        background-color: var(--primary-color);
+    }
 
-/* Estilos para la ventana de catálogo */
-.cataloging-window {
-    padding-top: 1.75rem;
-    border: 2px solid var(--secondary-color);
-}
+    /* Estilos para la ventana de catálogo */
+    .cataloging-window {
+        padding-top: 1.75rem;
+        border: 2px solid var(--secondary-color);
+    }
 
-/* Estilos para las opciones de autores y obras */
-.page_element_container {
-    width: 80%;
-    margin: 0 auto;
-    border-bottom: 1px solid #ccc;
-    padding: 1.5rem;
-}
+    /* Estilos para las opciones de autores y obras */
+    .page_element_container {
+        width: 80%;
+        margin: 0 auto;
+        border-bottom: 1px solid #ccc;
+        padding: 1.5rem;
+    }
 
-.page_element_container h3 {
-    font-size: 1.5rem;
-}
+    .page_element_container.selected_result_holder {
+        border-bottom: none;
+    }
 
-/* Estilos para los formularios */
+    /* Estilos para los formularios */
 
-.cataloging-window .form {
-    width: 100%;
-    max-width: 400px; 
-}
+    .cataloging-window .form {
+        width: 100%;
+        max-width: 400px;
+    }
 
-.cataloging-window .form legend {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
+    .cataloging-window .form legend {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
 
-.cataloging-window .form input[type="text"],
-.cataloging-window .form input[type="number"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
+    .cataloging-window .form input[type="text"],
+    .cataloging-window .form input[type="number"] {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
 
-.cataloging-window .form input[type="submit"] {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
+    .cataloging-window .form input[type="submit"] {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
 
-.cataloging-window .form input[type="submit"]:hover {
-    background-color: #2c974b;
-}
-
-/* Estilos para los botones de "Next step" */
-.next_step_btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
-
-.next_step_btn:hover {
-    background-color: #2c974b;
-}
+    .cataloging-window .form input[type="submit"]:hover {
+        background-color: #2c974b;
+    }
 
 
-.cataloging-window .form input[type="text"],
-.cataloging-window .form input[type="number"],
-.cataloging-window .form input[type="submit"] {
-    margin-bottom: 0.5rem;
-}
+    .nextstep_container {
+        text-align: right;
+        padding: .5rem;
+    }
+
+    .nextstep_container span {
+        font-size: 1.75rem;
+        font-weight: 900;
+        color: var(--secondary-color);
+        cursor: pointer;
+    }
+
+    .nextstep_container span.disabled {
+        color: #AAA;
+        cursor: pointer;
+    }
+
+    .nextstep_container span:hover {
+        color: #AAA;
+    }
+
+    .nextstep_container span.disabled:hover {
+        color: #AAA;
+    }
+
+    .cataloging-window .form input[type="text"],
+    .cataloging-window .form input[type="number"],
+    .cataloging-window .form input[type="submit"] {
+        margin-bottom: 0.5rem;
+    }
 
 
-/* Estilos para el modal */
-#modal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    overflow: auto;
-}
+    /* Estilos para el modal */
+    #modal {
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        overflow: auto;
+    }
 
-#modal .close_symbol {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    color: var(--secondary-color);
-    font-size: 24px;
-}
+    #modal .close_symbol {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        color: var(--secondary-color);
+        font-size: 24px;
+    }
 
-#modal .close_symbol:hover {
-    color: #888;
-}
+    #modal .close_symbol:hover {
+        color: #888;
+    }
 
-#modal .close_symbol:active {
-    color: var(--secondary-color);
-}
+    #modal .close_symbol:active {
+        color: var(--secondary-color);
+    }
 
-#modal .modal_content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    position: relative;
-}
+    #modal .modal_content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
 
-.modal_content .form input[type="text"],
-.modal_content .form input[type="number"],
-.modal_content .form input[type="submit"] {
-    margin-bottom: 0.5rem;
-}
+    .modal_content .form input[type="text"],
+    .modal_content .form input[type="number"],
+    .modal_content .form input[type="submit"] {
+        margin-bottom: 0.5rem;
+    }
 
-/* Estilos para las tablas de resultados */
-.results_table {
-    width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-}
+    /* Estilos para las tablas de resultados */
+    .results_table {
+        width: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
 
-.results_table td,
-.results_table th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
+    .results_table td,
+    .results_table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
 
-.results_table th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: var(--primary-color);
-    color: white;
-}
+    .results_table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: var(--primary-color);
+        color: white;
+    }
 
-.results_table tr:nth-child(even) {
-    background-color: var(--background-color);
-}
+    .results_table tr:nth-child(even) {
+        background-color: var(--background-color);
+    }
 
-.results_table tr:hover {
-    background-color: #ddd;
-}
+    .results_table tr:hover {
+        background-color: #ddd;
+    }
 
-.results_table .result_option {
-    cursor: pointer;
-}
+    .results_table .result_option {
+        cursor: pointer;
+    }
 
-/* Estilos para el botón de selección */
-.select_result_btn {
-    background-color: var(--primary-color);
-    border: 1px solid rgba(27, 31, 35, .15);
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 20px;
-    padding: 6px 16px;
-    text-align: center;
-    white-space: nowrap;
-    transition: background-color 0.3s;
-}
+    /* Estilos para el botón de selección */
+    .select_result_btn {
+        background-color: var(--primary-color);
+        border: 1px solid rgba(27, 31, 35, .15);
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 20px;
+        padding: 6px 16px;
+        text-align: center;
+        white-space: nowrap;
+        transition: background-color 0.3s;
+    }
 
-.select_result_btn:hover {
-    background-color: #2c974b;
-}
+    .select_result_btn:hover {
+        background-color: #2c974b;
+    }
 
-.select_result_btn:focus {
-    box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
-    outline: none;
-}
+    .select_result_btn:focus {
+        box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+        outline: none;
+    }
 
-.select_result_btn:disabled {
-    background-color: #94d3a2;
-    border-color: rgba(27, 31, 35, .1);
-    color: rgba(255, 255, 255, .8);
-    cursor: default;
-}
+    .select_result_btn:disabled {
+        background-color: #94d3a2;
+        border-color: rgba(27, 31, 35, .1);
+        color: rgba(255, 255, 255, .8);
+        cursor: default;
+    }
 
-.select_result_btn:active {
-    background-color: #298e46;
-    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-}
+    .select_result_btn:active {
+        background-color: #298e46;
+        box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+    }
 
-
-.next_step_btn {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-    display: block; /* Cambiamos a 'block' para que ocupen todo el ancho */
-    margin: 1rem auto; /* Centramos el botón horizontalmente y agregamos espaciado vertical */
-}
-
-.next_step_btn:hover {
-    background-color: #2c974b;
-}
-
-.hidden {
-    display: none;
-}
+    .hidden {
+        display: none;
+    }
