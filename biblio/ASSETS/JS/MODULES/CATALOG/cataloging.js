@@ -29,12 +29,15 @@ d.addEventListener("submit", async e => {
 
     let currentPage = findCurrentPage()
 
-    cleanErrorMessages(currentPage)
+    clearErrorMessages()
+    clearFormData(e.target)
 
     if (currentPage.classList.contains("author_page")) {
 
+        author = ""
         table = authorsResultsTable;
         resultsType = "author";
+        deletePrintedReults()
 
         if (e.target === searchAuthorForm) {
             operation = "search"
@@ -45,27 +48,36 @@ d.addEventListener("submit", async e => {
         }
 
     } else if (currentPage.classList.contains("bookwork_page")) {
+
+        bookwork = ""
         table = bookworksResultsTable;
         resultsType = "bookwork";
+        deletePrintedReults()
 
         if (e.target === searchBookworkForm) {
-            await getSearchAuthorResults(e.target)
+            operation = "search"
+            await getSearchBookworkResults(e.target)
         } else if (e.target === createBookworkForm) {
+            operation = "create"
             await getCreatehBookworkResults(e.target)
         }
+
     } else if (currentPage.classList.contains("edition_page")) {
+
+        edition = ""
         resultsType = "edition";
         table = bookEditionTable;
-
+        operation = "create"
+        
         await getCreateBookeditionResults(e.target)
     }
 
     if (error) {
-        handleErrorMessages(currentPage)
+        handleErrorMessages()
         error = null
     } else {
         showSearchResults()
-        selectResult()
+        enableModalActions()
     }
 })
 
@@ -88,6 +100,18 @@ const getCreateAuthorResults = async form => {
         {
             firstName: form.firstName.value,
             lastName: form.lastName.value
+        }
+    )
+    results = [results]
+}
+
+const getEditAuthorResults = async editedFields => {
+    await fetchRequest(
+        "PUT",
+        `http://localhost:8080/authors-catalog/edit-author/${results[0].idAuthor}`,
+        {
+            firstName: editedFields[0],
+            lastName: editedFields[1]
         }
     )
     results = [results]
@@ -120,6 +144,22 @@ const getCreatehBookworkResults = async form => {
     results = [results]
 }
 
+const getEditBookworkResults = async editedFields => {
+    await fetchRequest(
+        "POST",
+        `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
+        {
+            title: editedFields[0],
+            author: {
+                firstName: author.firstName,
+                lastName: author.lastName
+            },
+            publicationYear: editedFields[2]
+        }
+    )
+    results = [results]
+}
+
 const getCreateBookeditionResults = async form => {
     await fetchRequest(
         "POST",
@@ -129,6 +169,28 @@ const getCreateBookeditionResults = async form => {
             editor: form.editor_name.value,
             editionYear: form.edition_year.value,
             language: form.edition_language.value,
+            bookWork: {
+                title: bookwork.title,
+                author: {
+                    firstName: bookwork.author.firstName,
+                    lastName: bookwork.author.lastName
+                },
+                publicationYear: bookwork.publicationYear
+            }
+        }
+    )
+    results = [results]
+}
+
+const getEditBookeditionResults = async editedFields => {
+    await fetchRequest(
+        "POST",
+        `http://localhost:8080/general-catalog/save-bookedition/${results[0].idBookEdition}`,
+        {
+            isbn: editedFields[2],
+            editor: editedFields[3],
+            editionYear: editedFields[4],
+            language: editedFields[5],
             bookWork: {
                 title: bookwork.title,
                 author: {
@@ -190,20 +252,20 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`
 }
 
-const handleErrorMessages = currentPage => {
+const handleErrorMessages = () => {
     if (error.status === 422) {
-        handle422Exception(currentPage)
+        handle422Exception()
     }
 }
 
-const handle422Exception = currentPage => {
+const handle422Exception = () => {
     error.validationErrors.forEach(er => {
-        currentPage.querySelector(`.error_message.${er.field}`).textContent = er.message
+        findCurrentPage().querySelector(`.error_message.${er.field}`).textContent = er.message
     })
 }
 
-const cleanErrorMessages = page => {
-    page.querySelectorAll(".error_message").forEach(el => {
+const clearErrorMessages = () => {
+    findCurrentPage().querySelectorAll(".error_message").forEach(el => {
         el.textContent = ""
     })
 }
@@ -213,8 +275,7 @@ const showSearchResults = () => {
     table.classList.remove("hidden")
     generaTableContent()
 
-    if (operation = "search") {
-
+    if (operation === "search") {
         d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
 
         if (table === authorsResultsTable) {
@@ -227,9 +288,17 @@ const showSearchResults = () => {
     } else if (operation === "create") {
         d.querySelector(".modal_btns_container .create_btns").classList.remove("hidden")
     }
+}
 
-    changeOption();
-    enableCloseModalBtn();
+const enableModalActions = () => {
+    if (operation === "search") {
+        enableOptionChangigng()
+        enableCloseModalBtn()
+        enableSelectResultBtn()
+    } else if (operation === "create") {
+        disableCloseModalBtn()
+        enableCreateBtns()
+    }
 }
 
 const generaTableContent = () => {
@@ -243,6 +312,13 @@ const generaTableContent = () => {
 }
 
 const generateAuthorsTableContent = () => {
+    if (operation === "search" && !table.querySelector("th.select_column")) {
+        let selectColumn = d.createElement("th")
+        selectColumn.textContent = "Select Autor"
+        selectColumn.classList.add("select_column")
+        table.querySelector("thead tr").appendChild(selectColumn)        
+    }
+
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i];
@@ -255,25 +331,36 @@ const generateAuthorsTableContent = () => {
         let lastName = d.createElement("td");
         lastName.textContent = result.lastName;
 
+        let selectAuthor, checkbox
         if (operation === "search") {
-            let selectAuthor = d.createElement("td"),
-                checkbox = d.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.name = `select-author`;
-            checkbox.classList.add('result_option');
-            checkbox.classList.add('author_result_option');
+            selectAuthor = d.createElement("td")
+            checkbox = d.createElement("input")
+            checkbox.type = "checkbox"
+            checkbox.name = `select-author`
+            checkbox.classList.add('result_option')
+            checkbox.classList.add('author_result_option')
             checkbox.value = i;
-            selectAuthor.appendChild(checkbox);
+            selectAuthor.appendChild(checkbox)
         }
 
-        newRow.appendChild(firstName);
-        newRow.appendChild(lastName);
-        newRow.appendChild(selectAuthor);
-        table.querySelector(".results_table_body").appendChild(newRow);
+        newRow.appendChild(firstName)
+        newRow.appendChild(lastName)
+        if (selectAuthor) {
+            newRow.appendChild(selectAuthor)
+        }
+        table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
 
 const generateBookworksTableContent = () => {
+    
+    if (operation === "search" && !table.querySelector("th.select_column")) {
+        let selectColumn = d.createElement("th")
+        selectColumn.textContent = "Select book work"
+        selectColumn.classList.add("select_column")
+        table.querySelector("thead tr").appendChild(selectColumn)
+    }
+
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i];
@@ -290,24 +377,24 @@ const generateBookworksTableContent = () => {
         publicationYear.textContent = `${result.publicationYear ? result.publicationYear : "Unknown"}`;
 
 
-        let selectBookwork
+        let selectBookwork, checkbox
         if (operation === "search") {
-
-
             selectBookwork = d.createElement("td"),
-                checkbox = d.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.name = `select-bookwork`;
-            checkbox.classList.add('result_option');
-            checkbox.classList.add('bookwork_result_option');
-            checkbox.value = i;
-            selectBookwork.appendChild(checkbox);
+            checkbox = d.createElement("input")
+            checkbox.type = "checkbox"
+            checkbox.name = `select-bookwork`
+            checkbox.classList.add('result_option')
+            checkbox.classList.add('bookwork_result_option')
+            checkbox.value = i
+            selectBookwork.appendChild(checkbox)
         }
 
-        newRow.appendChild(title);
-        newRow.appendChild(bookAuthor);
-        newRow.appendChild(publicationYear);
-        newRow.appendChild(selectBookwork);
+        newRow.appendChild(title)
+        newRow.appendChild(bookAuthor)
+        newRow.appendChild(publicationYear)
+        if (selectBookwork) {
+            newRow.appendChild(selectBookwork)
+        }
 
         table.querySelector(".results_table_body").appendChild(newRow);
     }
@@ -350,20 +437,47 @@ const generateBookeditionsTableContent = () => {
     }
 }
 
-const selectResult = () => {
+const enableCreateBtns = () => {
+    confirmBtn.addEventListener("click", executeConfirmBtnListener)
+    editBtn.addEventListener("click", executeEditBtnListener)
+}
+
+const enableSelectResultBtn = () => {
     selectResultBtn.addEventListener("click", executeSelectResultBtnListener)
 }
 
+const executeConfirmBtnListener = () => {
+    saveResult()
+    endProcess()
+    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
+}
+
+const executeEditBtnListener = () => {
+    saveResult()
+    prepareEditonProcess()
+    editBtn.removeEventListener("click", executeEditBtnListener)
+}
+
 const executeSelectResultBtnListener = () => {
+    saveResult()
+    endProcess()
+    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
+}
+
+const endProcess = () => {
+    printSelectedResult()
+    closeModal()
+    enableNextPateBtn()
+}
+
+const saveResult = () => {
     if (resultsType === "author") {
         author = results[findSelectedResult()]
     } else if (resultsType === "bookwork") {
         bookwork = results[findSelectedResult()]
+    } else if (resultsType === "edition") {
+        newEdition = results[findSelectedResult()]
     }
-    printSelectedResult(resultsType)
-    closeModal()
-    enableNextPateBtn()
-    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
 }
 
 const printSelectedResult = () => {
@@ -376,15 +490,91 @@ const printSelectedResult = () => {
             el.textContent += `${bookwork.title}`
         })
     }
-    results = "", resultsType = "";
+}
+
+const prepareEditonProcess = () => {
+
+    const tbody = table.querySelector(".results_table_body"),
+          cells = tbody.querySelectorAll("td")
+
+    deletePrintedReults()
+
+    if (resultsType === "author") {
+
+        cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
+        cells[1].innerHTML = `<input type="text" class="edition"value="${author.lastName}" >`
+
+        author = ""
+    } else if (resultsType = "bookwork") {
+        cells[0].innerHTML = `<input type="text" class="edition" value="${bookwork.title}" >`
+        cells[2].innerHTML = `<input type="number" class="edition" value="${bookwork.publicationYear}" >`   
+
+        bookwork = ""
+    } else if (resultsType === "edition") {
+
+        cells[2].innerHTML = `<input type="text" class="edition" value="${edition.isbn}" >`;
+        cells[3].innerHTML = `<input type="text" class="edition" value="${edition.editor}" >`;
+        cells[4].innerHTML = `<input type="number" class="edition" value="${edition.editionYear}" >`;
+        cells[5].innerHTML = `<input type="text" class="edition" value="${edition.language}" >`;
+
+        edition = ""
+    }
+
+    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
+    confirmBtn.addEventListener("click", confirmEdition)
+
+}
+
+const confirmEdition = async () => {
+
+    const tbody = table.querySelector(".results_table_body"),
+          editedFields = [...tbody.querySelectorAll("td input")].map(input => input.value)
+          
+          console.log(editedFields)
+
+    if (resultsType === "author") {
+        await getEditAuthorResults(editedFields)
+    } else if (resultsType === "bookwork") {
+        await getEditBookworkResults(editedFields)
+    } else if (resultsType === "edition") {
+        await getEditBookeditionResults(editedFields)
+    }
+    saveResult()
+    endProcess()
+    confirmBtn.removeEventListener("click", confirmEdition)
+}
+
+const deletePrintedReults = () => {
+    if (resultsType === "author") {
+        d.querySelectorAll(".selected_result_holder .selected_author").forEach(el => {
+            el.textContent = "Author: "
+        })
+    } else if (resultsType === "bookwork") {
+        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
+            el.textContent = "Book work: "
+        })
+    }
+}
+
+const clearFormData = form => {
+    form.querySelectorAll("input").forEach(input => {
+        if (input.type !== "submit") {
+            input.value === ""
+        }
+    })
 }
 
 const findSelectedResult = () => {
     const checkboxes = d.querySelectorAll('input.result_option');
-    for (const checkbox of checkboxes) {
-        if (checkbox.checked === true) {
-            return checkbox.value
+
+    if (checkboxes.length > 0) {
+        for (const checkbox of checkboxes) {
+            if (checkbox.checked === true) {
+                return checkbox.value
+            }
         }
+    } else {
+        return 0
     }
 }
 
@@ -427,7 +617,7 @@ const findCurrentPage = () => {
     return currentPage
 }
 
-const changeOption = () => {
+const enableOptionChangigng = () => {
     const checkboxes = document.querySelectorAll('input.result_option');
 
     checkboxes.forEach(checkbox => {
@@ -451,22 +641,46 @@ const changeBtnState = checkbox => {
 }
 
 const enableCloseModalBtn = () => {
-    d.addEventListener("click", e => {
-        if (e.target === modal.querySelector(".close_symbol")) {
+    let closeSymbol = modal.querySelector(".close_symbol")
+    closeSymbol.classList.add("active")
+
+    closeSymbol.addEventListener("click", e => {
+        if (closeSymbol.classList.contains("active")) {
             closeModal()
         }
     })
 }
 
+const disableCloseModalBtn = () => {
+    modal.querySelector(".close_symbol").classList.remove("active")
+}
+
 const closeModal = () => {
-    d.querySelectorAll(".results_table").forEach(table => {
-        if (!table.classList.contains("hidden")) {
-            table.querySelector(".results_table_body").innerHTML = ""
-            table.classList.add("hidden")
-        }
-    })
+    table.querySelector(".results_table_body").innerHTML = ""        
+    table.classList.add("hidden")
+        
     modal.classList.add("hidden")
     selectResultBtn.setAttribute("disabled", true)
+
+    if (operation === "search") {
+        d.querySelector(".modal_btns_container .select_btn").classList.add("hidden")
+    } else if (operation === "create") {
+
+        d.querySelector(".modal_btns_container .create_btns").classList.add("hidden")
+    }
+    restartConfigurations()
+}
+
+const restartConfigurations = () => {
+    results = "",
+    resultsType = "", 
+    operation = ""
+
+    if (table.querySelector("th.select_column")) {
+        table.querySelector("th.select_column").remove()
+    }
+
+    table = ""
 }
 
 showPage("author_page");
