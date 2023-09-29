@@ -11,9 +11,11 @@ const d = document,
     bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
     bookEditionTable = d.querySelector(".results_table.edition_results_table"),
     modal = d.getElementById("modal"),
-    selectResultBtn = d.querySelector(".select_result_btn");
+    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
+    confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
+    editBtn = d.querySelector(".modal_btns_container .edit_btn")
 
-let author, bookwork, newEdition, results, error, table, resultsType;
+let author, bookwork, newEdition, results, error, table, resultsType, operation;
 
 pageLinks.forEach(pageLink => {
     pageLink.addEventListener("click", e => {
@@ -25,17 +27,24 @@ pageLinks.forEach(pageLink => {
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (e.target === searchAuthorForm || e.target === createAuthorForm) {
+    let currentPage = findCurrentPage()
+
+    cleanErrorMessages(currentPage)
+
+    if (currentPage.classList.contains("author_page")) {
+
         table = authorsResultsTable;
         resultsType = "author";
 
         if (e.target === searchAuthorForm) {
+            operation = "search"
             await getSearchAuthorResults(e.target)
         } else if (e.target === createAuthorForm) {
+            operation = "create"
             await getCreateAuthorResults(e.target)
-        } 
+        }
 
-    } else if (e.target === searchBookworkForm || e.target === createBookworkForm) {
+    } else if (currentPage.classList.contains("bookwork_page")) {
         table = bookworksResultsTable;
         resultsType = "bookwork";
 
@@ -43,8 +52,8 @@ d.addEventListener("submit", async e => {
             await getSearchAuthorResults(e.target)
         } else if (e.target === createBookworkForm) {
             await getCreatehBookworkResults(e.target)
-        } 
-    } else if (e.target === createBookEditionForm) {
+        }
+    } else if (currentPage.classList.contains("edition_page")) {
         resultsType = "edition";
         table = bookEditionTable;
 
@@ -52,7 +61,7 @@ d.addEventListener("submit", async e => {
     }
 
     if (error) {
-        handleErrorMessages()
+        handleErrorMessages(currentPage)
         error = null
     } else {
         showSearchResults()
@@ -70,7 +79,6 @@ const getSearchAuthorResults = async form => {
             }
         )
     )
-    results = [results]
 }
 
 const getCreateAuthorResults = async form => {
@@ -90,7 +98,7 @@ const getSearchBookworkResults = async form => {
         "POST",
         "http://localhost:8080/bookworks-catalog/search-bookwork",
         {
-            title: e.target.title.value,
+            title: form.title.value,
             author: `${author.firstName} ${author.lastName}`
         }
     )
@@ -101,12 +109,12 @@ const getCreatehBookworkResults = async form => {
         "POST",
         "http://localhost:8080/bookworks-catalog/save-bookwork",
         {
-            title: e.target.title.value,
+            title: form.title.value,
             author: {
                 firstName: author.firstName,
                 lastName: author.lastName
             },
-            publicationYear: e.target.publication_year.value
+            publicationYear: form.publication_year.value
         }
     )
     results = [results]
@@ -117,10 +125,10 @@ const getCreateBookeditionResults = async form => {
         "POST",
         "http://localhost:8080/general-catalog/save-bookedition",
         {
-            isbn: e.target.isbn.value,
-            editor: e.target.editor_name.value,
-            editionYear: e.target.edition_year.value,
-            language: e.target.edition_language.value,
+            isbn: form.isbn.value,
+            editor: form.editor_name.value,
+            editionYear: form.edition_year.value,
+            language: form.edition_language.value,
             bookWork: {
                 title: bookwork.title,
                 author: {
@@ -143,6 +151,8 @@ const showPage = pageOption => {
     })
     d.querySelector(`.page-link.${pageOption}`).classList.add("active")
     d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
+
+    enablePreviousPageBtn()
 }
 
 const fetchRequest = async (method, url, bodyContent) => {
@@ -166,7 +176,7 @@ const fetchRequest = async (method, url, bodyContent) => {
                 status: errorData.status,
                 statusText: errorData.statusText,
                 message: errorData.message,
-                validationErrors: errorData.errors
+                validationErrors: errorData.validationErrors
             }
         error = errorResponse
     }
@@ -180,15 +190,21 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`
 }
 
-const handleErrorMessages = () => {
+const handleErrorMessages = currentPage => {
     if (error.status === 422) {
-        handle422Exception()
+        handle422Exception(currentPage)
     }
 }
 
-const handle422Exception = () => {
+const handle422Exception = currentPage => {
     error.validationErrors.forEach(er => {
-        d.querySelector(`.error_message.${er.field}`).textContent = er.message
+        currentPage.querySelector(`.error_message.${er.field}`).textContent = er.message
+    })
+}
+
+const cleanErrorMessages = page => {
+    page.querySelectorAll(".error_message").forEach(el => {
+        el.textContent = ""
     })
 }
 
@@ -197,12 +213,19 @@ const showSearchResults = () => {
     table.classList.remove("hidden")
     generaTableContent()
 
-    if (table === authorsResultsTable) {
-        selectResultBtn.textContent = "Select author";
-    } else if (table === bookworksResultsTable) {
-        selectResultBtn.textContent = "Select book work";
-    } else if (table === bookEditionTable) {
-        selectResultBtn.textContent = "Save new edition";
+    if (operation = "search") {
+
+        d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
+
+        if (table === authorsResultsTable) {
+            selectResultBtn.textContent = "Select author";
+        } else if (table === bookworksResultsTable) {
+            selectResultBtn.textContent = "Select book work";
+        } else if (table === bookEditionTable) {
+            selectResultBtn.textContent = "Save new edition";
+        }
+    } else if (operation === "create") {
+        d.querySelector(".modal_btns_container .create_btns").classList.remove("hidden")
     }
 
     changeOption();
@@ -232,14 +255,16 @@ const generateAuthorsTableContent = () => {
         let lastName = d.createElement("td");
         lastName.textContent = result.lastName;
 
-        let selectAuthor = d.createElement("td"),
-            checkbox = d.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = `select-author`;
-        checkbox.classList.add('result_option');
-        checkbox.classList.add('author_result_option');
-        checkbox.value = i;
-        selectAuthor.appendChild(checkbox);
+        if (operation === "search") {
+            let selectAuthor = d.createElement("td"),
+                checkbox = d.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = `select-author`;
+            checkbox.classList.add('result_option');
+            checkbox.classList.add('author_result_option');
+            checkbox.value = i;
+            selectAuthor.appendChild(checkbox);
+        }
 
         newRow.appendChild(firstName);
         newRow.appendChild(lastName);
@@ -262,21 +287,28 @@ const generateBookworksTableContent = () => {
         bookAuthor.textContent = `${author.firstName} ${author.lastName}`;
 
         let publicationYear = d.createElement("td");
-        publicationYear.textContent = `${result.publicationYear}`;
+        publicationYear.textContent = `${result.publicationYear ? result.publicationYear : "Unknown"}`;
 
-        let selectBookwork = d.createElement("td"),
-            checkbox = d.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = `select-bookwork`;
-        checkbox.classList.add('result_option');
-        checkbox.classList.add('bookwork_result_option');
-        checkbox.value = i;
-        selectBookwork.appendChild(checkbox);
+
+        let selectBookwork
+        if (operation === "search") {
+
+
+            selectBookwork = d.createElement("td"),
+                checkbox = d.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.name = `select-bookwork`;
+            checkbox.classList.add('result_option');
+            checkbox.classList.add('bookwork_result_option');
+            checkbox.value = i;
+            selectBookwork.appendChild(checkbox);
+        }
 
         newRow.appendChild(title);
         newRow.appendChild(bookAuthor);
         newRow.appendChild(publicationYear);
         newRow.appendChild(selectBookwork);
+
         table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
@@ -306,15 +338,6 @@ const generateBookeditionsTableContent = () => {
         let language = d.createElement("td")
         language.textContent = result.language
 
-        let selectedBookedition = d.createElement("td"),
-            checkbox = d.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.name = `select-bookedition`;
-        checkbox.classList.add('result_option');
-        checkbox.classList.add('bookedition_result_option');
-        checkbox.value = i;
-        selectedBookedition.appendChild(checkbox);
-
         newRow.appendChild(title);
         newRow.appendChild(bookAuthor);
         newRow.appendChild(isbn);
@@ -339,7 +362,7 @@ const executeSelectResultBtnListener = () => {
     }
     printSelectedResult(resultsType)
     closeModal()
-    enableChangePageBtn()
+    enableNextPateBtn()
     selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
 }
 
@@ -365,17 +388,32 @@ const findSelectedResult = () => {
     }
 }
 
-const enableChangePageBtn = () => {
-    let nextPageBtn,
-        previousPageBtn,
-        currentPage,
-        previousPageBtns = d.querySelectorAll(".change_page_container .previous_page"),
-        nextPageBtns = d.querySelectorAll(".change_page_container .next_page"),
-        i = 0, found = false;
+const enableNextPateBtn = () => {
+    let currentPage = findCurrentPage(),
+        nextPageBtn = currentPage.querySelector(".change_page_container .next_page")
 
-    nextPageBtns.forEach(btn => {
-        btn.classList.add("disabled")
+    nextPageBtn.classList.remove("disabled")
+
+    nextPageBtn.addEventListener("click", e => {
+        showPage(nextPageBtn.classList[2])
     })
+
+}
+
+const enablePreviousPageBtn = () => {
+    let currentPage = findCurrentPage(),
+        previousPageBtn = currentPage.querySelector(".change_page_container .previous_page")
+
+    if (previousPageBtn) {
+        previousPageBtn.addEventListener("click", e => {
+            showPage(previousPageBtn.classList[2])
+        })
+    }
+}
+
+const findCurrentPage = () => {
+    let currentPage,
+        i = 0, found = false;
 
     do {
         if (!pages[i].classList.contains("hidden")) {
@@ -386,28 +424,7 @@ const enableChangePageBtn = () => {
         }
     } while (!found && i < pages.length)
 
-    if (found) {
-        i = 0
-        found = false
-    }
-
-    do {
-        if (currentPage.classList[1] === nextPageBtns[i].classList[1] === previousPageBtns[i].classList[1]) {
-            nextPageBtn = nextPageBtns[i]
-            previousPageBtn = previousPageBtns[i]
-            found = true
-        } else {
-            i++
-        }
-    } while (!found && i < nextPageBtns.length)
-
-    nextPageBtn.classList.remove("disabled")
-
-    d.addEventListener("click", e => {
-        if (e.target === nextPageBtn || e.target === previousPageBtn) {
-            showPage(e.target.classList[2])
-        }
-    })
+    return currentPage
 }
 
 const changeOption = () => {
