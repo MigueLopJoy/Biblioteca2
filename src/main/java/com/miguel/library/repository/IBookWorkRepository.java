@@ -16,4 +16,6 @@ public interface IBookWorkRepository extends JpaRepository<BookWork, Integer> {
 
     public List<BookWork> findByAuthor(Author author);
 
+    public List<BookWork> findByTitle(String title);
+
 }

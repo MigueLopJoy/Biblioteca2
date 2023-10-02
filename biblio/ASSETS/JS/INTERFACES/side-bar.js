@@ -21,7 +21,10 @@ for (let i = 0; i < dropdownBTNs.length; i++) {
 
 d.addEventListener("click", async e => {
     if (e.target.matches("#cataloging")) {
-        await loadContent("./ASSETS/HTML/PROGRAM/CATALOG/cataloging.html", d.getElementById("main-content"))
+        await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/cataloging.html", d.getElementById("main-content"))
         loadJsFile("./ASSETS/JS/MODULES/CATALOG/cataloging.js")
+    } else if (e.target.matches("#registering")) {
+        await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/registering.html", d.getElementById("main-content"))
+        loadJsFile("./ASSETS/JS/MODULES/CATALOG/registering.js")
     }
 })

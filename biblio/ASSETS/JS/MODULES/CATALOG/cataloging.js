@@ -265,6 +265,7 @@ const joinParamsToURL = (baseURL, params) => {
 
 const handleErrorMessages = layer => {
     if (error.status === 422) {
+        console.log(error)
         error.validationErrors.forEach(er => {
             layer.querySelector(`.error_message.${er.field}`).classList.add("active")
             layer.querySelector(`.error_message.${er.field}`).textContent = er.message
@@ -609,7 +610,9 @@ const deletePrintedReults = () => {
 const clearFormsData = page => {
     page.querySelectorAll(".form").forEach(form => {
         form.querySelectorAll("input").forEach(input => {
-            if (input.type !== "submit") {
+            if (input.type !== "submit" &&
+                !input.hasAttribute("readonly")
+            ) {
                 input.value = ""
             }
         })

@@ -67,21 +67,30 @@ public class ImpAuthorService implements IAuthorService {
             throw new ExceptionObjectNotFound("Author not found");
         }
 
-        Author savedAuthor = optionalAuthor.get();
+        Author fetchedAuthor = optionalAuthor.get();
 
         if (Objects.isNull(firstName) && Objects.isNull(lastName)) {
             throw new ExceptionNoInformationProvided("No information provided. Author cannot be edited.");
         }
 
         if (Objects.nonNull(firstName)) {
-            savedAuthor.setFirstName(firstName);
+            fetchedAuthor.setFirstName(firstName);
         }
 
         if (Objects.nonNull(lastName)) {
-            savedAuthor.setLastName(lastName);
+            fetchedAuthor.setLastName(lastName);
         }
 
-        return this.saveNewAuthor(savedAuthor);
+        Author authorWithAuthorName = this.searchByAuthorName(fetchedAuthor);
+
+        if (Objects.nonNull(authorWithAuthorName)) {
+            if (!authorWithAuthorName.getIdAuthor().equals(authorId)
+            ) {
+                throw new ExceptionObjectAlreadyExists("Author already exists");
+            }
+        }
+
+        return authorRepository.save(fetchedAuthor);
     }
 
     @Override

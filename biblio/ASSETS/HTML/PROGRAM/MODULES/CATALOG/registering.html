@@ -1,59 +1,48 @@
-<div class="container" id="cataloging-section">
+<div class="container" id="registering_section">
 
-    <menu class="cataloging-nav">
-        <a class="page_link author_page enabled">Author</a>
-        <a class="page_link bookwork_page">Work</a>
-        <a class="page_link edition_page">Edition</a>
+    <menu class="window_nav">
+        <a class="page_link search_bookedition_page enabled">Author</a>
+        <a class="page_link create_bookcopy_page">Work</a>
     </menu>
 
-    <div class="cataloging-window">
+    <div class="current_window">
 
-        <div class="page author_page hidden">
+        <div class="page search_bookedition_page hidden">
 
-            <div class="page_element_container search_author">
+            <div class="page_element_container search_bookEdition">
                 <form class="form author_form search">
-                    <legend>Search author</legend>
+                    <legend>Search book edition</legend>
                     <p class="error_message general_error"></p>
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="submit" id="search_author_btn" class="btn" value="Search">
-                </form>
-            </div>
-
-            <div class="page_element_container create_author">
-                <form class="form author_form create">
-                    <legend>Create new author</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message firstName"></p>
-                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
-                    <p class="error_message lastName"></p>
-                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
-                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+                    <p class="error_message title"></p>
+                    <input type="text" name="title">
+                    <p class="error_message author"></p>
+                    <input type="text" name="author">
+                    <p class="error_message ISBN"></p>
+                    <input type="text" name="isbn" placeholder="ISBN">
+                    <p class="error_message editor"></p>
+                    <input type="text" name="editor_name" placeholder="Editor name">
+                    <p class="error_message editionYear"></p>
+                    <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
+                    <p class="error_message language"></p>
+                    <input type="text" name="edition_language" id="edition_language" placeholder="language">
+                    <input type="submit" id="create_bookedition_btn" class="btn">
                 </form>
             </div>
 
             <div class="page_element_container selected_result_holder">
-                <p class="selected_author"><span>Author: </span></p>
+                <p class="selected_author"><span>Book edition: </span></p>
             </div>
 
             <div class="page_element_container change_page_container">
                 <span
-                    class="material-symbols-outlined author_page bookwork_page next_page disabled">chevron_right</span>
+                    class="material-symbols-outlined search_bookedition_page create_bookwork_page next_page disabled">chevron_right</span>
             </div>
         </div>
 
 
-        <div class="page bookwork_page hidden">
+        <div class="page create_bookcopy_page hidden">
 
-            <div class="page_element_container search_bookwork">
-                <form class="form bookwork_form search">
-                    <legend>Search book work</legend>
-                    <p class="error_message general_error"></p>
-                    <input type="text" name="title" placeholder="Introduce book work's title">
-                    <input type="submit" id="search_bookwork_btn" class="btn" value="Search">
-                </form>
-            </div>
-
-            <div class="page_element_container create_bookwork">
+            <div class="page_element_container create_bookcopy_page">
                 <form class="form bookwork_form create">
                     <legend>Create new book work</legend>
                     <p class="error_message general_error"></p>
@@ -84,7 +73,7 @@
                     <p class="error_message general_error"></p>
                     <input type="text" name="author_name" class="selected_author" readonly>
                     <input type="text" name="title" class="selected_bookwork" readonly>
-                    <p class="error_message isbn"></p>
+                    <p class="error_message ISBN"></p>
                     <input type="text" name="isbn" placeholder="ISBN">
                     <p class="error_message editor"></p>
                     <input type="text" name="editor_name" placeholder="Editor name">
@@ -145,6 +134,7 @@
                     </tbody>
                 </table>
 
+                <p class="success_message created_edition"></p>
                 <table class="results_table edition_results_table hidden">
                     <thead>
                         <tr>

@@ -21,18 +21,19 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
 
         if (Objects.isNull(bookEdition) || Objects.isNull(bookEdition.getBookWork())) {
             isValidYear = true;
-        }
-
-        Integer editionYear = bookEdition.getEditionYear();
-        Integer publicationYear = bookEdition.getBookWork().getPublicationYear();
-
-        if (Objects.isNull(editionYear) || Objects.isNull(publicationYear)) {
-            isValidYear = true;
         } else {
-            if (editionYear >= publicationYear) {
+            Integer editionYear = bookEdition.getEditionYear();
+            Integer publicationYear = bookEdition.getBookWork().getPublicationYear();
+
+            if (Objects.isNull(editionYear) || Objects.isNull(publicationYear)) {
                 isValidYear = true;
+            } else {
+                if (editionYear >= publicationYear) {
+                    isValidYear = true;
+                }
             }
         }
+
         return isValidYear;
     }
 

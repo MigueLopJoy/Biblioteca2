@@ -1,5 +1,7 @@
 package com.miguel.library.DTO;
 
+import com.miguel.library.Validations.EditionYearNotBeforePublicationYear;
+import com.miguel.library.Validations.YearNotGreaterThanCurrent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import jakarta.validation.constraints.Pattern;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EditionYearNotBeforePublicationYear(message = "Edition year should not be earlier than book work publication year")
 public class BooksEditDTOBookEdition {
 
     @NotBlank(message = "ISBN required")
@@ -23,7 +26,7 @@ public class BooksEditDTOBookEdition {
     private String editor;
 
     @NotNull(message = "Edition year required")
-    @Min(value = 1900, message = "Edition year should not be under 1900")
+    @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
     private Integer editionYear;
 
     @NotBlank(message = "Language required")
