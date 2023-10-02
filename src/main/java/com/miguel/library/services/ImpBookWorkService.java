@@ -2,10 +2,7 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.BooksEditDTOBookWork;
 import com.miguel.library.DTO.BooksSaveDTOBookWork;
-import com.miguel.library.Exceptions.ExceptionNoInformationProvided;
-import com.miguel.library.Exceptions.ExceptionNullObject;
-import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
-import com.miguel.library.Exceptions.ExceptionObjectNotFound;
+import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.Author;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookWorkRepository;
@@ -48,6 +45,15 @@ public class ImpBookWorkService implements IBookWorkService{
 
             return bookWorkRepository.save(bookWork);
         }
+    }
+
+    @Override
+    public List<BookWork> findAll() {
+        List<BookWork> allBookWorks = bookWorkRepository.findAll();
+        if (allBookWorks.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No book works were found");
+        }
+        return allBookWorks;
     }
 
     @Override

@@ -25,9 +25,6 @@ public class BookWorkController {
     private IBookWorkService bookWorkService;
 
     @Autowired
-    private IBookWorkRepository bookWorkRepository;
-
-    @Autowired
     private IBookSearchService bookSearchService;
 
     @PostMapping("/save-bookwork")
@@ -42,30 +39,17 @@ public class BookWorkController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAllBookWorks() {
-        List<BookWork> foundBookWorks = bookWorkRepository.findAll();
-
-        if (foundBookWorks.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookWorks);
-        }
+    public ResponseEntity<List<BookWork>> getAllBookWorks() {
+        return ResponseEntity.ok(bookWorkService.findAll());
     }
-
 
     @PostMapping("/search-bookwork")
-    public ResponseEntity<?> searchBookWorks(
+    public ResponseEntity<List<?>> searchBookWorks(
             @Valid @RequestBody BookSearchRequestBookWork bookSearchRequest
     ) {
-        List<?> foundBookWorks = bookSearchService.searchBooks(bookSearchRequest);
+        return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
 
-        if (foundBookWorks.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookWorks);
-        }
     }
-
     @PutMapping("/edit-bookwork/{bookWorkId}")
     public ResponseEntity<BookWork> editBookWork(
             @PathVariable Integer bookWorkId,

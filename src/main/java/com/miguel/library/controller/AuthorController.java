@@ -20,10 +20,6 @@ public class AuthorController {
 
     @Autowired
     private IAuthorService authorService;
-
-    @Autowired
-    private IAuthorRepository authorRepository;
-
     @PostMapping("/save-author")
     public ResponseEntity<Author> saveNewAuthor(
             @Valid @RequestBody AuthorsDTOSaveNewAuthor author
@@ -34,23 +30,16 @@ public class AuthorController {
                 )
         );
     }
-
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAllAuthors() {
-        return ResponseEntity.ok(authorRepository.findAll());
+    public ResponseEntity<List<Author>> getAllAuthors() {
+        return ResponseEntity.ok(authorService.findAll());
     }
 
     @GetMapping("/search-author")
-    public ResponseEntity<?> searchAuthor(
+    public ResponseEntity<List<Author>> searchAuthor(
             @RequestParam(name = "author_name") String authorName
     ) {
-        List<Author> foundAuthors = authorService.searchByCustomizedSearch(authorName);
-
-        if (foundAuthors.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundAuthors);
-        }
+        return ResponseEntity.ok(authorService.searchByCustomizedSearch(authorName));
     }
 
     @PutMapping("/edit-author/{authorId}")

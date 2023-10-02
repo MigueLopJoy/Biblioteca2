@@ -42,27 +42,15 @@ public class BookCopyController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAllBookCopies() {
-        List<BookCopy> foundBookCopies = bookCopyRepository.findAll();
-
-        if (foundBookCopies.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookCopies);
-        }
+    public ResponseEntity<List<BookCopy>> getAllBookCopies() {
+        return ResponseEntity.ok(bookCopyService.findAll());
     }
 
     @GetMapping("/search-bookcopies")
-    public ResponseEntity<?> searchBookCopies(
+    public ResponseEntity<List<Object>> searchBookCopies(
             @RequestBody BookSearchRequestBookCopy bookSearchRequest
     ) {
-        List<?> foundBookCopies = bookSearchService.searchBooks(bookSearchRequest);
-
-        if (foundBookCopies.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookCopies);
-        }
+        return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
     }
 
     @PutMapping("edit-bookCopy/{bookCopyId}")

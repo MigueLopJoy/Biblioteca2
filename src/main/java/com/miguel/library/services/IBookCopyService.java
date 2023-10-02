@@ -10,6 +10,7 @@ import java.util.List;
 public interface IBookCopyService {
     public BookCopy saveNewBookCopy(BookCopy bookCopy);
 
+    public List<BookCopy> findAll();
     public BookCopy searchByBarCode(String barCode);
 
     public BookCopy searchByRegistrationNumber(Long registrationNumber);

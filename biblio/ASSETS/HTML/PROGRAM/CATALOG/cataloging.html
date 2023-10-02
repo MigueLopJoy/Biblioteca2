@@ -1,9 +1,9 @@
 <div class="container" id="cataloging-section">
 
     <menu class="cataloging-nav">
-        <a class="page-link author_page">Author</a>
-        <a class="page-link bookwork_page">Work</a>
-        <a class="page-link edition_page">Edition</a>
+        <a class="page_link author_page enabled">Author</a>
+        <a class="page_link bookwork_page">Work</a>
+        <a class="page_link edition_page">Edition</a>
     </menu>
 
     <div class="cataloging-window">
@@ -13,6 +13,7 @@
             <div class="page_element_container search_author">
                 <form class="form author_form search">
                     <legend>Search author</legend>
+                    <p class="error_message general_error"></p>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
                     <input type="submit" id="search_author_btn" class="btn" value="Search">
                 </form>
@@ -21,6 +22,7 @@
             <div class="page_element_container create_author">
                 <form class="form author_form create">
                     <legend>Create new author</legend>
+                    <p class="error_message general_error"></p>
                     <p class="error_message firstName"></p>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
                     <p class="error_message lastName"></p>
@@ -45,6 +47,7 @@
             <div class="page_element_container search_bookwork">
                 <form class="form bookwork_form search">
                     <legend>Search book work</legend>
+                    <p class="error_message general_error"></p>
                     <input type="text" name="title" placeholder="Introduce book work's title">
                     <input type="submit" id="search_bookwork_btn" class="btn" value="Search">
                 </form>
@@ -53,6 +56,7 @@
             <div class="page_element_container create_bookwork">
                 <form class="form bookwork_form create">
                     <legend>Create new book work</legend>
+                    <p class="error_message general_error"></p>
                     <p class="error_message title"></p>
                     <input type="text" name="title" placeholder="Book work title">
                     <p class="error_message publicationYear"></p>
@@ -75,13 +79,11 @@
         <div class="page edition_page hidden">
 
             <div class="page_element_container create_bookedition">
-                <div class="selected_result_holder">
-                    <p class="selected_author"></p>
-                    <span>/</span>
-                    <p class="selected_bookwork"></p>
-                </div>
-                <form action="" class="form edition_form create">
+                <form class="form edition_form create">
                     <legend>Create new book edition</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="author_name" class="selected_author" readonly>
+                    <input type="text" name="title" class="selected_bookwork" readonly>
                     <p class="error_message isbn"></p>
                     <input type="text" name="isbn" placeholder="ISBN">
                     <p class="error_message editor"></p>
@@ -113,7 +115,15 @@
                             <th>Last name</th>
                         </tr>
                     </thead>
-                    <tbody class="results_table_body"></tbody>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td>
+                                <p class="error_message general_error"></p>
+                                <p class="error_message firstName"></p>
+                                <p class="error_message lastName"></p>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <table class="results_table bookworks_results_table hidden">
@@ -124,7 +134,15 @@
                             <th>Publication year</th>
                         </tr>
                     </thead>
-                    <tbody class="results_table_body"></tbody>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td>
+                                <p class="error_message general_error"></p>
+                                <p class="error_message title"></p>
+                                <p class="error_message publicationYear"></p>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <table class="results_table edition_results_table hidden">
@@ -138,7 +156,17 @@
                             <th>Language</th>
                         </tr>
                     </thead>
-                    <tbody class="results_table_body"></tbody>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td colspan="6">
+                                <p class="error_message general_error"></p>
+                                <p class="error_message isbn"></p>
+                                <p class="error_message editor"></p>
+                                <p class="error_message editionYear"></p>
+                                <p class="error_message language"></p>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <div class="modal_btns_container">

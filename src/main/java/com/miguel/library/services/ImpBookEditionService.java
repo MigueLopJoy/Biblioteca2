@@ -2,6 +2,7 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
+import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
@@ -57,6 +58,15 @@ public class ImpBookEditionService implements IBookEditionService{
         savedBookEdition = bookEditionRepository.save(bookEdition);
 
         return savedBookEdition;
+    }
+
+    @Override
+    public List<BookEdition> findAll() {
+        List<BookEdition> allBookEditions = bookEditionRepository.findAll();
+        if (allBookEditions.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No book editions were found");
+        }
+        return allBookEditions;
     }
 
     @Override

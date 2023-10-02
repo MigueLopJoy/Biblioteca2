@@ -41,27 +41,15 @@ public class BookEditionController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAllBookEditions() {
-        List<BookEdition> foundBookEditions = bookEditionRepository.findAll();
-
-        if (foundBookEditions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookEditions);
-        }
+    public ResponseEntity<List<BookEdition>> getAllBookEditions() {
+        return ResponseEntity.ok(bookEditionService.findAll());
     }
 
     @GetMapping("/search-bookeditions")
-    public ResponseEntity<?> searchBookEditions(
+    public ResponseEntity<List<?>> searchBookEditions(
             @RequestBody BookSearchRequestBookEdition bookSearchRequest
         ){
-        List<?> foundBookEditions = bookSearchService.searchBooks(bookSearchRequest);
-
-        if (foundBookEditions.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Search Results Found");
-        } else {
-            return ResponseEntity.ok(foundBookEditions);
-        }
+        return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
     }
 
     @PutMapping("/edit-bookedition/{bookEditionId}")

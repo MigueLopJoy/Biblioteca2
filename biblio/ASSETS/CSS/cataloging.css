@@ -9,7 +9,7 @@
     overflow: hidden;
 }
 
-.cataloging-nav a {
+.page_link {
     color: #fff;
     text-align: center;
     padding: 1rem;
@@ -18,21 +18,19 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
-.cataloging-nav a:hover {
+.page_link.enabled:hover {
     background-color: var(--primary-color);
 }
 
-.cataloging-nav a.active {
+.page_link.enabled.active {
     background-color: var(--primary-color);
 }
 
-/* Estilos para la ventana de catálogo */
 .cataloging-window {
     padding-top: 1.75rem;
     border: 2px solid var(--secondary-color);
 }
 
-/* Estilos para las opciones de autores y obras */
 .page_element_container {
     width: 80%;
     margin: 0 auto;
@@ -70,12 +68,11 @@
     font-size: 1rem;
 }
 
-.error_message {
+.error_message.active {
     color: #ff0000;
     padding-top: .25rem;
     padding-bottom: .25rem;
 }
-
 
 .change_page_container {
     width: 100%;
@@ -187,9 +184,29 @@
 
 .results_table input.edition {
     width: 100%;
-    font-family: "Lato", sans-serif;
-    padding: 8px;
+    padding: .5rem;
+    background-color: inherit;
+    font-size: 1rem !important;
+    font-family: "Lato", sans-serif !important;
     border: none;
+    border-bottom: 1px solid #888;
+    outline: none;
+}
+
+.results_table input.edition {
+    width: 100%;
+    padding: .5rem;
+    background-color: inherit;
+    font-size: 1rem !important;
+    font-family: "Lato", sans-serif !important;
+    border: none;
+    border-bottom: 1px solid #888;
+    outline: none;
+}
+
+
+.error_message_row {
+    text-align: center;
 }
 
 .btn {

@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.BookSearchRequestBookCopy;
 import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.DTO.BookSearchRequestBookWork;
+import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.model.Author;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ImpBookSearchService implements IBookSearchService {
@@ -46,10 +48,41 @@ public class ImpBookSearchService implements IBookSearchService {
 
         Join<BookCopy, BookEdition> bookCopyToBookEditionJoin = root.join("bookEdition", JoinType.INNER);
         Join<BookEdition, BookWork> bookEditionToBookWorkJoin = bookCopyToBookEditionJoin.join("bookWork", JoinType.INNER);
-        Join<BookWork, Author> bookWorkauthorJoin = bookEditionToBookWorkJoin.join("author");
+        Join<BookWork, Author> bookWorkAuthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
 
+        addBookCopyPredicates(
+                criteriaBuilder,
+                root,
+                bookCopyToBookEditionJoin,
+                bookEditionToBookWorkJoin,
+                bookWorkAuthorJoin,
+                bookSearchRequest,
+                predicates
+        );
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<BookCopy> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<BookCopy> searchResults = typedQuery.getResultList();
+
+        if (searchResults.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No search results were found");
+        }
+
+        return searchResults;
+    }
+
+    private void addBookCopyPredicates(
+            CriteriaBuilder criteriaBuilder,
+            Root<BookCopy> root,
+            Join<BookCopy, BookEdition> bookCopyToBookEditionJoin,
+            Join<BookEdition, BookWork> bookEditionToBookWorkJoin,
+            Join<BookWork, Author> bookWorkAuthorJoin,
+            BookSearchRequestBookCopy bookSearchRequest,
+            List<Predicate> predicates
+    ) {
         if (!StringUtils.isEmpty(bookSearchRequest.getBarCode()) &&
                 !bookSearchRequest.getBarCode().trim().isEmpty()) {
             predicates.add(criteriaBuilder.equal(root.get("barCode"), bookSearchRequest.getBarCode()));
@@ -60,9 +93,8 @@ public class ImpBookSearchService implements IBookSearchService {
             predicates.add(criteriaBuilder.equal(root.get("signature"), bookSearchRequest.getSignature()));
         }
 
-
-        if (bookSearchRequest.getMaxRegistrationNumber() != null
-                && bookSearchRequest.getMinRegistrationNumber() != null) {
+        if (Objects.nonNull(bookSearchRequest.getMaxRegistrationNumber())
+                && Objects.nonNull(bookSearchRequest.getMinRegistrationNumber())) {
 
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
@@ -103,57 +135,18 @@ public class ImpBookSearchService implements IBookSearchService {
             predicates.add(criteriaBuilder.equal(root.get("status"), bookSearchRequest.getStatus()));
         }
 
-        if (bookSearchRequest.getBorrowed() != null){
+        if (Objects.nonNull(bookSearchRequest.getBorrowed())){
             predicates.add(criteriaBuilder.equal(root.get("borrowed"), bookSearchRequest.getBorrowed()));
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getISBN())
-                && !bookSearchRequest.getISBN().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("ISBN"), bookSearchRequest.getISBN()));
-        }
-
-        if (!StringUtils.isEmpty(bookSearchRequest.getEditor())
-                && !bookSearchRequest.getEditor().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("editor"), bookSearchRequest.getEditor()));
-        }
-
-        if (!StringUtils.isEmpty(bookSearchRequest.getLanguage())
-                && !bookSearchRequest.getLanguage().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("language"), bookSearchRequest.getLanguage()));
-        }
-
-        if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())
-                && !bookSearchRequest.getAuthor().trim().isEmpty()) {
-
-            Expression<String> authorName = criteriaBuilder.concat(
-                    criteriaBuilder.concat(
-                            bookWorkauthorJoin.get("firstName"),
-                            " "),
-                    bookWorkauthorJoin.get("lastName")
-            );
-
-            predicates.add(
-                    criteriaBuilder.like(
-                            authorName,
-                            "%" + bookSearchRequest.getAuthor() + "%"
-                    )
-            );
-        }
-
-        if (!StringUtils.isEmpty(bookSearchRequest.getTitle())
-                && !bookSearchRequest.getTitle().trim().isEmpty()) {
-            predicates.add(
-                    criteriaBuilder.equal(
-                            bookEditionToBookWorkJoin.get("title"),
-                            bookSearchRequest.getTitle()
-                    )
-            );
-        }
-
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        TypedQuery<BookCopy> typedQuery = entityManager.createQuery(criteriaQuery);
-        return typedQuery.getResultList();
+        this.addBookEditionPredicates(
+                criteriaBuilder,
+                criteriaBuilder.createQuery(BookEdition.class).from(BookEdition.class),
+                bookEditionToBookWorkJoin,
+                bookWorkAuthorJoin,
+                bookSearchRequest,
+                predicates
+        );
     }
 
     private List<BookEdition> searchBookEditions(BookSearchRequestBookEdition bookSearchRequest) {
@@ -162,9 +155,38 @@ public class ImpBookSearchService implements IBookSearchService {
         Root<BookEdition> root = criteriaQuery.from(BookEdition.class);
 
         Join<BookEdition, BookWork> bookEditionToBookWorkJoin = root.join("bookWork", JoinType.INNER);
-        Join<BookWork, Author> bookWorkauthorJoin = bookEditionToBookWorkJoin.join("author");
+        Join<BookWork, Author> bookWorkAuthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
+
+        this.addBookEditionPredicates(
+                criteriaBuilder,
+                root,
+                bookEditionToBookWorkJoin,
+                bookWorkAuthorJoin,
+                bookSearchRequest,
+                predicates
+        );
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<BookEdition> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<BookEdition> searchResults = typedQuery.getResultList();
+
+        if (searchResults.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No search results were found");
+        }
+
+        return searchResults;
+    }
+    private void addBookEditionPredicates(
+            CriteriaBuilder criteriaBuilder,
+            Root<BookEdition> root,
+            Join<BookEdition, BookWork> bookEditionToBookWorkJoin,
+            Join<BookWork, Author> bookWorkAuthorJoin,
+            BookSearchRequestBookEdition bookSearchRequest,
+            List<Predicate> predicates
+    ) {
 
         if (!StringUtils.isEmpty(bookSearchRequest.getISBN())
                 && !bookSearchRequest.getISBN().trim().isEmpty()) {
@@ -182,38 +204,13 @@ public class ImpBookSearchService implements IBookSearchService {
             predicates.add(criteriaBuilder.equal(root.get("language"), bookSearchRequest.getLanguage()));
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())
-                && !bookSearchRequest.getAuthor().trim().isEmpty()) {
-
-            Expression<String> authorName = criteriaBuilder.concat(
-                    criteriaBuilder.concat(
-                            bookWorkauthorJoin.get("firstName"),
-                            " "),
-                    bookWorkauthorJoin.get("lastName")
-            );
-
-            predicates.add(
-                    criteriaBuilder.like(
-                            authorName,
-                            "%" + bookSearchRequest.getAuthor() + "%"
-                    )
-            );
-        }
-
-        if (!StringUtils.isEmpty(bookSearchRequest.getTitle())
-                && !bookSearchRequest.getTitle().trim().isEmpty()) {
-            predicates.add(
-                    criteriaBuilder.equal(
-                            bookEditionToBookWorkJoin.get("title"),
-                            bookSearchRequest.getTitle()
-                    )
-            );
-        }
-
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        TypedQuery<BookEdition> typedQuery = entityManager.createQuery(criteriaQuery);
-        return typedQuery.getResultList();
+        this.addBookWorksPredicates(
+                criteriaBuilder,
+                criteriaBuilder.createQuery(BookWork.class).from(BookWork.class),
+                bookWorkAuthorJoin,
+                bookSearchRequest,
+                predicates
+        );
     }
 
     private List<BookWork> searchBookWorks(BookSearchRequestBookWork bookSearchRequest) {
@@ -221,19 +218,42 @@ public class ImpBookSearchService implements IBookSearchService {
         CriteriaQuery<BookWork> criteriaQuery = criteriaBuilder.createQuery(BookWork.class);
         Root<BookWork> root = criteriaQuery.from(BookWork.class);
 
-        Join<BookWork, Author> bookWorkauthorJoin = root.join("author");
+        Join<BookWork, Author> bookWorkAuthorJoin = root.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
+
+        this.addBookWorksPredicates(
+                criteriaBuilder,
+                root,
+                bookWorkAuthorJoin,
+                bookSearchRequest,
+                predicates
+        );
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<BookWork> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<BookWork> searchResults = typedQuery.getResultList();
+
+        if (searchResults.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No search results were found");
+        }
+
+        return searchResults;
+    }
+
+    private List<Predicate> addBookWorksPredicates(
+            CriteriaBuilder criteriaBuilder,
+            Root<BookWork> root,
+            Join<BookWork, Author> bookWorkAuthorJoin,
+            BookSearchRequestBookWork bookSearchRequest,
+            List<Predicate> predicates
+    ) {
 
         if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())
                 && !bookSearchRequest.getAuthor().trim().isEmpty()) {
 
-            Expression<String> authorName = criteriaBuilder.concat(
-                    criteriaBuilder.concat(
-                            bookWorkauthorJoin.get("firstName"),
-                            " "),
-                    bookWorkauthorJoin.get("lastName")
-            );
+            Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);
 
             predicates.add(
                     criteriaBuilder.like(
@@ -253,9 +273,16 @@ public class ImpBookSearchService implements IBookSearchService {
                     )
             );
         }
+        return predicates;
+    }
 
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        TypedQuery<BookWork> typedQuery = entityManager.createQuery(criteriaQuery);
-        return typedQuery.getResultList();
+    private Expression<String> getAuthorNameExpression(CriteriaBuilder criteriaBuilder, Join<?, Author> authorJoin) {
+        Expression<String> authorName = criteriaBuilder.concat(
+                criteriaBuilder.concat(
+                        authorJoin.get("firstName"),
+                        " "),
+                authorJoin.get("lastName")
+        );
+        return authorName;
     }
 }

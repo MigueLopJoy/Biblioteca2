@@ -2,15 +2,11 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
-import com.miguel.library.Exceptions.ExceptionNoInformationProvided;
-import com.miguel.library.Exceptions.ExceptionNullObject;
-import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
-import com.miguel.library.Exceptions.ExceptionObjectNotFound;
+import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,8 +20,6 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public Author saveNewAuthor(Author author) {
-        Author savedAuthor;
-
         if (Objects.isNull(author)) {
             throw new ExceptionNullObject("Author should not be null");
         }
@@ -36,9 +30,16 @@ public class ImpAuthorService implements IAuthorService {
             throw new ExceptionObjectAlreadyExists("Author already exists");
         }
 
-        savedAuthor = authorRepository.save(author);
+        return authorRepository.save(author);
+    }
 
-        return savedAuthor;
+    @Override
+    public List<Author> findAll() {
+        List<Author> allAuthors = authorRepository.findAll();
+        if (allAuthors.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No authors were found");
+        }
+        return allAuthors;
     }
 
     @Override
@@ -48,7 +49,11 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public List<Author> searchByCustomizedSearch(String authorName) {
-        return authorRepository.findByCustomizedSearch(authorName);
+        List<Author> searchResults = authorRepository.findByCustomizedSearch(authorName);
+        if (searchResults.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No search results were found");
+        }
+        return searchResults;
     }
 
     @Override

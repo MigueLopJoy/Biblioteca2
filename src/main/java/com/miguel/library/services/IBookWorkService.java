@@ -10,6 +10,8 @@ import java.util.List;
 public interface IBookWorkService {
     public BookWork saveNewBookWork(BookWork bookWork);
 
+    public List<BookWork> findAll();
+
     public BookWork searchByTitleAndAuthor(BookWork bookWork);
 
     public List<BookWork> searchAuthorBookWorks(Author author);

@@ -54,6 +54,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, httpStatus);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = ExceptionNoSearchResultsFound.class)
+    public ResponseEntity<Object> handleExceptionNoSearchResultsFound(ExceptionNoSearchResultsFound ex) {
+
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getMessage(),
+                httpStatus
+        );
+
+        return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
     @ExceptionHandler(ExceptionObjectAlreadyExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> handleExceptionObjectAlreadyExists(ExceptionObjectAlreadyExists ex) {

@@ -10,6 +10,9 @@ public interface IAuthorService {
 
     public Author saveNewAuthor(Author author);
 
+
+    public List<Author> findAll();
+
     public Author searchByAuthorName(Author author);
 
     public List<Author> searchByCustomizedSearch(String authorName);

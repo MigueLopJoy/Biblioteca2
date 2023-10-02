@@ -2,10 +2,7 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookCopy;
-import com.miguel.library.Exceptions.ExceptionInvalidObject;
-import com.miguel.library.Exceptions.ExceptionNullObject;
-import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
-import com.miguel.library.Exceptions.ExceptionObjectNotFound;
+import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookCopyStatus;
 import com.miguel.library.model.BookEdition;
@@ -62,6 +59,15 @@ public class ImpBookCopyService implements IBookCopyService {
         savedBookCopy = bookCopyRepository.save(bookCopy);
 
         return savedBookCopy;
+    }
+
+    @Override
+    public List<BookCopy> findAll() {
+        List<BookCopy> allBookCopies = bookCopyRepository.findAll();
+        if (allBookCopies.isEmpty()){
+            throw new ExceptionNoSearchResultsFound("No book copies were found");
+        }
+        return allBookCopies;
     }
 
     @Override
