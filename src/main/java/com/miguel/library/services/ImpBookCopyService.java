@@ -28,7 +28,7 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Override
     public BookCopy saveNewBookCopy(BookCopy bookCopy) {
-        BookCopy savedBookCopy = null;
+        BookCopy savedBookCopy;
 
         if (Objects.isNull(bookCopy)) {
             throw new ExceptionNullObject("Book copy should not be null");
@@ -100,7 +100,7 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Override
     public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
-        BookCopy editedBookCopy = null;
+        BookCopy editedBookCopy;
         String signature = bookEdit.getSignature();
         Long registrationNumber = bookEdit.getRegistrationNumber();
         Character status = bookEdit.getStatus();

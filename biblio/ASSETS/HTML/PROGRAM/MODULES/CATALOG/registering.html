@@ -1,36 +1,29 @@
 <div class="container" id="registering_section">
 
     <menu class="window_nav">
-        <a class="page_link search_bookedition_page enabled">Author</a>
-        <a class="page_link create_bookcopy_page">Work</a>
+        <a class="page_link bookedition_page enabled">Author</a>
+        <a class="page_link bookcopy_page">Work</a>
     </menu>
 
     <div class="current_window">
 
-        <div class="page search_bookedition_page hidden">
+        <div class="page bookedition_page hidden">
 
-            <div class="page_element_container search_bookEdition">
+            <div class="page_element_container search_bookedition">
                 <form class="form author_form search">
                     <legend>Search book edition</legend>
                     <p class="error_message general_error"></p>
-                    <p class="error_message title"></p>
-                    <input type="text" name="title">
-                    <p class="error_message author"></p>
-                    <input type="text" name="author">
-                    <p class="error_message ISBN"></p>
+                    <input type="text" name="title" placeholder="Tile">
+                    <input type="text" name="author" placeholder="Author">
                     <input type="text" name="isbn" placeholder="ISBN">
-                    <p class="error_message editor"></p>
                     <input type="text" name="editor_name" placeholder="Editor name">
-                    <p class="error_message editionYear"></p>
-                    <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
-                    <p class="error_message language"></p>
-                    <input type="text" name="edition_language" id="edition_language" placeholder="language">
+                    <input type="text" name="edition_language" placeholder="Language">
                     <input type="submit" id="create_bookedition_btn" class="btn">
                 </form>
             </div>
 
             <div class="page_element_container selected_result_holder">
-                <p class="selected_author"><span>Book edition: </span></p>
+                <p class="selected_bookedition"><span>Book edition: </span></p>
             </div>
 
             <div class="page_element_container change_page_container">
@@ -40,16 +33,21 @@
         </div>
 
 
-        <div class="page create_bookcopy_page hidden">
+        <div class="page bookcopy_page hidden">
 
             <div class="page_element_container create_bookcopy_page">
                 <form class="form bookwork_form create">
                     <legend>Create new book work</legend>
+                    <div></div>
                     <p class="error_message general_error"></p>
-                    <p class="error_message title"></p>
-                    <input type="text" name="title" placeholder="Book work title">
-                    <p class="error_message publicationYear"></p>
-                    <input type="number" name="publication_year" placeholder="Book work publication year">
+                    <input type="text" name="title" readonly>
+                    <input type="text" name="author" readonly>
+                    <input type="text" name="isbn" readonly>
+                    <input type="text" name="editor_name" readonly>
+                    <p class="error_message registrationNumber"></p>
+                    <input type="number" name="registration_number" placeholder="Registration number">
+                    <p class="error_message signature"></p>
+                    <input type="number" name="signature" placeholder="Signature">
                     <input type="submit" id="create_bookwork_btn" class="btn" value="Create">
                 </form>
             </div>
@@ -65,30 +63,6 @@
             </div>
         </div>
 
-        <div class="page edition_page hidden">
-
-            <div class="page_element_container create_bookedition">
-                <form class="form edition_form create">
-                    <legend>Create new book edition</legend>
-                    <p class="error_message general_error"></p>
-                    <input type="text" name="author_name" class="selected_author" readonly>
-                    <input type="text" name="title" class="selected_bookwork" readonly>
-                    <p class="error_message ISBN"></p>
-                    <input type="text" name="isbn" placeholder="ISBN">
-                    <p class="error_message editor"></p>
-                    <input type="text" name="editor_name" placeholder="Editor name">
-                    <p class="error_message editionYear"></p>
-                    <input type="number" name="edition_year" id="edition_year" placeholder="Edition year">
-                    <p class="error_message language"></p>
-                    <input type="text" name="edition_language" id="edition_language" placeholder="language">
-                    <input type="submit" id="create_bookwork_btn" class="btn">
-                </form>
-            </div>
-
-            <div class="page_element_container change_page_container">
-                <span class="material-symbols-outlined edition_page bookwork_page  previous_page">chevron_left</span>
-            </div>
-        </div>
 
         <div id="modal" class="hidden">
 
@@ -97,30 +71,38 @@
                 <span class="close_symbol">X</span>
 
 
-                <table class="results_table authors_results_table hidden">
+                <table class="results_table bookeditions_results_table hidden">
                     <thead>
                         <tr>
-                            <th>First name</th>
-                            <th>Last name</th>
+                            <th>Title</td>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Editor</th>
+                            <th>Bar code</th>
+                            <th>Registration number</th>
+                            <th>Signature</th>
                         </tr>
                     </thead>
                     <tbody class="results_table_body">
                         <tr class="error_message_row hidden">
                             <td>
                                 <p class="error_message general_error"></p>
-                                <p class="error_message firstName"></p>
-                                <p class="error_message lastName"></p>
+                                <p class="error_message registrationNumber"></p>
+                                <p class="error_message signature"></p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <table class="results_table bookworks_results_table hidden">
+                <p class="success_message created_edition"></p>
+                <table class="results_table bookcopies_results_table hidden">
                     <thead>
                         <tr>
                             <th>Title</td>
                             <th>Author</th>
-                            <th>Publication year</th>
+                            <th>ISBN</th>
+                            <th>Editor</th>
+                            <th>Edition Year</th>
                         </tr>
                     </thead>
                     <tbody class="results_table_body">
@@ -129,31 +111,6 @@
                                 <p class="error_message general_error"></p>
                                 <p class="error_message title"></p>
                                 <p class="error_message publicationYear"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p class="success_message created_edition"></p>
-                <table class="results_table edition_results_table hidden">
-                    <thead>
-                        <tr>
-                            <th>Title</td>
-                            <th>Author</th>
-                            <th>ISBN</th>
-                            <th>Editor</th>
-                            <th>Edition Year</th>
-                            <th>Language</th>
-                        </tr>
-                    </thead>
-                    <tbody class="results_table_body">
-                        <tr class="error_message_row hidden">
-                            <td colspan="6">
-                                <p class="error_message general_error"></p>
-                                <p class="error_message isbn"></p>
-                                <p class="error_message editor"></p>
-                                <p class="error_message editionYear"></p>
-                                <p class="error_message language"></p>
                             </td>
                         </tr>
                     </tbody>

@@ -1,7 +1,18 @@
+import { enableWindowNavLinkBtns } from "./catalog-commons.js"
+import { showPage } from "./catalog-commons.js"
+import { findCurrentPage } from "./catalog-commons.js"
+
+import { toggleNextPageChanging } from "./catalog-commons.js"
+import { clearFormsData } from "./catalog-commons.js"
+import { clearPrintedReults } from "./catalog-commons.js"
+
+import { fetchRequest } from "./catalog-commons.js"
+
+import { handleErrorMessages } from "./catalog-commons.js"
+import { clearErrorMessages } from "./catalog-commons.js"
+
+
 const d = document,
-    currentPage = d.getElementById("cataloging-section"),
-    pageLinks = d.querySelectorAll(".page_link"),
-    pages = d.querySelectorAll(".page"),
     searchAuthorForm = d.querySelector(".form.author_form.search"),
     createAuthorForm = d.querySelector(".form.author_form.create"),
     searchBookworkForm = d.querySelector(".form.bookwork_form.search"),
@@ -15,16 +26,7 @@ const d = document,
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
     editBtn = d.querySelector(".modal_btns_container .edit_btn")
 
-let author, bookwork, newEdition, results, error, table, resultsType, operation;
-
-pageLinks.forEach(pageLink => {
-    pageLink.addEventListener("click", e => {
-        if (e.target.classList.contains("enabled")) {
-            e.preventDefault();
-            showPage(e.target.classList[1]);
-        }
-    });
-});
+let author, bookwork, newEdition, results, error, table, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
@@ -56,7 +58,7 @@ const runAuthorProcess = async form => {
     author = ""
     table = authorsResultsTable;
     resultsType = "author";
-    deletePrintedReults()
+    clearPrintedReults(resultsType)
 
     if (form === searchAuthorForm) {
         operation = "search"
@@ -71,7 +73,7 @@ const runBookworkProcess = async form => {
     bookwork = ""
     table = bookworksResultsTable;
     resultsType = "bookwork";
-    deletePrintedReults()
+    clearPrintedReults(resultsType)
 
     if (form === searchBookworkForm) {
         operation = "search"
@@ -92,15 +94,19 @@ const runBookeditionProcess = async form => {
 }
 
 const getSearchAuthorResults = async form => {
-    await fetchRequest(
-        "GET",
-        joinParamsToURL(
-            "http://localhost:8080/authors-catalog/search-author",
-            {
-                author_name: form.author_name.value
-            }
+    try {
+        results = await fetchRequest(
+            "GET",
+            joinParamsToURL(
+                "http://localhost:8080/authors-catalog/search-author",
+                {
+                    author_name: form.author_name.value
+                }
+            )
         )
-    )
+    } catch (error) {
+        error = error
+    }
 }
 
 const getCreateAuthorResults = async form => {
@@ -215,74 +221,12 @@ const getEditBookeditionResults = async editedFields => {
     }
 }
 
-const showPage = pageOption => {
-    pages.forEach(page => {
-        page.classList.add("hidden")
-    });
-    pageLinks.forEach(pageLink => {
-        pageLink.classList.remove("active");
-    })
-    d.querySelector(`.page_link.${pageOption}`).classList.add("active")
-    d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
-
-    enablePreviousPageBtn()
-}
-
-const fetchRequest = async (method, url, bodyContent) => {
-    try {
-        let options = {
-            method: method,
-            headers: {
-                "Content-type": "application/json; charset=utf-8"
-            },
-            body: bodyContent ? JSON.stringify(bodyContent) : null
-        },
-            res = await fetch(url, options)
-
-        if (!res.ok) throw res
-
-        results = await res.json()
-
-    } catch (ex) {
-        const errorData = await ex.json(),
-            errorResponse = {
-                status: errorData.status,
-                statusText: errorData.statusText,
-                message: errorData.message,
-                validationErrors: errorData.validationErrors
-            }
-        error = errorResponse
-    }
-}
-
 const joinParamsToURL = (baseURL, params) => {
     let queryParams = Object.keys(params)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
         .join('&')
 
     return `${baseURL}?${queryParams}`
-}
-
-const handleErrorMessages = layer => {
-    if (error.status === 422) {
-        console.log(error)
-        error.validationErrors.forEach(er => {
-            layer.querySelector(`.error_message.${er.field}`).classList.add("active")
-            layer.querySelector(`.error_message.${er.field}`).textContent = er.message
-        })
-    } else {
-        layer.querySelector('.error_message.general_error').classList.add("active")
-        layer.querySelector('.error_message.general_error').textContent = error.message
-    }
-}
-
-const clearErrorMessages = () => {
-    d.querySelectorAll(".error_message").forEach(er => {
-        if (er.classList.contains("active")) {
-            er.classList.remove("active")
-        }
-        er.textContent = ""
-    })
 }
 
 const showSearchResults = () => {
@@ -545,7 +489,7 @@ const prepareEditonProcess = () => {
     const tableResultsRow = table.querySelector(".results_row"),
         cells = tableResultsRow.querySelectorAll("td")
 
-    deletePrintedReults()
+    clearPrintedReults(resultsType)
 
     console.log(cells)
 
@@ -595,29 +539,6 @@ const confirmEdition = async () => {
     }
 }
 
-const deletePrintedReults = () => {
-    if (resultsType === "author") {
-        d.querySelectorAll(".selected_result_holder .selected_author").forEach(el => {
-            el.textContent = "Author: "
-        })
-    } else if (resultsType === "bookwork") {
-        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
-            el.textContent = "Book work: "
-        })
-    }
-}
-
-const clearFormsData = page => {
-    page.querySelectorAll(".form").forEach(form => {
-        form.querySelectorAll("input").forEach(input => {
-            if (input.type !== "submit" &&
-                !input.hasAttribute("readonly")
-            ) {
-                input.value = ""
-            }
-        })
-    })
-}
 
 const findSelectedResult = () => {
     const checkboxes = d.querySelectorAll('input.result_option');
@@ -633,80 +554,6 @@ const findSelectedResult = () => {
     }
 }
 
-const toggleNextPageChanging = () => {
-    let nextPageBtn = findCurrentPage().querySelector(".change_page_container .next_page")
-
-    if (resultsType === "author") {
-        if (!author) {
-            if (!nextPageBtn.classList.contains("disabled")) {
-                nextPageBtn.classList.add("disabled")
-            }
-            if (pageLinks[1].classList.contains("enabled")) {
-                pageLinks[1].classList.remove("enabled")
-            }
-            if (pageLinks[2].classList.contains("enabled")) {
-                pageLinks[2].classList.remove("enabled")
-            }
-        } else {
-            if (nextPageBtn.classList.contains("disabled")) {
-                nextPageBtn.classList.remove("disabled")
-            }
-            if (!pageLinks[1].classList.contains("enabled")) {
-                pageLinks[1].classList.add("enabled")
-            }
-        }
-    } else if (resultsType === "bookwork") {
-        if (!bookwork) {
-            if (!nextPageBtn.classList.contains("disabled")) {
-                nextPageBtn.classList.add("disabled")
-            }
-            if (pageLinks[2].classList.contains("enabled")) {
-                pageLinks[2].classList.remove("enabled")
-            }
-        } else {
-            if (nextPageBtn.classList.contains("disabled")) {
-                nextPageBtn.classList.remove("disabled")
-            }
-            if (!pageLinks[2].classList.contains("enabled")) {
-                pageLinks[2].classList.add("enabled")
-            }
-        }
-    }
-
-    if (nextPageBtn) {
-        nextPageBtn.addEventListener("click", () => {
-            if (!nextPageBtn.classList.contains("disabled")) {
-                showPage(nextPageBtn.classList[2])
-            }
-        })
-    }
-}
-
-const enablePreviousPageBtn = () => {
-    let previousPageBtn = findCurrentPage().querySelector(".change_page_container .previous_page")
-
-    if (previousPageBtn) {
-        previousPageBtn.addEventListener("click", () => {
-            showPage(previousPageBtn.classList[2])
-        })
-    }
-}
-
-const findCurrentPage = () => {
-    let currentPage,
-        i = 0, found = false;
-
-    do {
-        if (!pages[i].classList.contains("hidden")) {
-            currentPage = pages[i]
-            found = true
-        } else {
-            i++
-        }
-    } while (!found && i < pages.length)
-
-    return currentPage
-}
 
 const enableOptionChangigng = () => {
     const checkboxes = document.querySelectorAll('input.result_option');
@@ -776,5 +623,5 @@ const closeModal = () => {
 }
 
 
-
-showPage("author_page");
+enableWindowNavLinkBtns()
+showPage("author_page")

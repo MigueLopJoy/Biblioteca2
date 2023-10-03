@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Book;
 import java.util.List;
 
 @RestController
@@ -54,11 +55,11 @@ public class BookCopyController {
     }
 
     @PutMapping("edit-bookCopy/{bookCopyId}")
-    public ResponseEntity<BookEdition> editBookEdition(
-            @PathVariable Integer BookCopyId,
+    public ResponseEntity<BookCopy> editBookEdition(
+            @PathVariable Integer bookCopyId,
             @RequestBody BooksEditDTOBookCopy bookEdit
     ) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(bookCopyService.editBookCopy(bookCopyId, bookEdit));
     }
 
     @DeleteMapping("delete-bookcopy/{bookCopyId}")
