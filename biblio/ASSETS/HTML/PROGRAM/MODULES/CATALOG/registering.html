@@ -40,10 +40,10 @@
                     <legend>Create new book work</legend>
                     <div></div>
                     <p class="error_message general_error"></p>
-                    <input type="text" name="title" readonly>
-                    <input type="text" name="author" readonly>
-                    <input type="text" name="isbn" readonly>
-                    <input type="text" name="editor_name" readonly>
+                    <input type="text" name="title" class="selected_title" readonly>
+                    <input type="text" name="author" class="selected_author" readonly>
+                    <input type="text" name="isbn" class="selected_isbn" readonly>
+                    <input type="text" name="editor_name" class="selected_editor_name" readonly>
                     <p class="error_message registrationNumber"></p>
                     <input type="number" name="registration_number" placeholder="Registration number">
                     <p class="error_message signature"></p>
@@ -52,14 +52,8 @@
                 </form>
             </div>
 
-            <div class="page_element_container selected_result_holder">
-                <p class="selected_bookwork"><span>Book work: </span></p>
-            </div>
-
             <div class="page_element_container change_page_container">
                 <span class="material-symbols-outlined bookwork_page author_page previous_page">chevron_left</span>
-                <span
-                    class="material-symbols-outlined bookwork_page edition_page next_page disabled">chevron_right</span>
             </div>
         </div>
 
@@ -78,7 +72,21 @@
                             <th>Author</th>
                             <th>ISBN</th>
                             <th>Editor</th>
-                            <th>Bar code</th>
+                            <th>Edition Year</th>
+                        </tr>
+                    </thead>
+                    <tbody class="results_table_body">
+                    </tbody>
+                </table>
+
+                <p class="success_message created_edition"></p>
+                <table class="results_table newBookcopy_results_table hidden">
+                    <thead>
+                        <tr>
+                            <th>Title</td>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Editor</th>
                             <th>Registration number</th>
                             <th>Signature</th>
                         </tr>
@@ -87,29 +95,7 @@
                         <tr class="error_message_row hidden">
                             <td>
                                 <p class="error_message general_error"></p>
-                                <p class="error_message registrationNumber"></p>
-                                <p class="error_message signature"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p class="success_message created_edition"></p>
-                <table class="results_table bookcopies_results_table hidden">
-                    <thead>
-                        <tr>
-                            <th>Title</td>
-                            <th>Author</th>
-                            <th>ISBN</th>
-                            <th>Editor</th>
-                            <th>Edition Year</th>
-                        </tr>
-                    </thead>
-                    <tbody class="results_table_body">
-                        <tr class="error_message_row hidden">
-                            <td>
-                                <p class="error_message general_error"></p>
-                                <p class="error_message title"></p>
+                                <p class="error_message registration_number"></p>
                                 <p class="error_message publicationYear"></p>
                             </td>
                         </tr>

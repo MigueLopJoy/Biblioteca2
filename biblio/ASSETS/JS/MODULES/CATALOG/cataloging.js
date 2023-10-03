@@ -20,7 +20,7 @@ const d = document,
     createBookEditionForm = d.querySelector(".form.edition_form.create"),
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
     bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
-    bookEditionTable = d.querySelector(".results_table.edition_results_table"),
+    bookEditionTable = d.querySelector(".results_table.newEdition_results_table"),
     modal = d.getElementById("modal"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
@@ -46,8 +46,8 @@ d.addEventListener("submit", async e => {
     if (error) {
         handleErrorMessages(e.target)
         error = null
-        toggleNextPageChanging()
-        clearFormsData(findCurrentPage())
+        toggleNextPageChanging(resultsType)
+        clearFormsData()
     } else {
         showSearchResults()
         enableModalActions()
@@ -56,8 +56,8 @@ d.addEventListener("submit", async e => {
 
 const runAuthorProcess = async form => {
     author = ""
-    table = authorsResultsTable;
-    resultsType = "author";
+    table = authorsResultsTable
+    resultsType = "author"
     clearPrintedReults(resultsType)
 
     if (form === searchAuthorForm) {
@@ -71,8 +71,8 @@ const runAuthorProcess = async form => {
 
 const runBookworkProcess = async form => {
     bookwork = ""
-    table = bookworksResultsTable;
-    resultsType = "bookwork";
+    table = bookworksResultsTable
+    resultsType = "bookwork"
     clearPrintedReults(resultsType)
 
     if (form === searchBookworkForm) {
@@ -110,114 +110,124 @@ const getSearchAuthorResults = async form => {
 }
 
 const getCreateAuthorResults = async form => {
-    await fetchRequest(
-        "POST",
-        "http://localhost:8080/authors-catalog/save-author",
-        {
-            firstName: form.firstName.value.trim(),
-            lastName: form.lastName.value.trim()
-        }
-    )
-    if (!error) {
-        results = [results]
+    try {
+        results = [await fetchRequest(
+            "POST",
+            "http://localhost:8080/authors-catalog/save-author",
+            {
+                firstName: form.firstName.value.trim(),
+                lastName: form.lastName.value.trim()
+            }
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
 
 const getEditAuthorResults = async editedFields => {
-    await fetchRequest(
-        "PUT",
-        `http://localhost:8080/authors-catalog/edit-author/${results[0].idAuthor}`,
-        {
-            firstName: editedFields[0],
-            lastName: editedFields[1]
-        }
-    )
-    if (!error) {
-        results = [results]
+    try {
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/authors-catalog/edit-author/${results[0].idAuthor}`,
+            {
+                firstName: editedFields[0],
+                lastName: editedFields[1]
+            }
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
 const getSearchBookworkResults = async form => {
-    await fetchRequest(
-        "POST",
-        "http://localhost:8080/bookworks-catalog/search-bookwork",
-        {
-            title: form.title.value,
-            author: `${author.firstName} ${author.lastName}`
-        }
-    )
+    try {
+        results = await fetchRequest(
+            "POST",
+            "http://localhost:8080/bookworks-catalog/search-bookwork",
+            {
+                title: form.title.value,
+                author: `${author.firstName} ${author.lastName}`
+            }
+        )
+    } catch (error) {
+        error = error
+    }
 }
 
 const getCreatehBookworkResults = async form => {
-    await fetchRequest(
-        "POST",
-        "http://localhost:8080/bookworks-catalog/save-bookwork",
-        {
-            title: form.title.value,
-            author: {
-                firstName: author.firstName,
-                lastName: author.lastName
-            },
-            publicationYear: form.publication_year.value
-        }
-    )
-    if (!error) {
-        results = [results]
+    try {
+        results = [await fetchRequest(
+            "POST",
+            "http://localhost:8080/bookworks-catalog/save-bookwork",
+            {
+                title: form.title.value,
+                author: {
+                    firstName: author.firstName,
+                    lastName: author.lastName
+                },
+                publicationYear: form.publication_year.value
+            }
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
 const getEditBookworkResults = async editedFields => {
-    await fetchRequest(
-        "PUT",
-        `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
-        {
-            title: editedFields[0],
-            publicationYear: editedFields[1]
-        }
-    )
-    if (!error) {
-        results = [results]
+    try {
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
+            {
+                title: editedFields[0],
+                publicationYear: editedFields[1]
+            }
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
 const getCreateBookeditionResults = async form => {
-    await fetchRequest(
-        "POST",
-        "http://localhost:8080/general-catalog/save-bookedition",
-        {
-            isbn: form.isbn.value,
-            editor: form.editor_name.value,
-            editionYear: form.edition_year.value,
-            language: form.edition_language.value,
-            bookWork: {
-                title: bookwork.title,
-                author: {
-                    firstName: bookwork.author.firstName,
-                    lastName: bookwork.author.lastName
-                },
-                publicationYear: bookwork.publicationYear
+    try {
+        results = [await fetchRequest(
+            "POST",
+            "http://localhost:8080/general-catalog/save-bookedition",
+            {
+                isbn: form.isbn.value,
+                editor: form.editor_name.value,
+                editionYear: form.edition_year.value,
+                language: form.edition_language.value,
+                bookWork: {
+                    title: bookwork.title,
+                    author: {
+                        firstName: bookwork.author.firstName,
+                        lastName: bookwork.author.lastName
+                    },
+                    publicationYear: bookwork.publicationYear
+                }
             }
-        }
-    )
-    if (!error) {
-        results = [results]
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
 const getEditBookeditionResults = async editedFields => {
-    await fetchRequest(
-        "PUT",
-        `http://localhost:8080/general-catalog/save-bookedition/${results[0].idBookEdition}`,
-        {
-            isbn: editedFields[2],
-            editor: editedFields[3],
-            editionYear: editedFields[4],
-            language: editedFields[5],
-        }
-    )
-    if (!error) {
-        results = [results]
+    try {
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/general-catalog/save-bookedition/${results[0].idBookEdition}`,
+            {
+                isbn: editedFields[2],
+                editor: editedFields[3],
+                editionYear: editedFields[4],
+                language: editedFields[5],
+            }
+        )]
+    } catch (error) {
+        error = error
     }
 }
 
@@ -229,25 +239,7 @@ const joinParamsToURL = (baseURL, params) => {
     return `${baseURL}?${queryParams}`
 }
 
-const showSearchResults = () => {
-    modal.classList.remove("hidden")
-    table.classList.remove("hidden")
-    generaTableContent()
 
-    if (operation === "search") {
-        d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
-
-        if (table === authorsResultsTable) {
-            selectResultBtn.textContent = "Select author";
-        } else if (table === bookworksResultsTable) {
-            selectResultBtn.textContent = "Select book work";
-        } else if (table === bookEditionTable) {
-            selectResultBtn.textContent = "Save new edition";
-        }
-    } else if (operation === "create") {
-        d.querySelector(".modal_btns_container .create_btns").classList.remove("hidden")
-    }
-}
 
 const enableModalActions = () => {
     if (operation === "search") {
@@ -260,15 +252,7 @@ const enableModalActions = () => {
     }
 }
 
-const generaTableContent = () => {
-    if (table === authorsResultsTable) {
-        generateAuthorsTableContent()
-    } else if (table === bookworksResultsTable) {
-        generateBookworksTableContent()
-    } else if (table === bookEditionTable) {
-        generateBookeditionsTableContent()
-    }
-}
+
 
 const generateAuthorsTableContent = () => {
     if (operation === "search" && !table.querySelector("th.select_column")) {
@@ -388,7 +372,7 @@ const generateBookworksTableContent = () => {
     }
 }
 
-const generateBookeditionsTableContent = () => {
+const generateNewBookeditionTableContent = () => {
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i]
@@ -454,7 +438,7 @@ const executeSelectResultBtnListener = () => {
 const endProcess = () => {
     printSelectedResult()
     closeModal()
-    toggleNextPageChanging()
+    toggleNextPageChanging(resultsType)
 
     results = "",
         resultsType = "",
@@ -594,34 +578,14 @@ const disableCloseModalBtn = () => {
     modal.querySelector(".close_symbol").classList.remove("active")
 }
 
-const closeModal = () => {
-    let tableBody = table.querySelector(".results_table_body"),
-        errorMessageRow = tableBody.querySelector(".error_message_row")
 
-    tableBody.innerHTML = ""
-    tableBody.appendChild(errorMessageRow)
-
-    table.classList.add("hidden")
-
-    if (table.querySelector("th.select_column")) {
-        table.querySelector("th.select_column").remove()
-    }
-
-    table = ""
-
-    modal.classList.add("hidden")
-    selectResultBtn.setAttribute("disabled", true)
-
-    if (operation === "search") {
-        d.querySelector(".modal_btns_container .select_btn").classList.add("hidden")
-    } else if (operation === "create") {
-        d.querySelector(".modal_btns_container .create_btns").classList.add("hidden")
-    }
-
-    toggleNextPageChanging()
-    clearFormsData(findCurrentPage())
-}
 
 
 enableWindowNavLinkBtns()
 showPage("author_page")
+
+export { generateAuthorsTableContent }
+export { generateBookworksTableContent }
+export { generateNewBookeditionTableContent }
+export { author }
+export { bookwork }
