@@ -33,7 +33,7 @@ public class BookWorkController {
     ) {
         return ResponseEntity.ok(
                 bookWorkService.saveNewBookWork(
-                        bookWorkService.createBookWorkFromBookSaveDTO(bookWork)
+                        bookWorkService.createBookWorkFromDTO(bookWork)
                 )
         );
     }

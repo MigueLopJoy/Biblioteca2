@@ -99,6 +99,8 @@ public class ImpBookWorkService implements IBookWorkService{
     public BookWork editBookWork(Integer bookWorkId, BooksEditDTOBookWork bookEdit) {
         String title = bookEdit.getTitle();
         Integer publicationYear = bookEdit.getPublicationYear();
+        Integer counter = 0;
+        Boolean found = false;
 
         Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
 
@@ -120,7 +122,22 @@ public class ImpBookWorkService implements IBookWorkService{
             savedBookWork.setPublicationYear(publicationYear);
         }
 
-        return this.saveNewBookWork(savedBookWork);
+        List<BookWork> bookWorksWithTitle = bookWorkRepository.findByTitle(title);
+
+        if (!bookWorksWithTitle.isEmpty()) {
+            do {
+                if (savedBookWork.equals(bookWorksWithTitle.get(counter))) {
+                    found = true;
+                } else {
+                    counter++;
+                }
+            } while (!found && counter < bookWorksWithTitle.size());
+
+            if (found) {
+                throw new ExceptionObjectAlreadyExists("Book work already exists");
+            }
+        }
+        return bookWorkRepository.save(savedBookWork);
     }
 
     @Override
@@ -136,7 +153,7 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public BookWork createBookWorkFromBookSaveDTO(BooksSaveDTOBookWork bookWork) {
+    public BookWork createBookWorkFromDTO(BooksSaveDTOBookWork bookWork) {
         return new BookWork().builder()
                     .title(bookWork.getTitle())
                     .author(

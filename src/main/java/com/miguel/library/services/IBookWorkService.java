@@ -20,5 +20,5 @@ public interface IBookWorkService {
 
     public String deleteBookWork(Integer idBookWork);
 
-    public BookWork createBookWorkFromBookSaveDTO(BooksSaveDTOBookWork bookWork);
+    public BookWork createBookWorkFromDTO(BooksSaveDTOBookWork bookWork);
 }

@@ -149,7 +149,7 @@ public class ImpBookEditionService implements IBookEditionService{
                     .language(bookEdition.getLanguage())
                     .editionYear(bookEdition.getEditionYear())
                     .bookWork(
-                            bookWorkService.createBookWorkFromBookSaveDTO(
+                            bookWorkService.createBookWorkFromDTO(
                                     bookEdition.getBookWork()
                             )
                     )
