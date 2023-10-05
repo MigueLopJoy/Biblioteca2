@@ -1,5 +1,3 @@
-import { enableWindowNavLinkBtns } from "./catalog-commons.js"
-import { showPage } from "./catalog-commons.js"
 import { findCurrentPage } from "./catalog-commons.js"
 
 import { toggleNextPageChanging } from "./catalog-commons.js"
@@ -7,10 +5,14 @@ import { clearFormsData } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
 
 import { fetchRequest } from "./catalog-commons.js"
+import { joinParamsToURL } from "./catalog-commons.js"
 
 import { handleErrorMessages } from "./catalog-commons.js"
 import { clearErrorMessages } from "./catalog-commons.js"
 
+import { showSearchResults } from "./catalog-commons.js"
+import { enableModalActions } from "./catalog-commons.js"
+import { closeModal } from "./catalog-commons.js"
 
 const d = document,
     searchAuthorForm = d.querySelector(".form.author_form.search"),
@@ -31,26 +33,28 @@ let author, bookwork, newEdition, results, error, table, resultsType, operation
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    let currentPage = findCurrentPage()
+    if (document.body.contains(findCurrentPage())) {
+        let currentPage = findCurrentPage()
 
-    clearErrorMessages()
+        clearErrorMessages()
 
-    if (currentPage.classList.contains("author_page")) {
-        await runAuthorProcess(e.target)
-    } else if (currentPage.classList.contains("bookwork_page")) {
-        await runBookworkProcess(e.target)
-    } else if (currentPage.classList.contains("edition_page")) {
-        await runBookeditionProcess(e.target)
-    }
+        if (currentPage.classList.contains("author_page")) {
+            await runAuthorProcess(e.target)
+        } else if (currentPage.classList.contains("bookwork_page")) {
+            await runBookworkProcess(e.target)
+        } else if (currentPage.classList.contains("edition_page")) {
+            await runBookeditionProcess(e.target)
+        }
 
-    if (error) {
-        handleErrorMessages(e.target)
-        error = null
-        toggleNextPageChanging(resultsType)
-        clearFormsData()
-    } else {
-        showSearchResults()
-        enableModalActions()
+        if (error) {
+            handleErrorMessages(e.target)
+            error = null
+            toggleNextPageChanging(resultsType)
+            clearFormsData()
+        } else {
+            showSearchResults(table, operation)
+            enableModalActions(operation)
+        }
     }
 })
 
@@ -231,26 +235,7 @@ const getEditBookeditionResults = async editedFields => {
     }
 }
 
-const joinParamsToURL = (baseURL, params) => {
-    let queryParams = Object.keys(params)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
-        .join('&')
 
-    return `${baseURL}?${queryParams}`
-}
-
-
-
-const enableModalActions = () => {
-    if (operation === "search") {
-        enableOptionChangigng()
-        enableCloseModalBtn()
-        enableSelectResultBtn()
-    } else if (operation === "create") {
-        disableCloseModalBtn()
-        enableCreateBtns()
-    }
-}
 
 
 
@@ -280,7 +265,7 @@ const generateAuthorsTableContent = () => {
             selectAuthor = d.createElement("td")
             checkbox = d.createElement("input")
             checkbox.type = "checkbox"
-            checkbox.name = `select-author`
+            checkbox.name = `select_author`
             checkbox.classList.add('result_option')
             checkbox.classList.add('author_result_option')
             checkbox.value = i;
@@ -321,7 +306,8 @@ const generateBookworksTableContent = () => {
 
     for (let i = 0; i < results.length; i++) {
 
-        let result = results[i]
+        let result = results[i],
+            author = result.author
 
         let newRow = d.createElement("tr")
         newRow.classList.add("results_row")
@@ -408,42 +394,6 @@ const generateNewBookeditionTableContent = () => {
     }
 }
 
-const enableCreateBtns = () => {
-    confirmBtn.addEventListener("click", executeConfirmBtnListener)
-    editBtn.addEventListener("click", executeEditBtnListener)
-}
-
-const enableSelectResultBtn = () => {
-    selectResultBtn.addEventListener("click", executeSelectResultBtnListener)
-}
-
-const executeConfirmBtnListener = () => {
-    saveResult()
-    endProcess()
-    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
-}
-
-const executeEditBtnListener = () => {
-    saveResult()
-    prepareEditonProcess()
-    editBtn.removeEventListener("click", executeEditBtnListener)
-}
-
-const executeSelectResultBtnListener = () => {
-    saveResult()
-    endProcess()
-    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
-}
-
-const endProcess = () => {
-    printSelectedResult()
-    closeModal()
-    toggleNextPageChanging(resultsType)
-
-    results = "",
-        resultsType = "",
-        operation = ""
-}
 
 const saveResult = () => {
     if (resultsType === "author") {
@@ -474,8 +424,6 @@ const prepareEditonProcess = () => {
         cells = tableResultsRow.querySelectorAll("td")
 
     clearPrintedReults(resultsType)
-
-    console.log(cells)
 
     if (resultsType === "author") {
         cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
@@ -538,22 +486,6 @@ const findSelectedResult = () => {
     }
 }
 
-
-const enableOptionChangigng = () => {
-    const checkboxes = document.querySelectorAll('input.result_option');
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", e => {
-            checkboxes.forEach(cb => {
-                if (cb !== checkbox) {
-                    cb.checked = false;
-                }
-            });
-            changeBtnState(e.target);
-        });
-    });
-}
-
 const changeBtnState = checkbox => {
     if (checkbox.checked === true) {
         selectResultBtn.removeAttribute("disabled")
@@ -561,28 +493,6 @@ const changeBtnState = checkbox => {
         selectResultBtn.setAttribute("disabled", true)
     }
 }
-
-const enableCloseModalBtn = () => {
-    let closeSymbol = modal.querySelector(".close_symbol")
-
-    closeSymbol.classList.add("active")
-
-    closeSymbol.addEventListener("click", e => {
-        if (closeSymbol.classList.contains("active")) {
-            closeModal()
-        }
-    })
-}
-
-const disableCloseModalBtn = () => {
-    modal.querySelector(".close_symbol").classList.remove("active")
-}
-
-
-
-
-enableWindowNavLinkBtns()
-showPage("author_page")
 
 export { generateAuthorsTableContent }
 export { generateBookworksTableContent }

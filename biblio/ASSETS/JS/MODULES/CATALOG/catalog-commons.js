@@ -1,45 +1,20 @@
 import { generateAuthorsTableContent } from "./cataloging.js"
 import { generateBookworksTableContent } from "./cataloging.js"
 import { generateNewBookeditionTableContent } from "./cataloging.js"
+
 import { generateBookeditionsTableContent } from "./registering.js"
 import { generateNewBookcopyTableContent } from "./registering.js"
+
+import { showPage } from "./pages_navigation.js"
+
 import { author } from "./cataloging.js"
 import { bookwork } from "./cataloging.js"
 import { bookedition } from "./registering.js"
 
 
-const d = document;
+const d = document
 
 /* Global methods*/
-
-const enableWindowNavLinkBtns = () => {
-    const pageLinks = d.querySelectorAll(".page_link")
-
-    pageLinks.forEach(pageLink => {
-        pageLink.addEventListener("click", e => {
-            if (e.target.classList.contains("enabled")) {
-                e.preventDefault();
-                showPage(e.target.classList[1]);
-            }
-        });
-    })
-}
-
-const showPage = pageOption => {
-    const pages = d.querySelectorAll(".page"),
-        pageLinks = d.querySelectorAll(".page_link")
-
-    pages.forEach(page => {
-        page.classList.add("hidden")
-    });
-    pageLinks.forEach(pageLink => {
-        pageLink.classList.remove("active");
-    })
-    d.querySelector(`.page_link.${pageOption}`).classList.add("active")
-    d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
-
-    enablePreviousPageBtn()
-}
 
 
 const findCurrentPage = () => {
@@ -71,13 +46,14 @@ const enablePreviousPageBtn = () => {
     if (previousPageBtn) {
         previousPageBtn.addEventListener("click", () => {
             showPage(previousPageBtn.classList[2])
+            enablePreviousPageBtn()
         })
     }
 }
 
 const toggleNextPageChanging = resultsType => {
     const nextPageBtn = findCurrentPage().querySelector(".change_page_container .next_page"),
-          pageLinks = d.querySelectorAll(".page_link")
+        pageLinks = d.querySelectorAll(".page_link")
 
     const togglePageLink = (index, enable) => {
         if (pageLinks[index]) {
@@ -124,6 +100,7 @@ const toggleNextPageChanging = resultsType => {
     if (nextPageBtn && !nextPageBtn.classList.contains("disabled")) {
         nextPageBtn.addEventListener("click", () => {
             showPage(nextPageBtn.classList[2]);
+            enablePreviousPageBtn()
         });
     }
 };
@@ -203,6 +180,13 @@ const fetchRequest = async (method, url, bodyContent) => {
     }
 }
 
+const joinParamsToURL = (baseURL, params) => {
+    let queryParams = Object.keys(params)
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+        .join('&')
+
+    return `${baseURL}?${queryParams}`
+}
 
 /* Error handling methods*/
 
@@ -228,7 +212,7 @@ const clearErrorMessages = () => {
 }
 
 
-/* Display results methods */
+/* Handle results methods */
 
 const showSearchResults = (table, operation) => {
     const modal = d.getElementById("modal")
@@ -236,7 +220,7 @@ const showSearchResults = (table, operation) => {
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
-    generaTableContent()
+    generaTableContent(table)
 
     if (operation === "search") {
         d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
@@ -250,7 +234,7 @@ const showSearchResults = (table, operation) => {
         } else if (table.classList.contains(".editions_results_table")) {
             selectResultBtn.textContent = "Select book edition";
         } else if (table.classList.contains(".newBookCopy_results_table")) {
-            selectResultBtn.textContent = "Select book edition";
+            selectResultBtn.textContent = "Save new copy";
         }
     } else if (operation === "create") {
         d.querySelector(".modal_btns_container .create_btns").classList.remove("hidden")
@@ -258,11 +242,6 @@ const showSearchResults = (table, operation) => {
 }
 
 const generaTableContent = table => {
-    if (table === authorsResultsTable) {
-    } else if (table === bookworksResultsTable) {
-    } else if (table === bookEditionTable) {
-    } 
-
     if (table.classList.contains(".authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains(".bookworks_results_table")) {
@@ -270,11 +249,92 @@ const generaTableContent = table => {
     } else if (table.classList.contains(".newEdition_results_table")) {
         generateNewBookeditionTableContent()
     } else if (table.classList.contains(".editions_results_table")) {
-        selectResultBtn.textContent = "Select book edition";
+        generateBookeditionsTableContent()
     } else if (table.classList.contains(".newBookCopy_results_table")) {
-        selectResultBtn.textContent = "Select book edition";
+        generateNewBookcopyTableContent()
     }
 }
+
+const enableModalActions = operation => {
+    if (operation === "search") {
+        enableOptionChangigng()
+        enableCloseModalBtn()
+        enableSelectResultBtn()
+    } else if (operation === "create") {
+        disableCloseModalBtn()
+        enableCreateBtns()
+    }
+}
+
+const enableOptionChangigng = () => {
+    const checkboxes = document.querySelectorAll('input.result_option');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", e => {
+            checkboxes.forEach(cb => {
+                if (cb !== checkbox) {
+                    cb.checked = false;
+                }
+            });
+            changeBtnState(e.target);
+        });
+    });
+}
+
+const enableCloseModalBtn = () => {
+    let closeSymbol = modal.querySelector(".close_symbol")
+
+    closeSymbol.classList.add("active")
+
+    closeSymbol.addEventListener("click", e => {
+        if (closeSymbol.classList.contains("active")) {
+            closeModal()
+        }
+    })
+}
+
+const disableCloseModalBtn = () => {
+    modal.querySelector(".close_symbol").classList.remove("active")
+}
+
+const enableSelectResultBtn = () => {
+    selectResultBtn.addEventListener("click", executeSelectResultBtnListener)
+}
+
+const enableCreateBtns = () => {
+    confirmBtn.addEventListener("click", executeConfirmBtnListener)
+    editBtn.addEventListener("click", executeEditBtnListener)
+}
+
+const executeSelectResultBtnListener = () => {
+    saveResult()
+    endProcess()
+    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
+}
+
+
+const executeConfirmBtnListener = () => {
+    saveResult()
+    endProcess()
+    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
+}
+
+const executeEditBtnListener = () => {
+    saveResult()
+    prepareEditonProcess()
+    editBtn.removeEventListener("click", executeEditBtnListener)
+}
+
+const endProcess = () => {
+    printSelectedResult()
+    closeModal()
+    toggleNextPageChanging(resultsType)
+
+    results = "",
+        resultsType = "",
+        operation = ""
+}
+
 
 const closeModal = () => {
     let tableBody = table.querySelector(".results_table_body"),
@@ -304,19 +364,19 @@ const closeModal = () => {
     clearFormsData(findCurrentPage())
 }
 
-
-export { enableWindowNavLinkBtns }
-export { showPage }
 export { findCurrentPage }
 
+export { enablePreviousPageBtn }
 export { toggleNextPageChanging }
 export { clearFormsData }
 export { clearPrintedReults }
 
 export { fetchRequest }
+export { joinParamsToURL }
 
 export { handleErrorMessages }
-export { clearErrorMessages } 
+export { clearErrorMessages }
 
 export { showSearchResults }
+export { enableModalActions }
 export { closeModal }

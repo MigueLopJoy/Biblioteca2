@@ -1,5 +1,3 @@
-import { enableWindowNavLinkBtns } from "./catalog-commons.js"
-import { showPage } from "./catalog-commons.js"
 import { findCurrentPage } from "./catalog-commons.js"
 
 import { toggleNextPageChanging } from "./catalog-commons.js"
@@ -7,9 +5,14 @@ import { clearFormsData } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
 
 import { fetchRequest } from "./catalog-commons.js"
+import { joinParamsToURL } from "./catalog-commons.js"
 
 import { handleErrorMessages } from "./catalog-commons.js"
 import { clearErrorMessages } from "./catalog-commons.js"
+
+import { showSearchResults } from "./catalog-commons.js"
+import { enableModalActions } from "./catalog-commons.js"
+import { closeModal } from "./catalog-commons.js"
 
 const d = document,
     searchEditionForm = d.querySelector(".form.edition_form.search"),
@@ -26,24 +29,26 @@ let bookedition, newbookcopy, results, error, table, resultsType, operation
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    let currentPage = findCurrentPage()
+    if (d.getElementById("registering_section")) {
+        let currentPage = findCurrentPage()
 
-    clearErrorMessages()
+        clearErrorMessages()
 
-    if (currentPage.classList.contains("bookedition_page")) {
-        await runBookEditionProcess(e.target)
-    } else if (currentPage.classList.contains("bookcopy_page")) {
-        await runBookCopyProcess(e.target)
-    }
+        if (currentPage.classList.contains("bookedition_page")) {
+            await runBookEditionProcess(e.target)
+        } else if (currentPage.classList.contains("bookcopy_page")) {
+            await runBookCopyProcess(e.target)
+        }
 
-    if (error) {
-        handleErrorMessages(e.target)
-        error = null
-        toggleNextPageChanging(resultsType)
-        clearFormsData()
-    } else {
-        showSearchResults()
-        enableModalActions()
+        if (error) {
+            handleErrorMessages(e.target)
+            error = null
+            toggleNextPageChanging(resultsType)
+            clearFormsData()
+        } else {
+            showSearchResults(table, operation)
+            enableModalActions(operation)
+        }
     }
 })
 
@@ -67,7 +72,7 @@ const runBookCopyProcess = async form => {
 
 const getSearchBookeditionResults = async form => {
     try {
-        results =  fetchRequest(
+        results = fetchRequest(
             "POST",
             "http://localhost:8080/general-catalog/search-bookeditions",
             {
@@ -113,6 +118,7 @@ const getCreateBookCopyResults = async form => {
 }
 
 const generateBookeditionsTableContent = () => {
+
     if (!table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select book edition"
@@ -122,15 +128,17 @@ const generateBookeditionsTableContent = () => {
 
     for (let i = 0; i < results.length; i++) {
 
-        let result = results[i]
+        let result = results[i],
+            bookwork = result.bookwork,
+            author = bookwork.author
 
         let newRow = d.createElement("tr")
 
         let title = d.createElement("td")
-        title.textContent = result.bookwork.title
+        title.textContent = bookwork.title
 
         let bookAuthor = d.createElement("td")
-        bookAuthor.textContent = `${result.bookwork.author.firstName} ${result.bookwork.author.lastName}`
+        bookAuthor.textContent = `${author.firstName} ${author.lastName}`
 
         let isbn = d.createElement("td")
         isbn.textContent = result.isbn
@@ -144,12 +152,27 @@ const generateBookeditionsTableContent = () => {
         let language = d.createElement("td")
         language.textContent = result.language
 
+        let selectBookedition, checkbox
+        if (operation === "search") {
+            selectBookedition = d.createElement("td")
+            checkbox = d.createElement("input")
+            checkbox.type = "checkbox"
+            checkbox.name = `select_bookedition`
+            checkbox.classList.add('result_option')
+            checkbox.classList.add('bookedition_result_option')
+            checkbox.value = i;
+            selectAuthor.appendChild(checkbox)
+        }
+
         newRow.appendChild(title);
         newRow.appendChild(bookAuthor);
         newRow.appendChild(isbn);
         newRow.appendChild(editor);
         newRow.appendChild(editionYear);
         newRow.appendChild(language);
+        if (selectBookedition) {
+            newRow.appendChild(selectBookedition)
+        }
 
         table.querySelector(".results_table_body").appendChild(newRow);
     }
@@ -193,9 +216,6 @@ const generateNewBookcopyTableContent = () => {
         table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
-
-enableWindowNavLinkBtns()
-showPage("bookedition_page")
 
 export { generateBookeditionsTableContent }
 export { generateNewBookcopyTableContent }
