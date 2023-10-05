@@ -100,7 +100,6 @@ public class ImpBookWorkService implements IBookWorkService{
         String title = bookEdit.getTitle();
         Integer publicationYear = bookEdit.getPublicationYear();
         Integer counter = 0;
-        Boolean found = false;
 
         Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
 
@@ -109,10 +108,6 @@ public class ImpBookWorkService implements IBookWorkService{
         }
 
         BookWork savedBookWork = optionalBookWork.get();
-
-        if (Objects.isNull(title) && Objects.isNull(publicationYear)) {
-            throw new ExceptionNoInformationProvided("No information provided. Book work cannot be edited.");
-        }
 
         if (Objects.nonNull(title)) {
             savedBookWork.setTitle(title);
@@ -126,16 +121,15 @@ public class ImpBookWorkService implements IBookWorkService{
 
         if (!bookWorksWithTitle.isEmpty()) {
             do {
-                if (savedBookWork.equals(bookWorksWithTitle.get(counter))) {
-                    found = true;
+                if (savedBookWork.getAuthor().equals(bookWorksWithTitle.get(counter).getAuthor()) &&
+                        savedBookWork.getTitle().equals(bookWorksWithTitle.get(counter).getTitle()) &&
+                        !savedBookWork.getIdBookWork().equals(bookWorksWithTitle.get(counter).getIdBookWork())
+                ) {
+                    throw new ExceptionObjectAlreadyExists("Book work already exists");
                 } else {
                     counter++;
                 }
-            } while (!found && counter < bookWorksWithTitle.size());
-
-            if (found) {
-                throw new ExceptionObjectAlreadyExists("Book work already exists");
-            }
+            } while (counter < bookWorksWithTitle.size());
         }
         return bookWorkRepository.save(savedBookWork);
     }

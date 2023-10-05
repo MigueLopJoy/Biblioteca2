@@ -12,7 +12,8 @@ import { clearErrorMessages } from "./catalog-commons.js"
 
 import { showSearchResults } from "./catalog-commons.js"
 import { enableModalActions } from "./catalog-commons.js"
-import { closeModal } from "./catalog-commons.js"
+import { saveResult } from "./catalog-commons.js"
+import { endProcess } from "./catalog-commons.js"
 
 const d = document,
     searchAuthorForm = d.querySelector(".form.author_form.search"),
@@ -22,18 +23,14 @@ const d = document,
     createBookEditionForm = d.querySelector(".form.edition_form.create"),
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
     bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
-    bookEditionTable = d.querySelector(".results_table.newEdition_results_table"),
-    modal = d.getElementById("modal"),
-    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
-    confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
-    editBtn = d.querySelector(".modal_btns_container .edit_btn")
+    bookEditionTable = d.querySelector(".results_table.newEdition_results_table")
 
 let author, bookwork, newEdition, results, error, table, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (document.body.contains(findCurrentPage())) {
+    if (d.getElementById("cataloging_section")) {
         let currentPage = findCurrentPage()
 
         clearErrorMessages()
@@ -52,8 +49,9 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            showSearchResults(table, operation)
-            enableModalActions(operation)
+            console.log("1")
+            showSearchResults(operation, table)
+            enableModalActions(results, resultsType, operation, table)
         }
     }
 })
@@ -64,6 +62,8 @@ const runAuthorProcess = async form => {
     resultsType = "author"
     clearPrintedReults(resultsType)
 
+    console.log(form)
+
     if (form === searchAuthorForm) {
         operation = "search"
         await getSearchAuthorResults(form)
@@ -71,6 +71,7 @@ const runAuthorProcess = async form => {
         operation = "create"
         await getCreateAuthorResults(form)
     }
+    console.log(results)
 }
 
 const runBookworkProcess = async form => {
@@ -235,11 +236,8 @@ const getEditBookeditionResults = async editedFields => {
     }
 }
 
-
-
-
-
 const generateAuthorsTableContent = () => {
+    console.log("AAA")
     if (operation === "search" && !table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select Autor"
@@ -293,6 +291,7 @@ const generateAuthorsTableContent = () => {
             tableBody.appendChild(newRow);
         }
     }
+    console.log(table)
 }
 
 const generateBookworksTableContent = () => {
@@ -394,17 +393,6 @@ const generateNewBookeditionTableContent = () => {
     }
 }
 
-
-const saveResult = () => {
-    if (resultsType === "author") {
-        author = results[findSelectedResult()]
-    } else if (resultsType === "bookwork") {
-        bookwork = results[findSelectedResult()]
-    } else if (resultsType === "edition") {
-        newEdition = results[findSelectedResult()]
-    }
-}
-
 const printSelectedResult = () => {
     if (resultsType === "author") {
         d.querySelectorAll(".selected_result_holder .selected_author").forEach(el => {
@@ -468,29 +456,6 @@ const confirmEdition = async () => {
         saveResult()
         endProcess()
         confirmBtn.removeEventListener("click", confirmEdition)
-    }
-}
-
-
-const findSelectedResult = () => {
-    const checkboxes = d.querySelectorAll('input.result_option');
-
-    if (checkboxes.length > 0) {
-        for (const checkbox of checkboxes) {
-            if (checkbox.checked === true) {
-                return checkbox.value
-            }
-        }
-    } else {
-        return 0
-    }
-}
-
-const changeBtnState = checkbox => {
-    if (checkbox.checked === true) {
-        selectResultBtn.removeAttribute("disabled")
-    } else {
-        selectResultBtn.setAttribute("disabled", true)
     }
 }
 

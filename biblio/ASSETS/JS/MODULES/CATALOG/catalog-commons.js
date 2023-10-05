@@ -12,10 +12,15 @@ import { bookwork } from "./cataloging.js"
 import { bookedition } from "./registering.js"
 
 
-const d = document
+const d = document,
+      selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
+      confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
+      editBtn = d.querySelector(".modal_btns_container .edit_btn"),
+      closeSymbol = modal.querySelector(".close_symbol")
+      
+
 
 /* Global methods*/
-
 
 const findCurrentPage = () => {
     const pages = d.querySelectorAll(".page")
@@ -163,6 +168,8 @@ const fetchRequest = async (method, url, bodyContent) => {
             body: bodyContent ? JSON.stringify(bodyContent) : null
         },
             res = await fetch(url, options)
+            
+            console.log(res.ok)
 
         if (!res.ok) throw res
 
@@ -214,26 +221,27 @@ const clearErrorMessages = () => {
 
 /* Handle results methods */
 
-const showSearchResults = (table, operation) => {
+const showSearchResults = (operation, table) => {
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
+    console.log(table)
     generaTableContent(table)
 
     if (operation === "search") {
         d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
 
-        if (table.classList.contains(".authors_results_table")) {
+        if (table.classList.contains("authors_results_table")) {
             selectResultBtn.textContent = "Select author";
-        } else if (table.classList.contains(".bookworks_results_table")) {
+        } else if (table.classList.contains("bookworks_results_table")) {
             selectResultBtn.textContent = "Select book work";
-        } else if (table.classList.contains(".newEdition_results_table")) {
+        } else if (table.classList.contains("newEdition_results_table")) {
             selectResultBtn.textContent = "Save new edition";
-        } else if (table.classList.contains(".editions_results_table")) {
+        } else if (table.classList.contains("editions_results_table")) {
             selectResultBtn.textContent = "Select book edition";
-        } else if (table.classList.contains(".newBookCopy_results_table")) {
+        } else if (table.classList.contains("newBookCopy_results_table")) {
             selectResultBtn.textContent = "Save new copy";
         }
     } else if (operation === "create") {
@@ -242,27 +250,28 @@ const showSearchResults = (table, operation) => {
 }
 
 const generaTableContent = table => {
-    if (table.classList.contains(".authors_results_table")) {
+    console.log(table)
+    if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
-    } else if (table.classList.contains(".bookworks_results_table")) {
+    } else if (table.classList.contains("bookworks_results_table")) {
         generateBookworksTableContent()
-    } else if (table.classList.contains(".newEdition_results_table")) {
+    } else if (table.classList.contains("newEdition_results_table")) {
         generateNewBookeditionTableContent()
-    } else if (table.classList.contains(".editions_results_table")) {
+    } else if (table.classList.contains("editions_results_table")) {
         generateBookeditionsTableContent()
-    } else if (table.classList.contains(".newBookCopy_results_table")) {
+    } else if (table.classList.contains("newBookCopy_results_table")) {
         generateNewBookcopyTableContent()
     }
 }
 
-const enableModalActions = operation => {
+const enableModalActions = (results, resultsType, operation, table) => {
     if (operation === "search") {
         enableOptionChangigng()
-        enableCloseModalBtn()
-        enableSelectResultBtn()
+        enableCloseModalBtn(operation, table)
+        enableSelectResultBtn(results, resultsType)
     } else if (operation === "create") {
         disableCloseModalBtn()
-        enableCreateBtns()
+        enableCreateBtns(results, resultsType)
     }
 }
 
@@ -281,14 +290,95 @@ const enableOptionChangigng = () => {
     });
 }
 
-const enableCloseModalBtn = () => {
-    let closeSymbol = modal.querySelector(".close_symbol")
+const changeBtnState = checkbox => {
+    if (checkbox.checked === true) {
+        selectResultBtn.removeAttribute("disabled")
+    } else {
+        selectResultBtn.setAttribute("disabled", true)
+    }
+}
 
+const enableSelectResultBtn = (results, resultsType) => {
+    selectResultBtn.addEventListener("click", () => {
+        executeSelectResultBtnListener(results, resultsType)
+    })
+    
+}
+
+const enableCreateBtns = (results, resultsType) => {
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", () => {
+            executeConfirmBtnListener(results, resultsType)
+        })
+    }
+    if (editBtn) {
+        editBtn.addEventListener("click", () => {
+            executeEditBtnListener(results, resultsType)
+        })
+    }
+}
+
+const executeSelectResultBtnListener = (results, resultsType) => {    
+    saveResult(results, resultsType)
+    endProcess()
+    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
+}
+
+
+const executeConfirmBtnListener = (results, resultsType) => {
+    saveResult(results, resultsType)
+    endProcess()
+    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
+    
+}
+
+const executeEditBtnListener = (results, resultsType) => {
+    saveResult(results, resultsType)
+    prepareEditonProcess()
+    editBtn.removeEventListener("click", executeEditBtnListener)
+}
+
+const saveResult = (results, resultsType) => {
+    if (resultsType === "author") {
+        console.log(author)
+        author = results[findSelectedResult()]
+    } else if (resultsType === "bookwork") {
+        bookwork = results[findSelectedResult()]
+    } else if (resultsType === "edition") {
+        newEdition = results[findSelectedResult()]
+    }
+}
+
+const findSelectedResult = () => {
+    const checkboxes = d.querySelectorAll('input.result_option');
+
+    if (checkboxes.length > 0) {
+        for (const checkbox of checkboxes) {
+            if (checkbox.checked === true) {
+                return checkbox.value
+            }
+        }
+    } else {
+        return 0
+    }
+}
+
+const endProcess = (resultsType, operation, table) => {
+    printSelectedResult()
+    closeModal(operation, table)
+    toggleNextPageChanging(resultsType)
+
+    results = "",
+        resultsType = "",
+        operation = ""
+}
+
+const enableCloseModalBtn = (operation, table) => {
     closeSymbol.classList.add("active")
 
-    closeSymbol.addEventListener("click", e => {
+    closeSymbol.addEventListener("click", () => {
         if (closeSymbol.classList.contains("active")) {
-            closeModal()
+            closeModal(operation, table)
         }
     })
 }
@@ -297,46 +387,8 @@ const disableCloseModalBtn = () => {
     modal.querySelector(".close_symbol").classList.remove("active")
 }
 
-const enableSelectResultBtn = () => {
-    selectResultBtn.addEventListener("click", executeSelectResultBtnListener)
-}
 
-const enableCreateBtns = () => {
-    confirmBtn.addEventListener("click", executeConfirmBtnListener)
-    editBtn.addEventListener("click", executeEditBtnListener)
-}
-
-const executeSelectResultBtnListener = () => {
-    saveResult()
-    endProcess()
-    selectResultBtn.removeEventListener("click", executeSelectResultBtnListener)
-}
-
-
-const executeConfirmBtnListener = () => {
-    saveResult()
-    endProcess()
-    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
-}
-
-const executeEditBtnListener = () => {
-    saveResult()
-    prepareEditonProcess()
-    editBtn.removeEventListener("click", executeEditBtnListener)
-}
-
-const endProcess = () => {
-    printSelectedResult()
-    closeModal()
-    toggleNextPageChanging(resultsType)
-
-    results = "",
-        resultsType = "",
-        operation = ""
-}
-
-
-const closeModal = () => {
+const closeModal = (operation, table) => {
     let tableBody = table.querySelector(".results_table_body"),
         errorMessageRow = tableBody.querySelector(".error_message_row")
 
@@ -379,4 +431,5 @@ export { clearErrorMessages }
 
 export { showSearchResults }
 export { enableModalActions }
-export { closeModal }
+export { saveResult }
+export { endProcess }

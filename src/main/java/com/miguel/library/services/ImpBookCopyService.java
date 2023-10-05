@@ -100,7 +100,6 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Override
     public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
-        BookCopy editedBookCopy;
         String signature = bookEdit.getSignature();
         Long registrationNumber = bookEdit.getRegistrationNumber();
         Character status = bookEdit.getStatus();
@@ -118,7 +117,7 @@ public class ImpBookCopyService implements IBookCopyService {
             savedBookCopy.setSignature(signature);
         }
 
-        if (registrationNumber != null) {
+        if (Objects.nonNull(registrationNumber)) {
             if (!this.isRegistrationNumberAlreadyUsed(registrationNumber)) {
                 savedBookCopy.setRegistrationNumber(registrationNumber);
             }
@@ -130,9 +129,15 @@ public class ImpBookCopyService implements IBookCopyService {
             );
         }
 
-        editedBookCopy = this.saveNewBookCopy(savedBookCopy);
+        BookCopy bookCopyWithRegistrationNumber = this.searchByRegistrationNumber(savedBookCopy.getRegistrationNumber());
 
-        return editedBookCopy;
+        if (Objects.nonNull(bookCopyWithRegistrationNumber) &&
+                !bookCopyWithRegistrationNumber.getIdBookCopy().equals(savedBookCopy.getIdBookCopy())
+        ) {
+            throw new ExceptionObjectAlreadyExists("Book copy already exists");
+        }
+
+        return bookCopyRepository.save(savedBookCopy);
     }
 
     @Override

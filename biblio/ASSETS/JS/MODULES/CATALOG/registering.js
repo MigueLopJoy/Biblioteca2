@@ -12,17 +12,12 @@ import { clearErrorMessages } from "./catalog-commons.js"
 
 import { showSearchResults } from "./catalog-commons.js"
 import { enableModalActions } from "./catalog-commons.js"
-import { closeModal } from "./catalog-commons.js"
 
 const d = document,
     searchEditionForm = d.querySelector(".form.edition_form.search"),
     createBookcopyForm = d.querySelector(".form.bookcopy_form.create"),
     editionsResultsTable = d.querySelector(".results_table.editions_results_table"),
-    bookcopiesResultsTable = d.querySelector(".results_table.newBookkcopy_results_table"),
-    modal = d.getElementById("modal"),
-    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
-    confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
-    editBtn = d.querySelector(".modal_btns_container .edit_btn")
+    bookcopiesResultsTable = d.querySelector(".results_table.newBookkcopy_results_table")
 
 let bookedition, newbookcopy, results, error, table, resultsType, operation
 

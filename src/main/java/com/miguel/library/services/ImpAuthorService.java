@@ -69,10 +69,6 @@ public class ImpAuthorService implements IAuthorService {
 
         Author fetchedAuthor = optionalAuthor.get();
 
-        if (Objects.isNull(firstName) && Objects.isNull(lastName)) {
-            throw new ExceptionNoInformationProvided("No information provided. Author cannot be edited.");
-        }
-
         if (Objects.nonNull(firstName)) {
             fetchedAuthor.setFirstName(firstName);
         }
