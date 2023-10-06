@@ -1,0 +1,187 @@
+<div class="container" id="cataloging_section">
+
+    <menu class="window_nav">
+        <a class="page_link author_page enabled">Author</a>
+        <a class="page_link bookwork_page">Work</a>
+        <a class="page_link edition_page">Edition</a>
+    </menu>
+
+    <div class="current_window">
+
+        <div class="page author_page hidden">
+
+            <div class="page_element_container search_author">
+                <form class="form author_form search">
+                    <legend>Search author</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
+                    <input type="submit" id="search_author_btn" class="btn" value="Search">
+                </form>
+            </div>
+
+            <div class="page_element_container create_author">
+                <form class="form author_form create">
+                    <legend>Create new author</legend>
+                    <p class="error_message general_error"></p>
+                    <p class="error_message firstName"></p>
+                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
+                    <p class="error_message lastName"></p>
+                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
+                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+                </form>
+            </div>
+
+            <div class="page_element_container selected_result_holder">
+                <p class="selected_author"><span>Author: </span></p>
+            </div>
+
+            <div class="page_element_container change_page_container">
+                <span
+                    class="material-symbols-outlined author_page bookwork_page next_page disabled">chevron_right</span>
+            </div>
+        </div>
+
+
+        <div class="page bookwork_page hidden">
+
+            <div class="page_element_container search_bookwork">
+                <form class="form bookwork_form search">
+                    <legend>Search book work</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="title" placeholder="Introduce book work's title">
+                    <input type="submit" id="search_bookwork_btn" class="btn" value="Search">
+                </form>
+            </div>
+
+            <div class="page_element_container create_bookwork">
+                <form class="form bookwork_form create">
+                    <legend>Create new book work</legend>
+                    <p class="error_message general_error"></p>
+                    <p class="error_message title"></p>
+                    <input type="text" name="title" placeholder="Book work title">
+                    <p class="error_message publicationYear"></p>
+                    <input type="number" name="publication_year" placeholder="Book work publication year">
+                    <input type="submit" id="create_bookwork_btn" class="btn" value="Create">
+                </form>
+            </div>
+
+            <div class="page_element_container selected_result_holder">
+                <p class="selected_bookwork"><span>Book work: </span></p>
+            </div>
+
+            <div class="page_element_container change_page_container">
+                <span class="material-symbols-outlined bookwork_page author_page previous_page">chevron_left</span>
+                <span
+                    class="material-symbols-outlined bookwork_page edition_page next_page disabled">chevron_right</span>
+            </div>
+        </div>
+
+        <div class="page edition_page hidden">
+
+            <div class="page_element_container create_bookedition">
+                <form class="form edition_form create">
+                    <legend>Create new book edition</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="author_name" class="selected_author" readonly>
+                    <input type="text" name="title" class="selected_bookwork" readonly>
+                    <p class="error_message ISBN"></p>
+                    <input type="text" name="isbn" placeholder="ISBN">
+                    <p class="error_message editor"></p>
+                    <input type="text" name="editor_name" placeholder="Editor name">
+                    <p class="error_message editionYear"></p>
+                    <input type="number" name="edition_year" placeholder="Edition year">
+                    <p class="error_message language"></p>
+                    <input type="text" name="edition_language" placeholder="Language">
+                    <input type="submit" id="create_bookwork_btn" class="btn">
+                </form>
+            </div>
+
+            <div class="page_element_container change_page_container">
+                <span class="material-symbols-outlined edition_page bookwork_page  previous_page">chevron_left</span>
+            </div>
+        </div>
+
+        <div id="modal" class="hidden">
+
+            <div class="modal_content">
+
+                <span class="close_symbol">X</span>
+
+
+                <table class="results_table authors_results_table hidden">
+                    <thead>
+                        <tr>
+                            <th>First name</th>
+                            <th>Last name</th>
+                        </tr>
+                    </thead>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td>
+                                <p class="error_message general_error"></p>
+                                <p class="error_message firstName"></p>
+                                <p class="error_message lastName"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="results_table bookworks_results_table hidden">
+                    <thead>
+                        <tr>
+                            <th>Title</td>
+                            <th>Author</th>
+                            <th>Publication year</th>
+                        </tr>
+                    </thead>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td>
+                                <p class="error_message general_error"></p>
+                                <p class="error_message title"></p>
+                                <p class="error_message publicationYear"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="success_message created_edition"></p>
+                <table class="results_table newEdition_results_table hidden">
+                    <thead>
+                        <tr>
+                            <th>Title</td>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Editor</th>
+                            <th>Edition Year</th>
+                            <th>Language</th>
+                        </tr>
+                    </thead>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td colspan="6">
+                                <p class="error_message general_error"></p>
+                                <p class="error_message isbn"></p>
+                                <p class="error_message editor"></p>
+                                <p class="error_message editionYear"></p>
+                                <p class="error_message language"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal_btns_container">
+                    <div class="select_btn hidden">
+                        <button class="select_result_btn btn" role="button" disabled></button>
+                    </div>
+                    <div class="create_btns hidden">
+                        <button class="btn confirm_btn" role="button">Confirm</button>
+                        <button class="btn edit_btn" role="button">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
