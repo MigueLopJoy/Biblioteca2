@@ -33,8 +33,6 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
                 }
             }
         }
-
         return isValidYear;
     }
-
 }

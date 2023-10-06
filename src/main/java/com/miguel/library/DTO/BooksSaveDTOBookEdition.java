@@ -25,6 +25,7 @@ public class BooksSaveDTOBookEdition {
 
     @NotNull(message = "Edition year required")
     @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
+    @Min(value = 1900, message = "Edition year should not be under 1900")
     private Integer editionYear;
 
     @NotBlank(message = "Language required")
