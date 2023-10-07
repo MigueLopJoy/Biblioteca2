@@ -17,7 +17,6 @@ import { prepareNewEditionProcess } from "./cataloging.js"
 
 import { getAuthor } from "./cataloging.js"
 import { getBookwork } from "./cataloging.js"
-import { getNewEdition } from "./cataloging.js"
 import { reasigneAuthorValue } from "./cataloging.js"
 import { reasigneBookworkValue } from "./cataloging.js"
 import { reasigneNewEditionValue } from "./cataloging.js"
@@ -27,8 +26,7 @@ const d = document,
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
     editBtn = d.querySelector(".modal_btns_container .edit_btn"),
-    closeSymbol = modal.querySelector(".close_symbol")
-
+    closeSymbol = d.querySelector(".close_symbol")
 
 
 /* Global methods*/
@@ -70,56 +68,71 @@ const enablePreviousPageBtn = () => {
     }
 }
 
+const toggleNextPageBtn = (nextPageBtn, object) => {
+    if (nextPageBtn) {
+
+        const clonedBtn = nextPageBtn.cloneNode(true)
+        nextPageBtn.parentNode.replaceChild(clonedBtn, nextPageBtn)
+
+        const isDisabled = () => {
+            return clonedBtn.classList.contains("disabled")
+        }
+
+        const nextPageBtnClickHandler = () => {
+            if (!isDisabled()) {
+                showPage(nextPageBtn.classList[2])
+                enablePreviousPageBtn()
+            }
+        }
+
+        if (!object) {
+            if (!isDisabled()) {
+                clonedBtn.classList.add("disabled")
+            }
+        } else {
+            if (isDisabled()) {
+                clonedBtn.classList.remove("disabled")
+                clonedBtn.addEventListener("click", nextPageBtnClickHandler)
+            }
+        }
+    }
+}
+
+const togglePageLinks = (pageLinks, object) => {
+    for (let i = 0; i < pageLinks.length; i++) {
+        let pageLink = pageLinks[i],
+            condition = pageLink.classList.contains("enabled")
+
+        if (!object) {
+            if (condition) {
+                pageLink.classList.remove("enabled")
+            }
+        } else {
+            if (!condition) {
+                pageLink.classList.add("enabled")
+            }
+        }
+    }
+}
+
 const toggleNextPageChanging = resultsType => {
     const nextPageBtn = findCurrentPage().querySelector(".change_page_container .next_page"),
         pageLinks = d.querySelectorAll(".page_link")
 
-    const togglePageLink = (index, enable) => {
-        if (pageLinks[index]) {
-            if (enable) {
-                pageLinks[index].classList.add("enabled")
-            } else {
-                pageLinks[index].classList.remove("enabled")
-            }
-        }
-    }
-
-    const toggleNextPageBtn = enable => {
-        if (nextPageBtn) {
-            if (enable) {
-                if (!nextPageBtn.classList.contains("disabled")) {
-                    nextPageBtn.classList.add("disabled")
-                }
-            } else {
-                if (nextPageBtn.classList.contains("disabled")) {
-                    nextPageBtn.classList.remove("disabled")
-                }
-            }
-        }
-    }
-
-    const checkCondition = (type, value) => {
-        toggleNextPageBtn(!value)
-    }
-
-    console.log(resultsType)
-
     if (resultsType === "author") {
-        checkCondition("author", getAuthor())
+        toggleNextPageBtn(nextPageBtn, getAuthor())
+        if (!getAuthor()) {
+            let links = [pageLinks[1], pageLinks[2]]
+            togglePageLinks(links, getAuthor())
+        } else {
+            togglePageLinks([pageLinks[1]], getAuthor())
+        }
     } else if (resultsType === "bookwork") {
-        checkCondition("bookwork", getBookwork())
+        toggleNextPageBtn(nextPageBtn, getBookwork())
+        togglePageLinks([pageLinks[2]])
     } else if (resultsType === "bookedition") {
-        checkCondition("bookedition", getNewEdition())
-    }
-
-    const clickHandler = () => {
-        showPage(nextPageBtn.classList[2])
-        enablePreviousPageBtn()
-        nextPageBtn.removeEventListener("click", clickHandler)
-    }
-
-    if (nextPageBtn && !nextPageBtn.classList.contains("disabled")) {
-        nextPageBtn.addEventListener("click", clickHandler)
+        toggleNextPageBtn(nextPageBtn, getBookEdition())
+        togglePageLinks([pageLinks[1]], getBookEdition())
     }
 }
 
@@ -229,8 +242,11 @@ const clearErrorMessages = () => {
     })
 }
 
-
 /* Handle results methods */
+
+const tableContainsClass = (table, className) => {
+    return table.classList.contains(className)
+}
 
 const showSearchResults = (operation, table) => {
     const modal = d.getElementById("modal")
@@ -243,15 +259,15 @@ const showSearchResults = (operation, table) => {
     if (operation === "search") {
         d.querySelector(".modal_btns_container .select_btn").classList.remove("hidden")
 
-        if (table.classList.contains("authors_results_table")) {
+        if (tableContainsClass(table, "authors_results_table")) {
             selectResultBtn.textContent = "Select author";
-        } else if (table.classList.contains("bookworks_results_table")) {
+        } else if (tableContainsClass(table, "bookworks_results_table")) {
             selectResultBtn.textContent = "Select book work";
-        } else if (table.classList.contains("newEdition_results_table")) {
+        } else if (tableContainsClass(table, "newEdition_results_table")) {
             selectResultBtn.textContent = "Save new edition";
-        } else if (table.classList.contains("editions_results_table")) {
+        } else if (tableContainsClass(table, "editions_results_table")) {
             selectResultBtn.textContent = "Select book edition";
-        } else if (table.classList.contains("newBookCopy_results_table")) {
+        } else if (tableContainsClass(table, "newBookCopy_results_table")) {
             selectResultBtn.textContent = "Save new copy";
         }
     } else if (operation === "create") {
@@ -260,30 +276,27 @@ const showSearchResults = (operation, table) => {
 }
 
 const generaTableContent = table => {
-    if (table.classList.contains("authors_results_table")) {
+    if (tableContainsClass(table, "authors_results_table")) {
         generateAuthorsTableContent()
-    } else if (table.classList.contains("bookworks_results_table")) {
+    } else if (tableContainsClass(table, "bookworks_results_table")) {
         generateBookworksTableContent()
-    } else if (table.classList.contains("newEdition_results_table")) {
+    } else if (tableContainsClass(table, "newEdition_results_table")) {
         generateNewBookeditionTableContent()
-    } else if (table.classList.contains("editions_results_table")) {
+    } else if (tableContainsClass(table, "editions_results_table")) {
         generateBookeditionsTableContent()
-    } else if (table.classList.contains("newBookCopy_results_table")) {
+    } else if (tableContainsClass(table, "newBookCopy_results_table")) {
         generateNewBookcopyTableContent()
     }
 }
 
 const enableModalActions = (results, resultsType, operation, table) => {
-    console.log("ENABLE MODAL ACTIONS")
+
     if (operation === "search") {
-        console.log("SEARCH")
         enableOptionChangigng()
-        let i = 0
-        enableCloseModalBtn(resultsType, operation, table, i)
-        i++
+        toggleCloseModalBtn(resultsType, operation, table, true)
         enableSelectResultBtn(results, resultsType, operation, table)
     } else if (operation === "create") {
-        disableCloseModalBtn()
+        toggleCloseModalBtn(resultsType, operation, table, false)
         enableCreateBtns(results, resultsType, operation, table)
     }
 }
@@ -343,20 +356,18 @@ const enableCreateBtns = (results, resultsType, operation, table) => {
 
 const executeSelectResultBtnListener = (results, resultsType, operation, table) => {
     saveResult(results, resultsType)
-    endProcess(results, resultsType, operation, table)
-    selectResultBtn.removeEventListener("click", selectResultBtnClickHandler)
+    endProcess(resultsType, operation, table)
 }
 
 const executeConfirmBtnListener = (results, resultsType, operation, table) => {
     saveResult(results, resultsType)
-    endProcess(results, resultsType, operation, table)
-    confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+    endProcess(resultsType, operation, table)
 }
 
 const executeEditBtnListener = (results, resultsType, operation, table) => {
+    console.log("Executing edit btn listener")
     saveResult(results, resultsType)
     prepareEditonProcess(results, resultsType, operation, table)
-    editBtn.removeEventListener("click", editBtnClickHandler)
 }
 
 const saveResult = (results, resultsType) => {
@@ -364,31 +375,33 @@ const saveResult = (results, resultsType) => {
         reasigneAuthorValue(results[findSelectedResult()])
     } else if (resultsType === "bookwork") {
         reasigneBookworkValue(results[findSelectedResult()])
-    } else if (resultsType === "edition") {
+    } else if (resultsType === "newEdition") {
         reasigneNewEditionValue(results[findSelectedResult()])
     }
 }
 
 const prepareEditonProcess = (results, resultsType, operation, table) => {
-    console.log(table)
     const tableResultsRow = table.querySelector(".results_row"),
         cells = tableResultsRow.querySelectorAll("td")
+
+    console.log(cells)
 
     clearPrintedReults(resultsType)
 
     if (resultsType === "author") {
         prepareAuthorEditionProcess(cells)
-    } else if (resultsType = "bookwork") {
+    } else if (resultsType === "bookwork") {
         prepareBookworkEditionProcess(cells)
-    } else if (resultsType === "edition") {
+    } else if (resultsType === "newEdition") {
         prepareNewEditionProcess(cells)
     }
 
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+
     confirmBtnClickHandler = function () {
+        console.log("AAAA")
         confirmEdition(results, resultsType, operation, table)
     }
-
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
 
@@ -397,16 +410,21 @@ const confirmEdition = async (results, resultsType, operation, table) => {
         errorMessageRow = tbody.querySelector(".error_message_row"),
         editedFields = [...tbody.querySelectorAll("td input")].map(input => input.value)
 
+    console.log(editedFields)
+    console.log("CONFIRMING")
+
     let error
     try {
         if (resultsType === "author") {
             results = await getEditAuthorResults(editedFields)
         } else if (resultsType === "bookwork") {
             results = await getEditBookworkResults(editedFields)
-        } else if (resultsType === "edition") {
+        } else if (resultsType === "newEdition") {
             results = await getEditNewEditionResults(editedFields)
         }
+        console.log(results)
     } catch (ex) {
+        console.log(error)
         error = ex
     }
 
@@ -420,8 +438,7 @@ const confirmEdition = async (results, resultsType, operation, table) => {
             errorMessageRow.classList.add("hidden")
         }
         saveResult(results, resultsType)
-        endProcess(results, resultsType, operation, table)
-        confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+        endProcess(resultsType, operation, table)
     }
 }
 
@@ -439,13 +456,9 @@ const findSelectedResult = () => {
     }
 }
 
-const endProcess = (results, resultsType, operation, table) => {
+const endProcess = (resultsType, operation, table) => {
     printSelectedResult(resultsType)
     closeModal(resultsType, operation, table)
-
-    results = "",
-        resultsType = "",
-        operation = ""
 }
 
 const printSelectedResult = resultsType => {
@@ -462,26 +475,25 @@ const printSelectedResult = resultsType => {
     }
 }
 
+let closeSymbolClickHandler
 
-let closeModalBtnClickHandler
-
-const enableCloseModalBtn = (resultsType, operation, table, i) => {
-    closeModalBtnClickHandler = function () {
-        if (closeSymbol.classList.contains("active")) {
-            closeModal(resultsType, operation, table)
-        }
+const toggleCloseModalBtn = (resultsType, operation, table, enable) => {
+    closeSymbolClickHandler = function () {
+        closeModal(resultsType, operation, table)
     }
 
-    closeSymbol.classList.add("active")
-    closeSymbol.addEventListener("click", closeModalBtnClickHandler)
+    if (enable) {
+        if (!closeSymbol.classList.contains("active")) {
+            closeSymbol.classList.add("active")
+            closeSymbol.addEventListener("click", closeSymbolClickHandler)
+        }
+    } else {
+        closeSymbol.classList.remove("active")
+    }
 }
 
-const disableCloseModalBtn = () => {
-    closeSymbol.classList.remove("active")
-}
 
 const closeModal = (resultsType, operation, table) => {
-    console.log("CLOSING")
     if (table) {
         let tableBody = table.querySelector(".results_table_body"),
             errorMessageRow = tableBody.querySelector(".error_message_row")
@@ -507,9 +519,17 @@ const closeModal = (resultsType, operation, table) => {
         d.querySelector(".modal_btns_container .create_btns").classList.add("hidden")
     }
 
-    closeSymbol.removeEventListener("click", closeModalBtnClickHandler)
+    removeModalElementsListeners()
+    toggleCloseModalBtn(resultsType, operation, table, false)
     toggleNextPageChanging(resultsType)
     clearFormsData(findCurrentPage())
+}
+
+const removeModalElementsListeners = () => {
+    closeSymbol.removeEventListener("click", closeSymbolClickHandler)
+    selectResultBtn.removeEventListener("click", selectResultBtnClickHandler)
+    confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+    editBtn.removeEventListener("click", editBtnClickHandler)
 }
 
 export { findCurrentPage }

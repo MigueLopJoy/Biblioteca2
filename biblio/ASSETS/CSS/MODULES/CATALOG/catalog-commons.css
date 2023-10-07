@@ -52,13 +52,26 @@
 
 .page_element_container.selected_result_holder {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
 .change_page_container {
     width: 100%;
-    padding: 0 2rem .5rem 2rem;
-    padding-right: 2.5rem;
+    padding: 1.5rem 2rem .5rem 2rem;
+}
+
+.change_page_container.right {
     text-align: right;
+}
+
+.change_page_container.left {
+    text-align: left;
+}
+
+.change_page_container.both {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .change_page_container span {

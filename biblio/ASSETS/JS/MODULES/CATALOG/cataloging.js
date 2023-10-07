@@ -36,6 +36,8 @@ d.addEventListener("submit", async e => {
             await runBookeditionProcess(e.target)
         }
 
+        console.log(resultsType)
+
         if (error) {
             handleErrorMessages(error, e.target)
             error = null
@@ -48,9 +50,6 @@ d.addEventListener("submit", async e => {
     }
 })
 
-const submitFormProcess = () => {
-
-}
 
 const runAuthorProcess = async form => {
     author = ""
@@ -92,7 +91,7 @@ const runBookworkProcess = async form => {
 
 const runBookeditionProcess = async form => {
     newEdition = ""
-    resultsType = "edition"
+    resultsType = "newEdition"
     table = bookEditionTable
     operation = "create"
 
@@ -225,17 +224,27 @@ const getCreateBookeditionResults = async form => {
 }
 
 const getEditNewEditionResults = async editedFields => {
+    console.log(editedFields)
+    console.log(
+        {
+            isbn: editedFields[0],
+            editor: editedFields[1],
+            editionYear: editedFields[2],
+            language: editedFields[3],
+        }
+    )
     try {
         results = [await fetchRequest(
             "PUT",
-            `http://localhost:8080/general-catalog/save-bookedition/${results[0].idBookEdition}`,
+            `http://localhost:8080/general-catalog/edit-bookedition/${results[0].idBookEdition}`,
             {
-                isbn: editedFields[2],
-                editor: editedFields[3],
-                editionYear: editedFields[4],
-                language: editedFields[5],
+                isbn: editedFields[0],
+                editor: editedFields[1],
+                editionYear: editedFields[2],
+                language: editedFields[3],
             }
         )]
+        console.log(results)
         return results
     } catch (ex) {
         throw ex
@@ -364,12 +373,15 @@ const generateBookworksTableContent = () => {
 const generateNewBookeditionTableContent = () => {
     for (let i = 0; i < results.length; i++) {
 
-        let result = results[i]
+        let result = results[i],
+            bookWork = result.bookWork,
+            author = result.bookWork.author
 
         let newRow = d.createElement("tr")
+        newRow.classList.add("results_row")
 
         let title = d.createElement("td")
-        title.textContent = bookwork.title
+        title.textContent = bookWork.title
 
         let bookAuthor = d.createElement("td")
         bookAuthor.textContent = `${author.firstName} ${author.lastName}`
@@ -381,19 +393,28 @@ const generateNewBookeditionTableContent = () => {
         editor.textContent = result.editor
 
         let editionYear = d.createElement("td")
-        editionYear.textContent = result.editor
+        editionYear.textContent = result.editionYear
 
         let language = d.createElement("td")
         language.textContent = result.language
 
-        newRow.appendChild(title);
-        newRow.appendChild(bookAuthor);
-        newRow.appendChild(isbn);
-        newRow.appendChild(editor);
-        newRow.appendChild(editionYear);
-        newRow.appendChild(language);
+        newRow.appendChild(title)
+        newRow.appendChild(bookAuthor)
+        newRow.appendChild(isbn)
+        newRow.appendChild(editor)
+        newRow.appendChild(editionYear)
+        newRow.appendChild(language)
 
-        table.querySelector(".results_table_body").appendChild(newRow);
+        let tableBody = table.querySelector(".results_table_body")
+
+        if (tableBody.firstChild) {
+            tableBody.insertBefore(newRow, tableBody.firstChild)
+
+            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
+            errorMessageTd.setAttribute("colspan", 6)
+        } else {
+            tableBody.appendChild(newRow)
+        }
     }
 }
 
@@ -408,10 +429,10 @@ const prepareBookworkEditionProcess = cells => {
 }
 
 const prepareNewEditionProcess = cells => {
-    cells[2].innerHTML = `<input type="text" class="edition" value="${edition.isbn}" >`
-    cells[3].innerHTML = `<input type="text" class="edition" value="${edition.editor}" >`
-    cells[4].innerHTML = `<input type="number" class="edition" value="${edition.editionYear}" >`
-    cells[5].innerHTML = `<input type="text" class="edition" value="${edition.language}" >`
+    cells[2].innerHTML = `<input type="text" class="edition" value="${newEdition.isbn}" >`
+    cells[3].innerHTML = `<input type="text" class="edition" value="${newEdition.editor}" >`
+    cells[4].innerHTML = `<input type="number" class="edition" value="${newEdition.editionYear}" >`
+    cells[5].innerHTML = `<input type="text" class="edition" value="${newEdition.language}" >`
 }
 
 const getAuthor = () => {

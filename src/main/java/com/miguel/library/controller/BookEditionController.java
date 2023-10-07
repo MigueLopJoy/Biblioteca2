@@ -45,7 +45,7 @@ public class BookEditionController {
         return ResponseEntity.ok(bookEditionService.findAll());
     }
 
-    @GetMapping("/search-bookeditions")
+    @PostMapping("/search-bookeditions")
     public ResponseEntity<List<?>> searchBookEditions(
             @RequestBody BookSearchRequestBookEdition bookSearchRequest
         ){
@@ -55,7 +55,7 @@ public class BookEditionController {
     @PutMapping("/edit-bookedition/{bookEditionId}")
     public ResponseEntity<BookEdition> editBookEdition(
             @PathVariable Integer bookEditionId,
-            @RequestBody BooksEditDTOBookEdition bookEdit
+            @Valid @RequestBody BooksEditDTOBookEdition bookEdit
     ) {
         return ResponseEntity.ok(bookEditionService.editBookEdition(bookEditionId, bookEdit));
     }
