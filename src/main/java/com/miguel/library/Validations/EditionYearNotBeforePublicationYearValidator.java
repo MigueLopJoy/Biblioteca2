@@ -2,14 +2,18 @@ package com.miguel.library.Validations;
 
 import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
+import com.miguel.library.model.BookEdition;
+import com.miguel.library.repository.IBookEditionRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
 public class EditionYearNotBeforePublicationYearValidator implements ConstraintValidator<EditionYearNotBeforePublicationYear, Object> {
 
-    private Class<?> dtoClass;
+    @Autowired
+    private IBookEditionRepository bookEditionRepository;
 
     @Override
     public void initialize(EditionYearNotBeforePublicationYear constraintAnnotation) {
@@ -24,8 +28,9 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
         boolean isValidYear = false;
         Integer editionYear = null;
         Integer publicationYear = null;
-        BooksSaveDTOBookEdition saveDTO = null;
-        BooksEditDTOBookEdition editDTO = null;
+        BooksSaveDTOBookEdition saveDTO;
+        BooksEditDTOBookEdition editDTO;
+        BookEdition originalBookEdition;
 
         if (Objects.isNull(bookEdition)) {
             isValidYear = true;
@@ -33,19 +38,18 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
             if (bookEdition instanceof BooksSaveDTOBookEdition) {
                 saveDTO = (BooksSaveDTOBookEdition) bookEdition;
                 editionYear = saveDTO.getEditionYear();
-                publicationYear = (Objects.nonNull(saveDTO.getBookWork())) ? saveDTO.getBookWork().getPublicationYear() : null;
+                publicationYear =
+                        (Objects.nonNull(saveDTO.getBookWork())) ?
+                                saveDTO.getBookWork().getPublicationYear() : null;
+
             } else if (bookEdition instanceof BooksEditDTOBookEdition) {
                 editDTO = (BooksEditDTOBookEdition) bookEdition;
+                originalBookEdition = bookEditionRepository.getById(editDTO.getIdOriginalBookEdition());
                 editionYear = editDTO.getEditionYear();
-                publicationYear = (Objects.nonNull(editDTO.getEditionYear()) ? editDTO.get().getPublicationYear() : null;
+                publicationYear =
+                        (Objects.nonNull(originalBookEdition.getBookWork())) ?
+                                   originalBookEdition.getBookWork().getPublicationYear() : null;
             }
-        }
-
-        if (Objects.isNull(bookEdition) || Objects.isNull(bookEdition.getBookWork())) {
-            isValidYear = true;
-        } else {
-            Integer editionYear = bookEdition.getEditionYear();
-            Integer publicationYear = bookEdition.getBookWork().getPublicationYear();
 
             if (Objects.isNull(editionYear) || Objects.isNull(publicationYear)) {
                 isValidYear = true;

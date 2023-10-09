@@ -29,14 +29,13 @@ d.addEventListener("submit", async e => {
         clearErrorMessages()
 
         if (currentPage.classList.contains("author_page")) {
+            console.log("RUNNING AUTHOR PROCESS")
             await runAuthorProcess(e.target)
         } else if (currentPage.classList.contains("bookwork_page")) {
             await runBookworkProcess(e.target)
         } else if (currentPage.classList.contains("edition_page")) {
             await runBookeditionProcess(e.target)
         }
-
-        console.log(resultsType)
 
         if (error) {
             handleErrorMessages(error, e.target)
@@ -99,6 +98,7 @@ const runBookeditionProcess = async form => {
 }
 
 const getSearchAuthorResults = async form => {
+    console.log("GET SEARCHR RESULTS")
     try {
         results = await fetchRequest(
             "GET",
@@ -109,6 +109,7 @@ const getSearchAuthorResults = async form => {
                 }
             )
         )
+        console.log(results)
     } catch (ex) {
         error = ex
     }
@@ -217,34 +218,24 @@ const getCreateBookeditionResults = async form => {
                 }
             }
         )]
-        console.log(results)
     } catch (ex) {
         error = ex
     }
 }
 
 const getEditNewEditionResults = async editedFields => {
-    console.log(editedFields)
-    console.log(
-        {
-            isbn: editedFields[0],
-            editor: editedFields[1],
-            editionYear: editedFields[2],
-            language: editedFields[3],
-        }
-    )
     try {
         results = [await fetchRequest(
             "PUT",
             `http://localhost:8080/general-catalog/edit-bookedition/${results[0].idBookEdition}`,
             {
+                idOriginalBookEdition: results[0].idBookEdition,
                 isbn: editedFields[0],
                 editor: editedFields[1],
                 editionYear: editedFields[2],
                 language: editedFields[3],
             }
         )]
-        console.log(results)
         return results
     } catch (ex) {
         throw ex

@@ -42,15 +42,6 @@
     border-bottom: none;
 }
 
-
-
-
-.error_message.active {
-    color: #ff0000;
-    padding-top: .25rem;
-    padding-bottom: .25rem;
-}
-
 .change_page_container {
     width: 100%;
     padding: 0 2rem .5rem 2rem;

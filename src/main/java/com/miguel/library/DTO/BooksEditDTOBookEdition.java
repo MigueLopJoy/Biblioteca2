@@ -15,8 +15,11 @@ import jakarta.validation.constraints.Pattern;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EditionYearNotBeforePublicationYear(message = "Edition year should not be earlier than book work publication year")
+@EditionYearNotBeforePublicationYear
 public class BooksEditDTOBookEdition {
+
+    @NotNull
+    private Integer idOriginalBookEdition;
 
     @NotBlank(message = "ISBN required")
     @Pattern(regexp = "^(978|979)-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$", message = "Invalid ISBN number")

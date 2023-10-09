@@ -11,11 +11,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface EditionYearNotBeforePublicationYear {
 
-    String message() default "{Edition year should not be earlier than publication year";
+    String message() default "Edition year should not be earlier than publication year";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
 
-    Class<?> value();
 }
