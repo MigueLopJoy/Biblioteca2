@@ -23,8 +23,6 @@ import { showPage } from "./display_pages.js"
 import { displayCatalogingMainPage } from "./display_pages.js"
 import { displayRegisteringMainPage } from "./display_pages.js"
 
-console.log(document.getElementById("modal"))
-
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
     createBtnsContainer = d.querySelector(".modal_btns_container .create_btns"),
@@ -258,7 +256,6 @@ const tableContainsClass = (table, className) => {
 }
 
 const showSearchResults = (operation, table) => {
-    console.log("showing search results")
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
@@ -280,21 +277,12 @@ const showSearchResults = (operation, table) => {
         } else if (tableContainsClass(table, "newBookCopy_results_table")) {
             selectResultBtn.textContent = "Save new copy"
         }
-        console.log(selectResultBtn)
     } else if (operation === "create") {
         createBtnsContainer.classList.remove("hidden")
     }
-    console.log(modal)
-    console.log(table)
-    console.log(table.classList.contains("hidden"))
-    console.log(selectResultBtn.classList.contains("hidden"))
-
 }
 
 const generaTableContent = table => {
-
-    console.log("GENERATING TABLE CONTENT")
-
     if (tableContainsClass(table, "authors_results_table")) {
         generateAuthorsTableContent()
     } else if (tableContainsClass(table, "bookworks_results_table")) {
@@ -309,7 +297,6 @@ const generaTableContent = table => {
 }
 
 const enableModalActions = (results, resultsType, operation, table) => {
-
     if (operation === "search") {
         enableOptionChangigng()
         toggleCloseModalBtn(resultsType, operation, table, true)
@@ -554,6 +541,7 @@ const displaySuccessMessage = (resultsType) => {
     createBtnsContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
     endingBtnClickHandler = function () {
+        d.getElementById("main-content").textContent = ""
         if (resultsType === "newEdition") {
             displayCatalogingMainPage()
         } else if (resultsType === "newCopy") {

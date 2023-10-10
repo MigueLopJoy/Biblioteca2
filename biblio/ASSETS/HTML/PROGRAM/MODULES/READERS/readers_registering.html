@@ -1,0 +1,67 @@
+<div class="container" id="readers_registering_section">
+
+    <div class="current_window">
+
+        <div class="page readers_registering_page hidden">
+
+            <div class="page_element_container readers_registering">
+                <form class="form readers_registering_form search">
+                    <legend>New reader information</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="first_name" placeholder="First Name">
+                    <input type="text" name="last_name" placeholder="Last Name">
+                    <input type="date" name="birth_date" placeholder="Date OSf Birth">
+                    <select name="gender">
+                        <option disabled selected hidden>Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>                    
+                    <input type="text" name="email" placeholder="Email">
+                    <input type="text" name="phone_number" placeholder="Phone Numer">
+                    <input type="submit" id="readers_registering_btn">
+                </form>
+            </div>
+        </div>
+
+        <div id="modal" class="hidden">
+
+            <div class="modal_content">
+
+                <p class="success_message registered_reader"></p>
+                <table class="results_table registered_reader_table hidden">
+                    <thead>
+                        <tr>
+                            <th>First Name</td>
+                            <th>Last Name</th>
+                            <th>Date of birth</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Phone number</th>
+                        </tr>
+                    </thead>
+                    <tbody class="results_table_body">
+                        <tr class="error_message_row hidden">
+                            <td>
+                                <p class="error_message general_error"></p>
+                                <p class="error_message registration_number"></p>
+                                <p class="error_message publicationYear"></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal_btns_container">
+                    <div class="select_btn hidden">
+                        <button class="select_result_btn btn" role="button" disabled></button>
+                    </div>
+                    <div class="create_btns hidden">
+                        <button class="btn confirm_btn" role="button">Confirm</button>
+                        <button class="btn edit_btn" role="button">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

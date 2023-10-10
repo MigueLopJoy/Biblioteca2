@@ -1,5 +1,7 @@
 import { displayCatalogingMainPage } from "./MODULES/CATALOG/display_pages.js"
 import { displayRegisteringMainPage } from "./MODULES/CATALOG/display_pages.js"
+import { displaySearchReadersMainPage } from "./MODULES/CATALOG/display_pages.js"
+import { displayReadersRegisteringMainPage } from "./MODULES/CATALOG/display_pages.js"
 
 const d = document,
   dropdownBTNs = d.getElementsByClassName("dropdown-btn")
@@ -22,6 +24,10 @@ d.addEventListener("click", async e => {
     displayCatalogingMainPage()
   } else if (e.target.matches("#registering")) {
     displayRegisteringMainPage()
+  } else if (e.target.matches("#search_readers")) {
+    displaySearchReadersMainPage()
+  } else if (e.target.matches("#readers_registering")) {
+    displayReadersRegisteringMainPage()
   }
 })
 

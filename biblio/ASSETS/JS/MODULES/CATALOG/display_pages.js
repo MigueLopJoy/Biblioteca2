@@ -1,28 +1,21 @@
 const d = document
 
 const loadContent = async (url, component) => {
-    try {
         let res = await fetch(url),
             content = await res.text()
         component.innerHTML = content
-    } catch (error) {
-        console.error("Failed to load content:", error)
-    }
 }
 
 const loadJsFiles = async (...sources) => {
 
     removeScriptsExcept('http://localhost/biblio/ASSETS/JS/scripts.js')
-    console.log(document.querySelectorAll("script"))
 
     for (let src of sources) {
-        const timestamp = new Date().getTime(),
-            script = document.createElement("script")
+        const script = document.createElement("script")
         script.type = "module"
-        script.src = `${src}?${timestamp}`
+        script.src = `${src}`
         document.body.appendChild(script)
     }
-    console.log(document.querySelectorAll("script"))
 }
 
 const removeScriptsExcept = (...scriptsToKeep) => {
@@ -61,6 +54,18 @@ const displayRegisteringMainPage = async () => {
     showPageAndEnableLinks("bookedition_page")
 }
 
+const displaySearchReadersMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/search_readers.html", d.getElementById("main-content"))
+    await loadJsFiles("./ASSETS/JS/MODULES/READERS/readers.js")
+    showPageAndEnableLinks("search_readers_page")
+}
+
+const displayReadersRegisteringMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/readers_registering.html", d.getElementById("main-content"))
+    await loadJsFiles("./ASSETS/JS/MODULES/READERS/readers.js")
+    showPageAndEnableLinks("readers_registering_page")
+}
+
 const showPageAndEnableLinks = page => {
     showPage(page)
     enableWindowNavLinkBtns()
@@ -69,32 +74,42 @@ const showPageAndEnableLinks = page => {
 const enableWindowNavLinkBtns = () => {
     const pageLinks = d.querySelectorAll(".page_link")
 
-    pageLinks.forEach(pageLink => {
-        pageLink.addEventListener("click", e => {
-            if (e.target.classList.contains("enabled")) {
-                e.preventDefault();
-                showPage(e.target.classList[1]);
-            }
-        });
-    })
+    if (pageLinks) {
+        pageLinks.forEach(pageLink => {
+            pageLink.addEventListener("click", e => {
+                if (e.target.classList.contains("enabled")) {
+                    e.preventDefault();
+                    showPage(e.target.classList[1])
+                }
+            })
+        })
+    }
 }
 
 const showPage = pageOption => {
     const pages = d.querySelectorAll(".page"),
         pageLinks = d.querySelectorAll(".page_link")
 
-    pages.forEach(page => {
-        page.classList.add("hidden")
-    });
-    pageLinks.forEach(pageLink => {
-        pageLink.classList.remove("active");
-    })
-    d.querySelector(`.page_link.${pageOption}`).classList.add("active")
-    d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
+    if (pages) {
+        pages.forEach(page => {
+            page.classList.add("hidden")
+        })
+
+        d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
+    }
+
+    if (pageLinks) {
+        pageLinks.forEach(pageLink => {
+            pageLink.classList.remove("active");
+        })
+        d.querySelector(`.page_link.${pageOption}`).classList.add("active")
+    }
 }
 
 export { displayCatalogingMainPage }
 export { displayRegisteringMainPage }
+export { displaySearchReadersMainPage }
+export { displayReadersRegisteringMainPage }
 export { enableWindowNavLinkBtns }
 export { loadContent }
 export { showPage }
