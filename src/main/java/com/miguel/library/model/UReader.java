@@ -15,14 +15,26 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "readers")
 @AttributeOverride(name = "idUser", column = @Column(name = "id_reader"))
-public class UReader {
-    @NotBlank
-    @Column(unique = true)
-    private String readerCode;
+public class UReader extends User{
 
-    @NonNull
+    @Column(unique = true, nullable = false)
+    private String readerNumber;
+
     private Character gender;
 
-    @NonNull
     private LocalDate dateOfBirth;
+
+    public UReader(String firstName,
+                   String lastName,
+                   String email,
+                   String phoneNumber,
+                   String readerNumber,
+                   LocalDate dateOfBirth,
+                   Character gender
+    ) {
+        super(firstName, lastName, email, phoneNumber);
+        this.readerNumber = readerNumber;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+    }
 }

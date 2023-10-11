@@ -15,19 +15,24 @@ public class User {
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Integer idUser;
 
-    @NotBlank
     @Column(nullable = false)
     private String firstName;
 
-    @NotBlank
     @Column(nullable = false)
     private String lastName;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String phoneNumber;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
+
+    public User(String firstName, String lastName, String email, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }

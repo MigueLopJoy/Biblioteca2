@@ -113,7 +113,8 @@ public class ImpBookCopyService implements IBookCopyService {
         BookCopy savedBookCopy = optionalBookCopy.get();
 
         if (!StringUtils.isEmpty(signature)
-                && !signature.isBlank()) {
+                && !signature.isBlank()
+        ) {
             savedBookCopy.setSignature(signature);
         }
 
@@ -179,7 +180,7 @@ public class ImpBookCopyService implements IBookCopyService {
 
         BookCopy bookCopy = this.searchByBarCode(code);
 
-        if (bookCopy != null) {
+        if (Objects.nonNull(bookCopy)) {
             codeAlreadyUsed = true;
         }
         return codeAlreadyUsed;
@@ -190,7 +191,7 @@ public class ImpBookCopyService implements IBookCopyService {
 
         BookCopy bookCopy = this.searchByRegistrationNumber(registrationNumber);
 
-        if (bookCopy != null) {
+        if (Objects.nonNull(bookCopy)) {
             registrationNumberAlreadyUsed = true;
         }
         return registrationNumberAlreadyUsed;
