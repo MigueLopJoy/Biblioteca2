@@ -52,7 +52,7 @@ public class ImpBookSearchService implements IBookSearchService {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        addBookCopyPredicates(
+        this.addBookCopyPredicates(
                 criteriaBuilder,
                 root,
                 bookCopyToBookEditionJoin,

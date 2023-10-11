@@ -2,12 +2,15 @@ package com.miguel.library.services;
 
 import com.miguel.library.DTO.UEditReaderDTO;
 import com.miguel.library.DTO.USaveReaderDTO;
+import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
+import com.miguel.library.Exceptions.ExceptionObjectNotFound;
 import com.miguel.library.model.UReader;
 import com.miguel.library.repository.IUReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,18 +21,11 @@ public class ImpUReaderService implements IUReaderService{
     private IUReaderRepository readerRepository;
 
     @Override
-    public UReader saveNewUReader(UReader uReader) {
-        if (Objects.isNull(uReader)) {
+    public UReader saveNewUReader(UReader reader) {
+        if (Objects.isNull(reader)) {
             throw new ExceptionNullObject("Reader should not be null");
         }
-
-        if (Objects.isNull()) {
-
-        }
-
-        if () {
-
-        }
+        return readerRepository.save(reader);
     }
 
     @Override
@@ -38,18 +34,83 @@ public class ImpUReaderService implements IUReaderService{
     }
 
     @Override
+    public UReader searchByPhoneNumber(String phoneNumber) {
+        return readerRepository.findByPhoneNumber(phoneNumber).orElse(null);
+    }
+
+    @Override
+    public UReader searchByEmail(String email) {
+        return readerRepository.findByEmail(email).orElse(null);
+    }
+
+    public UReader searchById(Integer readerId) {
+        return readerRepository.findById(readerId).orElse(null);
+    }
+
+    @Override
     public List<UReader> findAll() {
-        return null;
+        List<UReader> allUsers = readerRepository.findAll();
+        if (allUsers.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No readers were found");
+        }
+        return allUsers;
     }
 
     @Override
     public UReader editReader(Integer readerId, UEditReaderDTO readerEdit) {
-        return null;
+        String firstName = readerEdit.getFirstName();
+        String lastName = readerEdit.getLastName();
+        String email = readerEdit.getEmail();
+        String phoneNumber = readerEdit.getPhoneNumber();
+        String readerNumber = readerEdit.getReaderNumber();
+        LocalDate dateOfBirth = readerEdit.getDateOfBirth();
+        Character gender = readerEdit.getGender();
+
+        UReader fetchedReader = this.searchById(readerId);
+        if (Objects.isNull(fetchedReader)) {
+            throw new ExceptionObjectNotFound("Reader not found");
+        }
+
+        if (Objects.nonNull(firstName)) {
+            fetchedReader.setFirstName(firstName);
+        }
+
+        if (Objects.nonNull(lastName)) {
+            fetchedReader.setLastName(lastName);
+        }
+
+        if (Objects.nonNull(email)) {
+            fetchedReader.setEmail(email);
+        }
+
+        if (Objects.nonNull(phoneNumber)) {
+            fetchedReader.setPhoneNumber(phoneNumber);
+        }
+
+        if (Objects.nonNull(readerNumber)) {
+            fetchedReader.setReaderNumber(readerNumber);
+        }
+
+        if (Objects.nonNull(dateOfBirth)) {
+            fetchedReader.setDateOfBirth(dateOfBirth);
+        }
+
+        if (Objects.nonNull(gender)) {
+            fetchedReader.setGender(gender);
+        }
+
+        return readerRepository.save(fetchedReader);
     }
 
     @Override
     public String deleteReader(Integer readerId) {
-        return null;
+        UReader fetchedReader = this.searchById(readerId);
+
+        if (Objects.isNull(fetchedReader)) {
+            throw new ExceptionObjectNotFound("Reader not found");
+        }
+        readerRepository.deleteById(readerId);
+        return "Reader deleted successfully";
     }
 
     @Override
@@ -66,13 +127,13 @@ public class ImpUReaderService implements IUReaderService{
     }
 
     private String generateReaderNumber() {
-        String bookCopyCode;
+        String readerNumber;
 
         do {
-            bookCopyCode = "" + (int) (Math.random() * (99999999 - 10000000 + 1) + 10000000);
-        } while (isReaderNumberAlreadyUsed(bookCopyCode));
+            readerNumber = "L" + (int) (Math.random() * (99999999 - 10000000 + 1) + 10000000);
+        } while (isReaderNumberAlreadyUsed(readerNumber));
 
-        return bookCopyCode;
+        return readerNumber;
     }
 
     private boolean isReaderNumberAlreadyUsed(String readerNumber) {

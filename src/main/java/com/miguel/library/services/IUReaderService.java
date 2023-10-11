@@ -10,8 +10,14 @@ public interface IUReaderService {
 
     public UReader saveNewUReader(UReader uReader);
 
-
     public UReader searchByReaderNumber(String readerNumber);
+
+
+    public UReader searchByPhoneNumber(String phoneNumber);
+
+
+    public UReader searchByEmail(String email);
+
 
     public List<UReader> findAll();
 

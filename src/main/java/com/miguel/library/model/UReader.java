@@ -20,8 +20,10 @@ public class UReader extends User{
     @Column(unique = true, nullable = false)
     private String readerNumber;
 
+    @Column(nullable = false)
     private Character gender;
 
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
     public UReader(String firstName,

@@ -56,18 +56,20 @@ public class ImpAuthorService implements IAuthorService {
         return searchResults;
     }
 
+    public Author searchById(Integer authorId) {
+        return authorRepository.findById(authorId).orElse(null);
+    }
+
     @Override
     public Author editAuthor(Integer authorId, AuthorsDTOEditAuthor authorEdit) {
         String firstName = authorEdit.getFirstName();
         String lastName = authorEdit.getLastName();
 
-        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        Author fetchedAuthor = this.searchById(authorId);
 
-        if (!optionalAuthor.isPresent()) {
+        if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Author not found");
         }
-
-        Author fetchedAuthor = optionalAuthor.get();
 
         if (Objects.nonNull(firstName)) {
             fetchedAuthor.setFirstName(firstName);
@@ -91,9 +93,9 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public String deleteAuthor(Integer authorId) {
-        Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+        Author fetchedAuthor = this.searchById(authorId);
 
-        if (!optionalAuthor.isPresent()) {
+        if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Author not found");
         }
         authorRepository.deleteById(authorId);
