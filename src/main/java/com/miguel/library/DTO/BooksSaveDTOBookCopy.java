@@ -1,5 +1,6 @@
 package com.miguel.library.DTO;
 
+import com.miguel.library.Validations.UniqueRegistrationNumber;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +15,8 @@ import lombok.Setter;
 public class BooksSaveDTOBookCopy {
 
     @NotNull(message = "Registration number required")
-    @Min(value = 1, message = "Registration number should be greater than 1")
+    @Min(value = 1, message = "Registration number should be lower than 1")
+    @UniqueRegistrationNumber
     private Long registrationNumber;
 
     @NotBlank(message = "Signature required")

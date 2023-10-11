@@ -57,7 +57,7 @@ public class BookCopyController {
     @PutMapping("edit-bookCopy/{bookCopyId}")
     public ResponseEntity<BookCopy> editBookEdition(
             @PathVariable Integer bookCopyId,
-            @RequestBody BooksEditDTOBookCopy bookEdit
+            @Valid @RequestBody BooksEditDTOBookCopy bookEdit
     ) {
         return ResponseEntity.ok(bookCopyService.editBookCopy(bookCopyId, bookEdit));
     }
@@ -66,6 +66,7 @@ public class BookCopyController {
     public ResponseEntity<String> deleteBookCopy(
             @PathVariable Integer bookCopyId
     ) {
-        return null;
+        bookCopyService.deleteBookCopy(bookCopyId);
+        return ResponseEntity.ok("Book Copy Deleted Successfully");
     }
 }

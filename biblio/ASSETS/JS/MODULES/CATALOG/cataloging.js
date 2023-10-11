@@ -1,14 +1,13 @@
-import { findCurrentPage } from "./catalog-commons.js"
+import { findCurrentPage } from "./../modules_commons.js"
+import { fetchRequest } from "./../modules_commons.js"
+import { joinParamsToURL } from "./../modules_commons.js"
+import { handleErrorMessages } from "./../modules_commons.js"
+import { clearErrorMessages } from "./../modules_commons.js"
+import { clearFormsData } from "./../modules_commons.js"
+import { enableModalActions } from "./../modules_commons.js"
 
 import { toggleNextPageChanging } from "./catalog-commons.js"
-import { clearFormsData } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
-
-import { fetchRequest } from "./catalog-commons.js"
-import { joinParamsToURL } from "./catalog-commons.js"
-
-import { handleErrorMessages } from "./catalog-commons.js"
-import { clearErrorMessages } from "./catalog-commons.js"
 
 import { showSearchResults } from "./catalog-commons.js"
 import { enableModalActions } from "./catalog-commons.js"
@@ -407,20 +406,20 @@ const generateNewBookeditionTableContent = () => {
 }
 
 const prepareAuthorEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
-    cells[1].innerHTML = `<input type="text" class="edition"value="${author.lastName}" >`
+    cells[0].innerHTML = `<input type="text" class="newEdition" value="${author.firstName}" >`
+    cells[1].innerHTML = `<input type="text" class="newEdition"value="${author.lastName}" >`
 }
 
 const prepareBookworkEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="edition" value="${bookwork.title}" >`
-    cells[2].innerHTML = `<input type="number" class="edition" value="${bookwork.publicationYear}" >`
+    cells[0].innerHTML = `<input type="text" class="newEdition" value="${bookwork.title}" >`
+    cells[2].innerHTML = `<input type="number" class="newEdition" value="${bookwork.publicationYear}" >`
 }
 
-const prepareNewEditionProcess = cells => {
-    cells[2].innerHTML = `<input type="text" class="edition" value="${newEdition.isbn}" >`
-    cells[3].innerHTML = `<input type="text" class="edition" value="${newEdition.editor}" >`
-    cells[4].innerHTML = `<input type="number" class="edition" value="${newEdition.editionYear}" >`
-    cells[5].innerHTML = `<input type="text" class="edition" value="${newEdition.language}" >`
+const prepareNewEditionEditionProcess = cells => {
+    cells[2].innerHTML = `<input type="text" class="newEdition" value="${newEdition.isbn}" >`
+    cells[3].innerHTML = `<input type="text" class="newEdition" value="${newEdition.editor}" >`
+    cells[4].innerHTML = `<input type="number" class="newEdition" value="${newEdition.editionYear}" >`
+    cells[5].innerHTML = `<input type="text" class="newEdition" value="${newEdition.language}" >`
 }
 
 const getAuthor = () => {
@@ -458,7 +457,7 @@ export { generateNewBookeditionTableContent }
 
 export { prepareAuthorEditionProcess }
 export { prepareBookworkEditionProcess }
-export { prepareNewEditionProcess }
+export { prepareNewEditionEditionProcess }
 
 export { getAuthor }
 export { getBookwork }

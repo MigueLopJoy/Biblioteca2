@@ -111,32 +111,16 @@ public class ImpBookCopyService implements IBookCopyService {
 
         BookCopy savedBookCopy = optionalBookCopy.get();
 
-        if (!StringUtils.isEmpty(signature)
-                && !signature.isBlank()
-        ) {
+        if (Objects.nonNull(signature)) {
             savedBookCopy.setSignature(signature);
         }
 
         if (Objects.nonNull(registrationNumber)) {
-            if (!this.isRegistrationNumberAlreadyUsed(registrationNumber)) {
-                savedBookCopy.setRegistrationNumber(registrationNumber);
-            }
+            savedBookCopy.setRegistrationNumber(registrationNumber);
         }
 
-        if (Objects.nonNull(status) &&
-                Character.isLetter(status) &&
-                Character.isAlphabetic(status)
-        ) {
+        if (Objects.nonNull(status)) {
             savedBookCopy.setBookCopyStatus(status);
-        }
-
-        BookCopy bookCopyWithRegistrationNumber =
-                this.searchByRegistrationNumber(savedBookCopy.getRegistrationNumber());
-
-        if (Objects.nonNull(bookCopyWithRegistrationNumber) &&
-                !bookCopyWithRegistrationNumber.getIdBookCopy().equals(savedBookCopy.getIdBookCopy())
-        ) {
-            throw new ExceptionObjectAlreadyExists("Book copy already exists");
         }
 
         return bookCopyRepository.save(savedBookCopy);
@@ -185,16 +169,5 @@ public class ImpBookCopyService implements IBookCopyService {
             codeAlreadyUsed = true;
         }
         return codeAlreadyUsed;
-    }
-
-    private boolean isRegistrationNumberAlreadyUsed(Long registrationNumber) {
-        Boolean registrationNumberAlreadyUsed = false;
-
-        BookCopy bookCopy = this.searchByRegistrationNumber(registrationNumber);
-
-        if (Objects.nonNull(bookCopy)) {
-            registrationNumberAlreadyUsed = true;
-        }
-        return registrationNumberAlreadyUsed;
     }
 }

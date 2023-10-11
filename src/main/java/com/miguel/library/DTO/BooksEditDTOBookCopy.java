@@ -1,5 +1,6 @@
 package com.miguel.library.DTO;
 
+import com.miguel.library.Validations.UniqueRegistrationNumber;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,14 +13,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BooksEditDTOBookCopy {
 
-    @NotNull(message = "Registration number required")
     @Min(value = 1, message = "Registration number should be greater than 1")
+    @UniqueRegistrationNumber
     private Long registrationNumber;
 
-    @NotBlank(message = "Signature required")
     private String signature;
 
-    @Pattern(regexp = "[A-D]", message = "Only 'A', 'B', 'C' or 'D' are accepted status")
-    @Size(min = 1, max = 1, message = "Invalid status")
+    @Pattern(regexp = "^[A-D]$", message = "Must provide a valid status")
     private Character status;
 }

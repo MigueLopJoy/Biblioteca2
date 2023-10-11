@@ -19,7 +19,7 @@ const d = document,
     editionsResultsTable = d.querySelector(".results_table.editions_results_table"),
     bookcopiesResultsTable = d.querySelector(".results_table.newBookkcopy_results_table")
 
-let bookedition, newbookcopy, results, error, table, resultsType, operation
+let bookedition, newBookcopy, results, error, table, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
@@ -57,7 +57,7 @@ const runBookEditionProcess = async form => {
 }
 
 const runBookCopyProcess = async form => {
-    newbookcopy = ""
+    newBookcopy = ""
     table = bookcopiesResultsTable
     resultsType = "bookcopies"
     clearPrintedReults(resultsType)
@@ -109,6 +109,23 @@ const getCreateBookCopyResults = async form => {
         )
     } catch (error) {
         error = error
+    }
+}
+
+const getEditNewCopyResults = async editedFields => {
+    try {
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/bookcopies/edit-bookcopy/${results[0].idBookCopy}`,
+            {
+                signature: editedFields[0],
+                registrationNuber: editedFields[1],
+                status: editedFields[2],
+            }
+        )]
+        return results
+    } catch (ex) {
+        throw ex
     }
 }
 
@@ -212,7 +229,39 @@ const generateNewBookcopyTableContent = () => {
     }
 }
 
+const prepareBookeditionEditionProcess = cells => {
+    cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
+    cells[1].innerHTML = `<input type="text" class="edition"value="${author.lastName}" >`
+}
+
+const prepareNewBookCopyEditionProcess = cells => {
+    cells[0].innerHTML = `<input type="text" class="edition" value="${bookwork.title}" >`
+    cells[2].innerHTML = `<input type="number" class="edition" value="${bookwork.publicationYear}" >`
+}
+
+
+const getBookedition = () => {
+    return bookedition
+}
+
+const getNewBookcopy = () => {
+    return newBookcopy
+}
+
+const reasigneBookeditionValue = newBookeditionValue => {
+    author = newAuthorValue
+}
+
+const reasigneNewBookcopyValue = newBookworkValue => {
+    newBookcopy = newBookworkValue
+}
+
+export { getEditNewCopyResults }
+export { prepareBookeditionEditionProcess }
+export { prepareNewBookCopyEditionProcess }
 export { generateBookeditionsTableContent }
 export { generateNewBookcopyTableContent }
-export { bookedition }
-export { newbookcopy }
+export { getBookedition }
+export { getNewBookcopy }
+export { reasigneBookeditionValue }
+export { reasigneNewBookcopyValue }
