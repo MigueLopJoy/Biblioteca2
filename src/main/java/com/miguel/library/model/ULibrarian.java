@@ -11,11 +11,10 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "librarians")
 @AttributeOverride(name = "idUser", column = @Column(name = "id_librarian"))
-public class ULibrarian {
+public class ULibrarian extends User{
     @NotBlank
     @Column(nullable = false)
     private String password;

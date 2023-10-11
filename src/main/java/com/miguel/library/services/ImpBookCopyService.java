@@ -4,7 +4,6 @@ import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.BookCopy;
-import com.miguel.library.model.BookCopyStatus;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,13 +123,15 @@ public class ImpBookCopyService implements IBookCopyService {
             }
         }
 
-        if (Character.isLetter(status) && Character.isAlphabetic(status)) {
-            savedBookCopy.setBookCopyStatus(
-                    this.selectBookCopyStatus(status)
-            );
+        if (Objects.nonNull(status) &&
+                Character.isLetter(status) &&
+                Character.isAlphabetic(status)
+        ) {
+            savedBookCopy.setBookCopyStatus(status);
         }
 
-        BookCopy bookCopyWithRegistrationNumber = this.searchByRegistrationNumber(savedBookCopy.getRegistrationNumber());
+        BookCopy bookCopyWithRegistrationNumber =
+                this.searchByRegistrationNumber(savedBookCopy.getRegistrationNumber());
 
         if (Objects.nonNull(bookCopyWithRegistrationNumber) &&
                 !bookCopyWithRegistrationNumber.getIdBookCopy().equals(savedBookCopy.getIdBookCopy())
@@ -159,7 +160,7 @@ public class ImpBookCopyService implements IBookCopyService {
                 .registrationNumber(bookCopy.getRegistrationNumber())
                 .registrationDate(LocalDate.now())
                 .signature(bookCopy.getSignature())
-                .bookCopyStatus(BookCopyStatus.OUT_OF_CIRCULATION)
+                .bookCopyStatus('B')
                 .borrowed(false)
                 .bookEdition(bookEditionService.createBookEditionFromBookSaveDTO(bookCopy.getBookEdition()))
                 .build();
@@ -195,22 +196,5 @@ public class ImpBookCopyService implements IBookCopyService {
             registrationNumberAlreadyUsed = true;
         }
         return registrationNumberAlreadyUsed;
-    }
-
-    private BookCopyStatus selectBookCopyStatus(Character chosenStatus) {
-        BookCopyStatus bookCopyStatus;
-
-        if (chosenStatus.equals('A')){
-            bookCopyStatus = BookCopyStatus.IN_CIRCULATION;
-        } else if (chosenStatus.equals('B')){
-            bookCopyStatus = BookCopyStatus.OUT_OF_CIRCULATION;
-        } else if (chosenStatus.equals('C')) {
-            bookCopyStatus = BookCopyStatus.LOST;
-        } else if (chosenStatus.equals('D')) {
-            bookCopyStatus = BookCopyStatus.WITHDRAWN;
-        } else {
-            throw new ExceptionInvalidObject("The provided status is not valid");
-        }
-        return bookCopyStatus;
     }
 }

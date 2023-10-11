@@ -29,7 +29,7 @@ public class BookCopy {
 
     private String signature;
 
-    private BookCopyStatus bookCopyStatus;
+    private Character bookCopyStatus;
 
     private boolean borrowed;
 

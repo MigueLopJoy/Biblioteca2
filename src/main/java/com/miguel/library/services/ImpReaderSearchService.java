@@ -13,9 +13,10 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
-public class ImpUserSearchService implements IUserSearchService{
+public class ImpReaderSearchService implements IReaderSearchService {
 
     @Autowired
     private EntityManager entityManager;
@@ -57,7 +58,8 @@ public class ImpUserSearchService implements IUserSearchService{
         String email = searchRequest.getEmail();
         String phoneNumber = searchRequest.getPhoneNumber();
         String readerNumber = searchRequest.getReaderNumber();
-        LocalDate dateOfBirth = searchRequest.getDateOfBirth();
+        LocalDate minDateOfBirth = searchRequest.getMinDateOfBirth();
+        LocalDate maxDateOfBirth = searchRequest.getMinDateOfBirth();
         Character gender = searchRequest.getGender();
 
 
@@ -79,6 +81,39 @@ public class ImpUserSearchService implements IUserSearchService{
             );
         }
 
+        if (isValidString(email)) {
+            predicates.add(criteriaBuilder.equal(root.get("email"), email));
+        }
+
+        if (isValidString(phoneNumber)) {
+            predicates.add(criteriaBuilder.equal(root.get("phoneNumber"), phoneNumber));
+        }
+
+        if (isValidString(readerNumber)) {
+            predicates.add(criteriaBuilder.equal(root.get("readerNumber"), readerNumber));
+        }
+
+        if (Objects.nonNull(minDateOfBirth)
+                && Objects.nonNull(maxDateOfBirth)) {
+
+            predicates.add(
+                    criteriaBuilder.greaterThanOrEqualTo(
+                            root.get("dateOfBirth"),
+                            minDateOfBirth
+                    )
+            );
+
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get("dateOfBirth"),
+                            maxDateOfBirth
+                    )
+            );
+
+            if (Objects.nonNull(gender)){
+                predicates.add(criteriaBuilder.equal(root.get("status"), gender));
+            }
+        }
     }
 
     private Boolean isValidString (String value) {

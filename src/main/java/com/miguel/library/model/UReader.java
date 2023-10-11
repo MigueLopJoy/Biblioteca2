@@ -2,6 +2,7 @@ package com.miguel.library.model;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Entity
 @Table(name = "readers")
 @AttributeOverride(name = "idUser", column = @Column(name = "id_reader"))
 public class UReader extends User{

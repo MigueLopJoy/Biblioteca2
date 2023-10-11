@@ -26,7 +26,9 @@ public class USearchReaderDTO {
 
     private String readerNumber;
 
-    private LocalDate dateOfBirth;
+    private LocalDate minDateOfBirth;
+
+    private LocalDate maxDateOfBirth;
 
     private Character gender;
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,66 +84,70 @@ public class ImpBookSearchService implements IBookSearchService {
             BookSearchRequestBookCopy bookSearchRequest,
             List<Predicate> predicates
     ) {
-        if (!StringUtils.isEmpty(bookSearchRequest.getBarCode()) &&
-                !bookSearchRequest.getBarCode().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(root.get("barCode"), bookSearchRequest.getBarCode()));
+        String barCode = bookSearchRequest.getBarCode();
+        String signature = bookSearchRequest.getSignature();
+        Long minRegistrationNumber = bookSearchRequest.getMinRegistrationNumber();
+        Long maxRegistrationNumber = bookSearchRequest.getMaxRegistrationNumber();
+        LocalDate minRegistrationDate = bookSearchRequest.getMinRegistrationDate();
+        LocalDate maxRegistrationDate = bookSearchRequest.getMaxRegistrationDate();
+        Character status = bookSearchRequest.getStatus();
+        Boolean borrowed = bookSearchRequest.getBorrowed();
+
+        if (isValidString(barCode)) {
+            predicates.add(criteriaBuilder.equal(root.get("barCode"), barCode));
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getSignature())
-                && !bookSearchRequest.getSignature().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(root.get("signature"), bookSearchRequest.getSignature()));
+        if (isValidString(signature)) {
+            predicates.add(criteriaBuilder.equal(root.get("signature"), signature));
         }
 
-        if (Objects.nonNull(bookSearchRequest.getMaxRegistrationNumber())
-                && Objects.nonNull(bookSearchRequest.getMinRegistrationNumber())) {
+        if (Objects.nonNull(maxRegistrationNumber)
+                && Objects.nonNull(minRegistrationNumber)) {
 
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
                             root.get("registrationNumber"),
-                            bookSearchRequest.getMaxRegistrationNumber()
+                            maxRegistrationNumber
                     )
             );
 
             predicates.add(
                     criteriaBuilder.lessThanOrEqualTo(
                             root.get("registrationNumber"),
-                            bookSearchRequest.getMinRegistrationNumber()
+                            minRegistrationNumber
                     )
             );
         }
 
-
-        if (bookSearchRequest.getMinRegistrationDate() != null
-                && bookSearchRequest.getMaxRegistrationDate() != null) {
+        if (Objects.nonNull(minRegistrationDate)
+                && Objects.nonNull(maxRegistrationDate)) {
 
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
                             root.get("registrationDate"),
-                            bookSearchRequest.getMinRegistrationDate()
+                            minRegistrationDate
                     )
             );
 
             predicates.add(
                     criteriaBuilder.lessThanOrEqualTo(
                             root.get("registrationDate"),
-                            bookSearchRequest.getMaxRegistrationDate()
+                            maxRegistrationDate
                     )
             );
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getStatus())
-                && !bookSearchRequest.getStatus().trim().isEmpty()){
-            predicates.add(criteriaBuilder.equal(root.get("status"), bookSearchRequest.getStatus()));
+        if (Objects.nonNull(status)){
+            predicates.add(criteriaBuilder.equal(root.get("status"), status));
         }
 
-        if (Objects.nonNull(bookSearchRequest.getBorrowed())){
-            predicates.add(criteriaBuilder.equal(root.get("borrowed"), bookSearchRequest.getBorrowed()));
+        if (Objects.nonNull(borrowed)) {
+            predicates.add(criteriaBuilder.equal(root.get("borrowed"), borrowed));
         }
 
         this.addBookEditionPredicates(
                 criteriaBuilder,
                 criteriaBuilder.createQuery(BookEdition.class).from(BookEdition.class),
-                bookEditionToBookWorkJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -162,7 +167,6 @@ public class ImpBookSearchService implements IBookSearchService {
         this.addBookEditionPredicates(
                 criteriaBuilder,
                 root,
-                bookEditionToBookWorkJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -182,26 +186,25 @@ public class ImpBookSearchService implements IBookSearchService {
     private void addBookEditionPredicates(
             CriteriaBuilder criteriaBuilder,
             Root<BookEdition> root,
-            Join<BookEdition, BookWork> bookEditionToBookWorkJoin,
             Join<BookWork, Author> bookWorkAuthorJoin,
             BookSearchRequestBookEdition bookSearchRequest,
             List<Predicate> predicates
     ) {
+        String ISBN = bookSearchRequest.getISBN();
+        String editor = bookSearchRequest.getEditor();
+        String language = bookSearchRequest.getLanguage();
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getISBN())
-                && !bookSearchRequest.getISBN().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(root.get("ISBN"), bookSearchRequest.getISBN()));
+        if (isValidString(ISBN)) {
+            predicates.add(criteriaBuilder.equal(root.get("ISBN"), ISBN));
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getEditor())
-                && !bookSearchRequest.getEditor().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(root.get("editor"), bookSearchRequest.getEditor()));
+        if (isValidString(editor)) {
+            predicates.add(criteriaBuilder.equal(root.get("editor"), editor));
         }
 
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getLanguage())
-                && !bookSearchRequest.getLanguage().trim().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(root.get("language"), bookSearchRequest.getLanguage()));
+        if (isValidString(language)) {
+            predicates.add(criteriaBuilder.equal(root.get("language"), language));
         }
 
         this.addBookWorksPredicates(
@@ -249,27 +252,26 @@ public class ImpBookSearchService implements IBookSearchService {
             BookSearchRequestBookWork bookSearchRequest,
             List<Predicate> predicates
     ) {
+        String author = bookSearchRequest.getAuthor();
+        String title = bookSearchRequest.getTitle();
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getAuthor())
-                && !bookSearchRequest.getAuthor().trim().isEmpty()) {
+        if (isValidString(author)) {
 
             Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);
 
             predicates.add(
                     criteriaBuilder.like(
                             authorName,
-                            "%" + bookSearchRequest.getAuthor() + "%"
+                            "%" + author + "%"
                     )
             );
         }
 
-        if (!StringUtils.isEmpty(bookSearchRequest.getTitle())
-                && !bookSearchRequest.getTitle().trim().isEmpty()) {
-
+        if (isValidString(title)) {
             predicates.add(
                     criteriaBuilder.like(
                             root.get("title"),
-                            "%" + bookSearchRequest.getTitle() + "%"
+                            "%" + title + "%"
                     )
             );
         }
@@ -285,4 +287,9 @@ public class ImpBookSearchService implements IBookSearchService {
         );
         return authorName;
     }
+    private Boolean isValidString (String value) {
+        return !StringUtils.isEmpty(value) && !value.trim().isEmpty();
+    }
+
+
 }

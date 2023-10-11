@@ -5,7 +5,7 @@ import com.miguel.library.model.UReader;
 
 import java.util.List;
 
-public interface IUserSearchService {
+public interface IReaderSearchService {
 
     public List<UReader> searchReaders(USearchReaderDTO searchRequest);
 
