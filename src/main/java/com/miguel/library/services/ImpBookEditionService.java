@@ -119,13 +119,6 @@ public class ImpBookEditionService implements IBookEditionService{
 
         Optional<BookEdition> bookEditionWithISBN = bookEditionRepository.findByISBN(savedBookEdition.getISBN());
 
-        if (bookEditionWithISBN.isPresent() &&
-            !bookEditionWithISBN.get().getIdBookEdition().equals(savedBookEdition.getIdBookEdition())
-        ) {
-            throw new ExceptionObjectAlreadyExists("Book edition already exists");
-
-        }
-
         return bookEditionRepository.save(savedBookEdition);
     }
 

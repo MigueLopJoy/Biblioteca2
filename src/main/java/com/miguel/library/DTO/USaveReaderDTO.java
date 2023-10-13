@@ -1,6 +1,7 @@
 package com.miguel.library.DTO;
 
-import com.miguel.library.Validations.UniqueEmailOrPhoneNumber;
+import com.miguel.library.Validations.UniqueEmail;
+import com.miguel.library.Validations.UniquePhoneNumber;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@UniqueEmail
+@UniquePhoneNumber
 @AllArgsConstructor
 public class USaveReaderDTO {
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Must introduce a valid first name")
@@ -26,11 +29,9 @@ public class USaveReaderDTO {
     private Character gender;
 
     @Email(message = "Must provide a valid email")
-    @UniqueEmailOrPhoneNumber(message = "Email already taken")
     private String email;
 
     @Pattern(regexp = "^\\+?\\d{1,3}\\d{1,14}$", message = "Must provide a valid phone number")
-    @UniqueEmailOrPhoneNumber(message = "Phone number already taken")
     private String phoneNumber;
 
 }

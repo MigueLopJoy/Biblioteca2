@@ -25,16 +25,14 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
             Object bookEdition,
             ConstraintValidatorContext constraintValidatorContext
     ) {
-        boolean isValidYear = false;
+        boolean isValidYear = true;
         Integer editionYear = null;
         Integer publicationYear = null;
         BooksSaveDTOBookEdition saveDTO;
         BooksEditDTOBookEdition editDTO;
         BookEdition originalBookEdition;
 
-        if (Objects.isNull(bookEdition)) {
-            isValidYear = true;
-        } else {
+        if (Objects.nonNull(bookEdition)) {
             if (bookEdition instanceof BooksSaveDTOBookEdition) {
                 saveDTO = (BooksSaveDTOBookEdition) bookEdition;
                 editionYear = saveDTO.getEditionYear();
@@ -44,19 +42,17 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
 
             } else if (bookEdition instanceof BooksEditDTOBookEdition) {
                 editDTO = (BooksEditDTOBookEdition) bookEdition;
-                originalBookEdition = bookEditionRepository.getById(editDTO.getIdOriginalBookEdition());
+                originalBookEdition = bookEditionRepository.getById(editDTO.getOriginalBookEditionId());
                 editionYear = editDTO.getEditionYear();
                 publicationYear =
                         (Objects.nonNull(originalBookEdition.getBookWork())) ?
-                                   originalBookEdition.getBookWork().getPublicationYear() : null;
+                                originalBookEdition.getBookWork().getPublicationYear() : null;
             }
+        }
 
-            if (Objects.isNull(editionYear) || Objects.isNull(publicationYear)) {
-                isValidYear = true;
-            } else {
-                if (editionYear >= publicationYear) {
-                    isValidYear = true;
-                }
+        if (Objects.nonNull(editionYear) && Objects.nonNull(publicationYear)) {
+            if (editionYear <= publicationYear) {
+                isValidYear = false;
             }
         }
         return isValidYear;

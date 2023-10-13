@@ -11,10 +11,13 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@UniqueRegistrationNumber
 public class BooksEditDTOBookCopy {
 
+    @NotNull
+    private Integer originalBookCopyId;
+
     @Min(value = 1, message = "Registration number should be greater than 1")
-    @UniqueRegistrationNumber
     private Long registrationNumber;
 
     private String signature;

@@ -1,15 +1,41 @@
-import { printSelectedResult } from "./CATALOG/catalog-commons"
-import { reasigneNewReaderValue } from "./READERS/readers_commons"
+import { displayCatalogingMainPage } from "./CATALOG/display_pages.js"
+import { displayRegisteringMainPage } from "./CATALOG/display_pages.js"
+import { displayReadersRegisteringMainPage } from "./CATALOG/display_pages.js"
+import { displaySearchReadersMainPage } from "./CATALOG/display_pages.js"
 
+import { printSelectedResult } from "./CATALOG/catalog-commons.js"
+import { toggleNextPageChanging } from "./CATALOG/catalog-commons.js"
+import { clearPrintedReults } from "./CATALOG/catalog-commons.js"
+
+import { getEditAuthorResults } from "./CATALOG/cataloging.js"
+import { getEditBookworkResults } from "./CATALOG/cataloging.js"
+import { getEditNewEditionResults } from "./CATALOG/cataloging.js"
+import { prepareAuthorEditionProcess } from "./CATALOG/cataloging.js"
+import { prepareBookworkEditionProcess } from "./CATALOG/cataloging.js"
+import { prepareNewEditionEditionProcess } from "./CATALOG/cataloging.js"
+import { reasigneAuthorValue } from "./CATALOG/cataloging.js"
+import { reasigneBookworkValue } from "./CATALOG/cataloging.js"
+import { reasigneNewEditionValue } from "./CATALOG/cataloging.js"
+
+import { getEditNewCopyResults } from "./CATALOG/registering.js"
+import { prepareNewBookcopyEditionProcess } from "./CATALOG/registering.js"
+import { reasigneBookeditionValue } from "./CATALOG/registering.js"
+import { reasigneNewBookcopyValue } from "./CATALOG/registering.js"
+
+import { getEditNewReaderResults } from "./READERS/readers_registering.js"
+import { prepareNewReaderEditionProcess } from "./READERS/readers_registering.js"
 
 
 /* Global methods */
 
 const d = document,
+    selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
+    createBtnsContainer = d.querySelector(".modal_btns_container .create_btns"),
     endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn"),
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
     editBtn = d.querySelector(".modal_btns_container .edit_btn"),
     endingBtn = d.querySelector(".modal_btns_container .ending_btn"),
+    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
     closeSymbol = d.querySelector(".close_symbol"),
     successMessage = d.querySelector(".success_message")
 
@@ -144,7 +170,7 @@ const saveResult = (results, resultsType) => {
     } else if (resultsType === "bookedition") {
         reasigneBookeditionValue(results[findSelectedResult()])
     } else if (resultsType === "newBookcopy") {
-        reasigneNewBookCopyValue(results[findSelectedResult()])
+        reasigneNewBookcopyValue(results[findSelectedResult()])
     } else if (resultsType === "newReader") {
         reasigneNewReaderValue(results[findSelectedResult()])
     }
@@ -193,10 +219,8 @@ const confirmEdition = async (results, resultsType, operation, table) => {
             results = await getEditBookworkResults(editedFields)
         } else if (resultsType === "newEdition") {
             results = await getEditNewEditionResults(editedFields)
-        } else if (resultsType === "bookedition") {
-            results = await getEditBookEditionResults(editedFields)
         } else if (resultsType === "newBookCopy") {
-            results = await getEditNewBookCopyResults(editedFields)
+            results = await getEditNewCopyResults(editedFields)
         } else if (resultsType === "newReader") {
             results = await getEditNewReaderResults(editedFields)
         }
@@ -243,7 +267,9 @@ const closeModal = (resultsType, operation, table) => {
             errorMessageRow = tableBody.querySelector(".error_message_row")
 
         tableBody.innerHTML = ""
-        tableBody.appendChild(errorMessageRow)
+        if (errorMessageRow) {
+            tableBody.appendChild(errorMessageRow)
+        }
 
         table.classList.add("hidden")
 
@@ -291,7 +317,7 @@ const displaySuccessMessage = (resultsType) => {
         } else if (resultsType === "newCopy") {
             displayRegisteringMainPage()
         } else if (resultsType === "newReader") {
-
+            displayReadersRegisteringMainPage()
         }
     }
     endingBtn.addEventListener("click", endingBtnClickHandler)
@@ -348,15 +374,17 @@ const joinParamsToURL = (baseURL, params) => {
 /* Error handling methods*/
 
 const handleErrorMessages = (error, layer) => {
-
+    console.log(error)
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
-            layer.querySelector(`.error_message.${er.field}`).classList.add("active")
-            layer.querySelector(`.error_message.${er.field}`).textContent = er.message
+            let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)
+            validationErrorMessage.classList.add("active")
+            validationErrorMessage.textContent = er.message
         })
     } else {
-        layer.querySelector('.error_message.general_error').classList.add("active")
-        layer.querySelector('.error_message.general_error').textContent = error.message
+        let generalErrorMessage = layer.querySelector('.error_message.general_error')
+        generalErrorMessage.classList.add("active")
+        generalErrorMessage.textContent = error.message
     }
 }
 

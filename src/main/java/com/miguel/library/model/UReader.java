@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "readers")
-@AttributeOverride(name = "idUser", column = @Column(name = "id_reader"))
+@AttributeOverride(name = "idUser", column = @Column(name = "idReader"))
 public class UReader extends User{
 
     @Column(unique = true, nullable = false)

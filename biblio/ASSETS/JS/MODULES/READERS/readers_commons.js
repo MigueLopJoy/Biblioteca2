@@ -1,4 +1,6 @@
-import { generateNewReaderTableContent } from "./readers_registering"
+import { generateNewReaderTableContent } from "./readers_registering.js"
+
+const d = document
 
 const showSearchResults = (operation, table) => {
     const modal = d.getElementById("modal")
@@ -13,7 +15,7 @@ const showSearchResults = (operation, table) => {
 
         if (tableContainsClass(table, "class")) {
             selectResultBtn.textContent = "btn text content"
-        } 
+        }
     } else if (operation === "create") {
         createBtnsContainer.classList.remove("hidden")
     }
@@ -29,9 +31,4 @@ const generaTableContent = table => {
     }
 }
 
-const reasigneNewReaderValue = newReaderValue => {
-    reader = newReaderValue
-}
-
 export { showSearchResults }
-export { reasigneNewReaderValue }

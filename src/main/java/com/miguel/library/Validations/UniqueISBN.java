@@ -8,14 +8,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueRegistrationNumberValidator.class)
-public @interface UniqueRegistrationNumber {
-    String message() default "Registration Number Already Taken";
+@Constraint(validatedBy = UniqueISBNValidator.class)
+public @interface UniqueISBN {
+    String message() default "ISBN Already Taken";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

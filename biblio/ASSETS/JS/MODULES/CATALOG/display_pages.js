@@ -1,9 +1,9 @@
 const d = document
 
 const loadContent = async (url, component) => {
-        let res = await fetch(url),
-            content = await res.text()
-        component.innerHTML = content
+    let res = await fetch(url),
+        content = await res.text()
+    component.innerHTML = content
 }
 
 const loadJsFiles = async (...sources) => {
@@ -44,13 +44,19 @@ const removeScriptsExcept = (...scriptsToKeep) => {
 
 const displayCatalogingMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/cataloging.html", d.getElementById("main-content"))
-    await loadJsFiles("./ASSETS/JS/MODULES/CATALOG/cataloging.js", "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js")
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/cataloging.js",
+        "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("author_page")
 }
 
 const displayRegisteringMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/registering.html", d.getElementById("main-content"))
-    await loadJsFiles("./ASSETS/JS/MODULES/CATALOG/registering.js", "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js")
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/registering.js",
+        "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("bookedition_page")
 }
 
@@ -62,7 +68,10 @@ const displaySearchReadersMainPage = async () => {
 
 const displayReadersRegisteringMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/readers_registering.html", d.getElementById("main-content"))
-    await loadJsFiles("./ASSETS/JS/MODULES/READERS/readers.js")
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/READERS/readers_registering.js",
+        "./ASSETS/JS/MODULES/READERS/readers_commons.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("readers_registering_page")
 }
 

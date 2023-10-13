@@ -10,7 +10,6 @@ import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
 
 import { showSearchResults } from "./catalog-commons.js"
-import { enableModalActions } from "./catalog-commons.js"
 
 const d = document,
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
@@ -32,7 +31,7 @@ d.addEventListener("submit", async e => {
         } else if (currentPage.classList.contains("bookwork_page")) {
             await runBookworkProcess(e.target)
         } else if (currentPage.classList.contains("edition_page")) {
-            await runBookeditionProcess(e.target)
+            await runNewEditionProcess(e.target)
         }
 
         if (error) {
@@ -86,12 +85,11 @@ const runBookworkProcess = async form => {
     }
 }
 
-const runBookeditionProcess = async form => {
+const runNewEditionProcess = async form => {
     newEdition = ""
     resultsType = "newEdition"
     table = bookEditionTable
     operation = "create"
-
     await getCreateBookeditionResults(form)
 }
 
@@ -406,20 +404,20 @@ const generateNewBookeditionTableContent = () => {
 }
 
 const prepareAuthorEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="newEdition" value="${author.firstName}" >`
-    cells[1].innerHTML = `<input type="text" class="newEdition"value="${author.lastName}" >`
+    cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
+    cells[1].innerHTML = `<input type="text" class="edition"value="${author.lastName}" >`
 }
 
 const prepareBookworkEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="newEdition" value="${bookwork.title}" >`
-    cells[2].innerHTML = `<input type="number" class="newEdition" value="${bookwork.publicationYear}" >`
+    cells[0].innerHTML = `<input type="text" class="edition" value="${bookwork.title}" >`
+    cells[2].innerHTML = `<input type="number" class="edition" value="${bookwork.publicationYear}" >`
 }
 
 const prepareNewEditionEditionProcess = cells => {
-    cells[2].innerHTML = `<input type="text" class="newEdition" value="${newEdition.isbn}" >`
-    cells[3].innerHTML = `<input type="text" class="newEdition" value="${newEdition.editor}" >`
-    cells[4].innerHTML = `<input type="number" class="newEdition" value="${newEdition.editionYear}" >`
-    cells[5].innerHTML = `<input type="text" class="newEdition" value="${newEdition.language}" >`
+    cells[2].innerHTML = `<input type="text" class="edition" value="${newEdition.isbn}" >`
+    cells[3].innerHTML = `<input type="text" class="edition" value="${newEdition.editor}" >`
+    cells[4].innerHTML = `<input type="number" class="edition" value="${newEdition.editionYear}" >`
+    cells[5].innerHTML = `<input type="text" class="edition" value="${newEdition.language}" >`
 }
 
 const getAuthor = () => {

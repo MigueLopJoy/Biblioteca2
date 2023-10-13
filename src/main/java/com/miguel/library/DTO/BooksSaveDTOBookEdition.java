@@ -1,6 +1,7 @@
 package com.miguel.library.DTO;
 
 import com.miguel.library.Validations.EditionYearNotBeforePublicationYear;
+import com.miguel.library.Validations.UniqueISBN;
 import com.miguel.library.Validations.YearNotGreaterThanCurrent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.Pattern;
 @AllArgsConstructor
 @Getter @Setter
 @EditionYearNotBeforePublicationYear
+@UniqueISBN
 public class BooksSaveDTOBookEdition {
 
     @NotBlank(message = "ISBN required")

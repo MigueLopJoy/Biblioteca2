@@ -1,13 +1,4 @@
 import { findCurrentPage } from "./../modules_commons.js"
-import { fetchRequest } from "./../modules_commons.js"
-import { joinParamsToURL } from "./../modules_commons.js"
-import { handleErrorMessages } from "./../modules_commons.js"
-import { clearErrorMessages } from "./../modules_commons.js"
-import { clearFormsData } from "./../modules_commons.js"
-
-import { getEditAuthorResults } from "./cataloging.js"
-import { getEditBookworkResults } from "./cataloging.js"
-import { getEditNewEditionResults } from "./cataloging.js"
 
 import { generateAuthorsTableContent } from "./cataloging.js"
 import { generateBookworksTableContent } from "./cataloging.js"
@@ -16,26 +7,16 @@ import { generateNewBookeditionTableContent } from "./cataloging.js"
 import { generateBookeditionsTableContent } from "./registering.js"
 import { generateNewBookcopyTableContent } from "./registering.js"
 
-import { prepareAuthorEditionProcess } from "./cataloging.js"
-import { prepareBookworkEditionProcess } from "./cataloging.js"
-import { prepareNewEditionProcess } from "./cataloging.js"
-
 import { getAuthor } from "./cataloging.js"
 import { getBookwork } from "./cataloging.js"
-import { reasigneAuthorValue } from "./cataloging.js"
-import { reasigneBookworkValue } from "./cataloging.js"
-import { reasigneNewEditionValue } from "./cataloging.js"
+import { getBookedition } from "./registering.js"
 
 import { showPage } from "./display_pages.js"
-import { displayCatalogingMainPage } from "./display_pages.js"
-import { displayRegisteringMainPage } from "./display_pages.js"
 
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
     createBtnsContainer = d.querySelector(".modal_btns_container .create_btns"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
-
-
 
 /* Page's interaction methods*/
 
@@ -118,8 +99,8 @@ const toggleNextPageChanging = resultsType => {
         toggleNextPageBtn(nextPageBtn, getBookwork())
         togglePageLinks([pageLinks[2]])
     } else if (resultsType === "bookedition") {
-        toggleNextPageBtn(nextPageBtn, getBookEdition())
-        togglePageLinks([pageLinks[1]], getBookEdition())
+        toggleNextPageBtn(nextPageBtn, getBookedition())
+        togglePageLinks([pageLinks[1]], getBookedition())
     }
 }
 
@@ -145,9 +126,20 @@ const clearPrintedReults = resultsType => {
             if (el.hasAttribute("readonly")) {
                 el.value = ""
             } else {
-                el.textContent = "Book work: "
+                el.textContent = "Book edition: "
             }
         })
+
+        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
+            el.textContent = "Book work: "
+        })
+        d.querySelectorAll(".selected_result_holder .selected_bookedition").forEach(el => {
+            el.textContent = "Book edition: "
+        })
+        d.querySelector(".form .selected_title").value = ""
+        d.querySelector(".form .selected_author").value = ""
+        d.querySelector(".form .selected_editorAndYear").value = ""
+        d.querySelector(".form .selected_isbn").value = ""
     }
 }
 
@@ -161,6 +153,7 @@ const showSearchResults = (operation, table) => {
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
+    console.log(table)
     table.classList.remove("hidden")
 
     generaTableContent(table)
@@ -174,11 +167,11 @@ const showSearchResults = (operation, table) => {
             selectResultBtn.textContent = "Select book work"
         } else if (tableContainsClass(table, "newEdition_results_table")) {
             selectResultBtn.textContent = "Save new edition"
-        } else if (tableContainsClass(table, "editions_results_table")) {
+        } else if (tableContainsClass(table, "bookeditions_results_table")) {
             selectResultBtn.textContent = "Select book edition"
         } else if (tableContainsClass(table, "newBookCopy_results_table")) {
             selectResultBtn.textContent = "Save new copy"
-        } 
+        }
     } else if (operation === "create") {
         createBtnsContainer.classList.remove("hidden")
     }
@@ -191,7 +184,7 @@ const generaTableContent = table => {
         generateBookworksTableContent()
     } else if (tableContainsClass(table, "newEdition_results_table")) {
         generateNewBookeditionTableContent()
-    } else if (tableContainsClass(table, "editions_results_table")) {
+    } else if (tableContainsClass(table, "bookeditions_results_table")) {
         generateBookeditionsTableContent()
     } else if (tableContainsClass(table, "newBookCopy_results_table")) {
         generateNewBookcopyTableContent()
@@ -210,13 +203,29 @@ const printSelectedResult = resultsType => {
             el.textContent += `${getBookwork().title}`
         })
         d.querySelector(".form .selected_bookwork").value = getBookwork().title
+    } else if (resultsType === "bookedition") {
+        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
+            el.textContent +=
+                `${getBookedition().bookWork.title} / 
+                ${getBookedition().bookWork.author.firstName} ${getBookedition().bookWork.author.lastName}`
+        })
+        d.querySelectorAll(".selected_result_holder .selected_bookedition").forEach(el => {
+            el.textContent +=
+                `${getBookedition().editor}: ${getBookedition().editionYear} . - ${getBookedition().isbn}`
+        })
+        d.querySelector(".form .selected_title").value = `${getBookedition().bookWork.title}`
+        d.querySelector(".form .selected_author").value =
+            `${getBookedition().bookWork.author.firstName} ${getBookedition().bookWork.author.lastName}`
+        d.querySelector(".form .selected_editorAndYear").value =
+            `${getBookedition().editor}: ${getBookedition().editionYear}`
+        d.querySelector(".form .selected_isbn").value =
+            `${getBookedition().isbn}`
     }
 }
 
 
 export { enablePreviousPageBtn }
 export { toggleNextPageChanging }
-export { clearFormsData }
 export { clearPrintedReults }
 export { printSelectedResult }
 export { showSearchResults }

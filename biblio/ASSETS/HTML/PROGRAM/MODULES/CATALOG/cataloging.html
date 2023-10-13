@@ -105,70 +105,79 @@
 
             <div class="modal_content">
 
-                <span class="close_symbol">X</span>
+                <div class="icons_container">
+                    <div class="left_icons_container">
+                        <span class="material-symbols-outlined">edit_note</span>
+                        <span class="material-symbols-outlined">delete</span>
+                    </div>
+                    <div class="close_symbol_container">
+                        <span class="close_symbol">X</span>
+                    </div>
+                </div>
 
+                <div class="tables_container">
+                    <table class="results_table authors_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body">
+                            <tr class="error_message_row hidden">
+                                <td>
+                                    <p class="error_message general_error"></p>
+                                    <p class="error_message firstName"></p>
+                                    <p class="error_message lastName"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <table class="results_table authors_results_table hidden">
-                    <thead>
-                        <tr>
-                            <th>First name</th>
-                            <th>Last name</th>
-                        </tr>
-                    </thead>
-                    <tbody class="results_table_body">
-                        <tr class="error_message_row hidden">
-                            <td>
-                                <p class="error_message general_error"></p>
-                                <p class="error_message firstName"></p>
-                                <p class="error_message lastName"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="results_table bookworks_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>Title</td>
+                                <th>Author</th>
+                                <th>Publication year</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body">
+                            <tr class="error_message_row hidden">
+                                <td>
+                                    <p class="error_message general_error"></p>
+                                    <p class="error_message title"></p>
+                                    <p class="error_message publicationYear"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <table class="results_table bookworks_results_table hidden">
-                    <thead>
-                        <tr>
-                            <th>Title</td>
-                            <th>Author</th>
-                            <th>Publication year</th>
-                        </tr>
-                    </thead>
-                    <tbody class="results_table_body">
-                        <tr class="error_message_row hidden">
-                            <td>
-                                <p class="error_message general_error"></p>
-                                <p class="error_message title"></p>
-                                <p class="error_message publicationYear"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p class="success_message created_edition"></p>
-                <table class="results_table newEdition_results_table hidden">
-                    <thead>
-                        <tr>
-                            <th>Title</td>
-                            <th>Author</th>
-                            <th>ISBN</th>
-                            <th>Editor</th>
-                            <th>Edition Year</th>
-                            <th>Language</th>
-                        </tr>
-                    </thead>
-                    <tbody class="results_table_body">
-                        <tr class="error_message_row hidden">
-                            <td colspan="6">
-                                <p class="error_message general_error"></p>
-                                <p class="error_message ISBN"></p>
-                                <p class="error_message editor"></p>
-                                <p class="error_message editionYear"></p>
-                                <p class="error_message language"></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <p class="success_message created_edition"></p>
+                    <table class="results_table newEdition_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>Title</td>
+                                <th>Author</th>
+                                <th>ISBN</th>
+                                <th>Editor</th>
+                                <th>Edition Year</th>
+                                <th>Language</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body">
+                            <tr class="error_message_row hidden">
+                                <td colspan="6">
+                                    <p class="error_message general_error"></p>
+                                    <p class="error_message ISBN"></p>
+                                    <p class="error_message editor"></p>
+                                    <p class="error_message editionYear"></p>
+                                    <p class="error_message language"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <div class="modal_btns_container">
                     <div class="select_btn hidden">

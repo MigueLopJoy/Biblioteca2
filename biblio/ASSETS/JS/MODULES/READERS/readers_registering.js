@@ -1,8 +1,8 @@
 import { findCurrentPage } from "./../modules_commons.js"
 import { fetchRequest } from "./../modules_commons.js"
-import { joinParamsToURL } from "./../modules_commons.js"
 import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
+import { clearFormsData } from "./../modules_commons.js"
 
 import { showSearchResults } from "./readers_commons.js"
 
@@ -14,13 +14,14 @@ let newReader, results, error, table, resultsType, operation
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
+    if (d.getElementById("readers_registering_section")) {
         let currentPage = findCurrentPage()
 
         clearErrorMessages()
 
         if (currentPage.classList.contains("author_page")) {
             await runCreateNewReaderProcess(e.target)
-        } 
+        }
 
         if (error) {
             handleErrorMessages(error, e.target)
@@ -30,20 +31,15 @@ d.addEventListener("submit", async e => {
             showSearchResults(operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
+    }
 })
 
-const runCreateNewReaderProcess = async () => {
-    reader = ""
+const runCreateNewReaderProcess = async form => {
+    newReader = ""
     table = registeredReaderTable
     resultsType = "newReader"
-    clearPrintedReults(resultsType)
-
-    if (form.classList.contains("author_form") &&
-        form.classList.contains("search")
-    ) {
-        operation = "search"
-        await getCreateReaderResults(form)
-    } 
+    operation = "create"
+    await getCreateReaderResults(form)
 }
 
 const getCreateReaderResults = async form => {
@@ -62,6 +58,28 @@ const getCreateReaderResults = async form => {
         )]
     } catch (ex) {
         error = ex
+    }
+}
+
+const getEditNewReaderResults = async editedFields => {
+    try {
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/readers/edit-reader/${results[0].idReader}`,
+            {
+                originalReaderId: results[0].idReader,
+                firstName: editedFields[0],
+                lastName: editedFields[1],
+                dateOfBirth: editedFields[2],
+                gender: editedFields[3],
+                email: editedFields[4],
+                phoneNumber: editedFields[5],
+                readerNumber: editedFields[6]
+            }
+        )]
+        return results
+    } catch (ex) {
+        throw ex
     }
 }
 
@@ -90,7 +108,7 @@ const generateNewReaderTableContent = () => {
 
         let phoneNumber = d.createElement("td")
         phoneNumber.textContent = result.phoneNumber
-    
+
 
 
         newRow.appendChild(firstName)
@@ -114,26 +132,24 @@ const generateNewReaderTableContent = () => {
 }
 
 const prepareNewReaderEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="newReader" value="${newReader.firstName}" >`
-    cells[1].innerHTML = `<input type="text" class="newReader"value="${newReader.lastName}" >`
-    cells[2].innerHTML = `<input type="text" class="newReader" value="${newReader.dateOfBirth}" >`
-    cells[3].innerHTML = `<input type="text" class="newReader"value="${newReader.gender}" >`
-    cells[4].innerHTML = `<input type="text" class="newReader" value="${newReader.email}" >`
-    cells[5].innerHTML = `<input type="text" class="newReader"value="${newReader.phoneNumber}" >`
+    cells[0].innerHTML = `<input type="text" class="edition" value="${newReader.firstName}" >`
+    cells[1].innerHTML = `<input type="text" class="edition"value="${newReader.lastName}" >`
+    cells[2].innerHTML = `<input type="text" class="edition" value="${newReader.dateOfBirth}" >`
+    cells[3].innerHTML = `<input type="text" class="edition"value="${newReader.gender}" >`
+    cells[4].innerHTML = `<input type="text" class="edition" value="${newReader.email}" >`
+    cells[5].innerHTML = `<input type="text" class="edition"value="${newReader.phoneNumber}" >`
 }
-
-
 
 const getNewReader = () => {
-    return newReader
+    return
 }
-
 
 const reasigneNewReaderValue = newReaderValue => {
     newReader = newReaderValue
 }
 
 export { generateNewReaderTableContent }
+export { getEditNewReaderResults }
 export { prepareNewReaderEditionProcess }
 export { getNewReader }
 export { reasigneNewReaderValue }

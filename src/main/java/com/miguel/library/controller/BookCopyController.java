@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.print.Book;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost/")
 @RestController
 @RequestMapping("/bookcopies")
 public class BookCopyController {

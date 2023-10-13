@@ -6,11 +6,11 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = UniqueEmailOrPhoneNumberValidator.class)
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueEmailOrPhoneNumber {
-    String message() default "Field value already taken";
+@Constraint(validatedBy = UniquePhoneNumberValidator.class)
+public @interface UniquePhoneNumber {
+    String message() default "Phone Number Already Taken";
 
     Class<?>[] groups() default {};
 

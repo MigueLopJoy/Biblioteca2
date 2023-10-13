@@ -12,11 +12,11 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@UniqueRegistrationNumber
 public class BooksSaveDTOBookCopy {
 
     @NotNull(message = "Registration number required")
     @Min(value = 1, message = "Registration number should be lower than 1")
-    @UniqueRegistrationNumber
     private Long registrationNumber;
 
     @NotBlank(message = "Signature required")
