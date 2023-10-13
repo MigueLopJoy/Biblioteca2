@@ -153,7 +153,6 @@ const showSearchResults = (operation, table) => {
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
-    console.log(table)
     table.classList.remove("hidden")
 
     generaTableContent(table)
@@ -169,7 +168,7 @@ const showSearchResults = (operation, table) => {
             selectResultBtn.textContent = "Save new edition"
         } else if (tableContainsClass(table, "bookeditions_results_table")) {
             selectResultBtn.textContent = "Select book edition"
-        } else if (tableContainsClass(table, "newBookCopy_results_table")) {
+        } else if (tableContainsClass(table, "newBookcopy_results_table")) {
             selectResultBtn.textContent = "Save new copy"
         }
     } else if (operation === "create") {
@@ -186,7 +185,7 @@ const generaTableContent = table => {
         generateNewBookeditionTableContent()
     } else if (tableContainsClass(table, "bookeditions_results_table")) {
         generateBookeditionsTableContent()
-    } else if (tableContainsClass(table, "newBookCopy_results_table")) {
+    } else if (tableContainsClass(table, "newBookcopy_results_table")) {
         generateNewBookcopyTableContent()
     }
 }

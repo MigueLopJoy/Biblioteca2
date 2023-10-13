@@ -55,9 +55,17 @@
     padding-bottom: 0;
 }
 
+.selected_result_holder p {
+    margin-bottom: .5rem;
+}
+
+.selected_result_holder p:last-child {
+    margin-bottom: 0;
+}
+
 .change_page_container {
     width: 100%;
-    padding: 1.5rem 2rem .5rem 2rem;
+    padding: .5rem 2rem;
 }
 
 .change_page_container.right {

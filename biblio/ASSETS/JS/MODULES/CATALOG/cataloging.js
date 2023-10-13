@@ -275,7 +275,7 @@ const generateAuthorsTableContent = () => {
             newRow.appendChild(selectAuthor)
         }
 
-        let tableBody = table.querySelector(".results_table_body")
+        const tableBody = table.querySelector(".results_table_body")
 
         if (tableBody.firstChild) {
             tableBody.insertBefore(newRow, tableBody.firstChild);

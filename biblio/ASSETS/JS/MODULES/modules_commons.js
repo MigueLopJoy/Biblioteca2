@@ -124,19 +124,17 @@ const enableSelectResultBtn = (results, resultsType, operation, table) => {
 
 const enableCreateBtns = (results, resultsType, operation, table) => {
     if (confirmBtn) {
-
         confirmBtnClickHandler = function () {
             executeConfirmBtnListener(results, resultsType, operation, table)
         }
-
         confirmBtn.addEventListener("click", confirmBtnClickHandler)
     }
     if (editBtn) {
-
+        console.log(editBtn, "ENABLED")
         editBtnClickHandler = function () {
+            console.log("EDIT CLICKED")
             executeEditBtnListener(results, resultsType, operation, table)
         }
-
         editBtn.addEventListener("click", editBtnClickHandler)
     }
 }
@@ -190,7 +188,7 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
         prepareNewEditionEditionProcess(cells)
     } else if (resultsType === "bookedition") {
         prepareBookworkEditionProcess(cells)
-    } else if (resultsType === "newBookCopy") {
+    } else if (resultsType === "newBookcopy") {
         prepareNewBookcopyEditionProcess(cells)
     } else if (resultsType === "newReader") {
         prepareNewReaderEditionProcess(cells)
@@ -207,6 +205,7 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
 
 
 const confirmEdition = async (results, resultsType, operation, table) => {
+    console.log("confirming")
     const tbody = table.querySelector(".results_table_body"),
         errorMessageRow = tbody.querySelector(".error_message_row"),
         editedFields = [...tbody.querySelectorAll("td input")].map(input => input.value)
@@ -219,12 +218,11 @@ const confirmEdition = async (results, resultsType, operation, table) => {
             results = await getEditBookworkResults(editedFields)
         } else if (resultsType === "newEdition") {
             results = await getEditNewEditionResults(editedFields)
-        } else if (resultsType === "newBookCopy") {
+        } else if (resultsType === "newBookcopy") {
             results = await getEditNewCopyResults(editedFields)
         } else if (resultsType === "newReader") {
             results = await getEditNewReaderResults(editedFields)
         }
-
     } catch (ex) {
         error = ex
     }
@@ -374,7 +372,6 @@ const joinParamsToURL = (baseURL, params) => {
 /* Error handling methods*/
 
 const handleErrorMessages = (error, layer) => {
-    console.log(error)
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
             let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)

@@ -45,13 +45,6 @@ public class ImpBookCopyService implements IBookCopyService {
             throw new ExceptionObjectNotFound("Book copy's book edition not found");
         }
 
-        BookCopy bookCopyWithRegistrationNumber
-                = this.searchByRegistrationNumber(bookCopy.getRegistrationNumber());
-
-        if (Objects.nonNull(bookCopyWithRegistrationNumber)) {
-            throw new ExceptionObjectAlreadyExists("Book copy already exists");
-        }
-
         bookCopy.setBookEdition(savedBookEdition);
         bookCopy.setBarCode(this.generateBarCode());
 

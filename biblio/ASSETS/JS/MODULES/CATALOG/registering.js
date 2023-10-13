@@ -12,7 +12,7 @@ import { showSearchResults } from "./catalog-commons.js"
 
 const d = document,
     editionsResultsTable = d.querySelector(".results_table.bookeditions_results_table"),
-    bookcopiesResultsTable = d.querySelector(".results_table.newBookkcopy_results_table")
+    bookcopiesResultsTable = d.querySelector(".results_table.newBookcopy_results_table")
 
 let bookedition, newBookcopy, results, error, table, resultsType, operation
 
@@ -31,14 +31,11 @@ d.addEventListener("submit", async e => {
         }
 
         if (error) {
-            console.log(e.target)
             handleErrorMessages(error, e.target)
             error = null
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            console.log(table)
-            console.log(results)
             showSearchResults(operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
@@ -57,7 +54,7 @@ const runBookEditionProcess = async form => {
 const runBookCopyProcess = async form => {
     newBookcopy = ""
     table = bookcopiesResultsTable
-    resultsType = "bookcopies"
+    resultsType = "newBookcopy"
     clearPrintedReults(resultsType)
     operation = "create"
     await getCreateBookCopyResults(form)
@@ -76,7 +73,6 @@ const getSearchBookeditionResults = async form => {
                 language: form.edition_language.value,
             }
         )
-        console.log(results)
     } catch (ex) {
         error = ex
     }
@@ -84,33 +80,13 @@ const getSearchBookeditionResults = async form => {
 
 const getCreateBookCopyResults = async form => {
     try {
-        console.log(
-            {
-                registrationNumber: form.registration_number.value,
-                signature: form.signature.value,
-                bookedition: {
-                    isbn: bookedition.isbn,
-                    editor: bookedition.editor,
-                    editionYear: bookedition.editionYear,
-                    language: bookedition.language,
-                    bookWork: {
-                        title: bookedition.bookWork.title,
-                        author: {
-                            firstName: bookedition.bookWork.author.firstName,
-                            lastName: bookedition.bookWork.author.lastName
-                        },
-                        publicationYear: bookedition.bookWork.publicationYear
-                    }
-                }
-            }
-        )
-        results = await fetchRequest(
+        results = [await fetchRequest(
             "POST",
             "http://localhost:8080/bookcopies/save-bookcopy",
             {
                 registrationNumber: form.registration_number.value,
                 signature: form.signature.value,
-                bookedition: {
+                bookEdition: {
                     isbn: bookedition.isbn,
                     editor: bookedition.editor,
                     editionYear: bookedition.editionYear,
@@ -125,24 +101,36 @@ const getCreateBookCopyResults = async form => {
                     }
                 }
             }
-        )
+        )]
     } catch (ex) {
         error = ex
     }
 }
 
 const getEditNewCopyResults = async editedFields => {
+    console.log("GETTING EDITED RESULTS")
     try {
+        console.log(
+            {
+                originalBookCopyId: results[0].idBookCopy,
+                registrationNumber: editedFields[0],
+                signature: editedFields[1],
+                status: newBookcopy.bookCopyStatus,
+                borrowed: newBookcopy.borrowed
+            }
+        )
         results = [await fetchRequest(
             "PUT",
-            `http://localhost:8080/bookcopies/edit-bookcopy/${results[0].idBookCopy}`,
+            `http://localhost:8080/bookcopies/edit-bookCopy/${results[0].idBookCopy}`,
             {
                 originalBookCopyId: results[0].idBookCopy,
                 signature: editedFields[0],
-                registrationNuber: editedFields[1],
-                status: editedFields[2],
+                registrationNumber: editedFields[1],
+                status: newBookcopy.bookCopyStatus,
+                borrowed: newBookcopy.borrowed
             }
         )]
+        console.log(results)
         return results
     } catch (ex) {
         throw ex
@@ -165,6 +153,7 @@ const generateBookeditionsTableContent = () => {
             author = bookWork.author
 
         let newRow = d.createElement("tr")
+        newRow.classList.add("results_row")
 
         let title = d.createElement("td")
         title.textContent = bookWork.title
@@ -181,40 +170,38 @@ const generateBookeditionsTableContent = () => {
         let editionYear = d.createElement("td")
         editionYear.textContent = result.editionYear
 
-        let selectBookedition, checkbox
-        if (operation === "search") {
-            selectBookedition = d.createElement("td")
+        let selectBookedition = d.createElement("td"),
             checkbox = d.createElement("input")
-            checkbox.type = "checkbox"
-            checkbox.name = `select_bookedition`
-            checkbox.classList.add('result_option')
-            checkbox.classList.add('bookedition_result_option')
-            checkbox.value = i;
-            selectBookedition.appendChild(checkbox)
-        }
+        checkbox.type = "checkbox"
+        checkbox.name = `select_bookedition`
+        checkbox.classList.add('result_option')
+        checkbox.classList.add('bookedition_result_option')
+        checkbox.value = i;
+        selectBookedition.appendChild(checkbox)
 
         newRow.appendChild(title);
         newRow.appendChild(bookAuthor);
         newRow.appendChild(isbn);
         newRow.appendChild(editor);
         newRow.appendChild(editionYear);
-        if (selectBookedition) {
-            newRow.appendChild(selectBookedition)
-        }
+        newRow.appendChild(selectBookedition)
 
         table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
 
 const generateNewBookcopyTableContent = () => {
+    const tableBody = table.querySelector(".results_table_body")
+
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i],
-            bookedition = result.bookedition,
-            bookwork = result.bookwork,
-            author = result.author
+            bookedition = result.bookEdition,
+            bookwork = bookedition.bookWork,
+            author = bookwork.author
 
         let newRow = d.createElement("tr")
+        newRow.classList.add("results_row")
 
         let title = d.createElement("td")
         title.textContent = bookwork.title
@@ -229,10 +216,10 @@ const generateNewBookcopyTableContent = () => {
         editor.textContent = bookedition.editor
 
         let registrationNuber = d.createElement("td")
-        editionYear.textContent = result.registrationNuber
+        registrationNuber.textContent = result.registrationNumber
 
         let signature = d.createElement("td")
-        language.textContent = result.signature
+        signature.textContent = result.signature
 
         newRow.appendChild(title);
         newRow.appendChild(bookAuthor);
@@ -242,12 +229,22 @@ const generateNewBookcopyTableContent = () => {
         newRow.appendChild(signature);
 
         table.querySelector(".results_table_body").appendChild(newRow);
+
+
+        if (tableBody.firstChild) {
+            tableBody.insertBefore(newRow, tableBody.firstChild)
+
+            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
+            errorMessageTd.setAttribute("colspan", 6)
+        } else {
+            tableBody.appendChild(newRow)
+        }
     }
 }
 
 const prepareNewBookcopyEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="edition" value="${newBookcopy.registrationNuber}" >`
-    cells[1].innerHTML = `<input type="text" class="edition"value="${newBookcopy.signature}" >`
+    cells[4].innerHTML = `<input type="text" class="edition" value="${newBookcopy.registrationNumber}" >`
+    cells[5].innerHTML = `<input type="text" class="edition"value="${newBookcopy.signature}" >`
 }
 
 
