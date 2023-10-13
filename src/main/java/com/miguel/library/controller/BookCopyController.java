@@ -48,14 +48,14 @@ public class BookCopyController {
         return ResponseEntity.ok(bookCopyService.findAll());
     }
 
-    @GetMapping("/search-bookcopies")
+    @PostMapping("/search-bookcopies")
     public ResponseEntity<List<Object>> searchBookCopies(
             @RequestBody BookSearchRequestBookCopy bookSearchRequest
     ) {
         return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
     }
 
-    @PutMapping("edit-bookCopy/{bookCopyId}")
+    @PutMapping("/edit-bookCopy/{bookCopyId}")
     public ResponseEntity<BookCopy> editBookEdition(
             @PathVariable Integer bookCopyId,
             @Valid @RequestBody BooksEditDTOBookCopy bookEdit
@@ -63,7 +63,7 @@ public class BookCopyController {
         return ResponseEntity.ok(bookCopyService.editBookCopy(bookCopyId, bookEdit));
     }
 
-    @DeleteMapping("delete-bookcopy/{bookCopyId}")
+    @DeleteMapping("/delete-bookcopy/{bookCopyId}")
     public ResponseEntity<String> deleteBookCopy(
             @PathVariable Integer bookCopyId
     ) {

@@ -6,7 +6,6 @@ import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.services.IBookCopyService;
-import com.miguel.library.services.IUReaderService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,18 @@
 import { generateNewReaderTableContent } from "./readers_registering.js"
 
-const d = document
+const d = document,
+    selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
+    createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
+    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
+
+const tableContainsClass = (table, className) => {
+    return table.classList.contains(className)
+}
 
 const showSearchResults = (operation, table) => {
+
+    console.log(operation, table)
+
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
@@ -17,12 +27,8 @@ const showSearchResults = (operation, table) => {
             selectResultBtn.textContent = "btn text content"
         }
     } else if (operation === "create") {
-        createBtnsContainer.classList.remove("hidden")
+        createBtnContainer.classList.remove("hidden")
     }
-}
-
-const tableContainsClass = (table, className) => {
-    return table.classList.contains(className)
 }
 
 const generaTableContent = table => {

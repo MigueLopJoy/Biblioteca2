@@ -24,7 +24,6 @@ public class BooksEditDTOBookCopy {
 
     private String signature;
 
-    @Pattern(regexp = "^[A-D]$", message = "Must provide a valid status")
     private Character status;
 
     private boolean borrowed;

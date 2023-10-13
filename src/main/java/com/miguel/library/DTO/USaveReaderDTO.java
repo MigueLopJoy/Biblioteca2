@@ -25,7 +25,6 @@ public class USaveReaderDTO {
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Must select a gender")
-    @Pattern(regexp = "^[MF]$", message = "Must provide a valid gender")
     private Character gender;
 
     @Email(message = "Must provide a valid email")

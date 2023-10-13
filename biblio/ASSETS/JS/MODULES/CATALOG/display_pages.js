@@ -107,7 +107,7 @@ const showPage = pageOption => {
         d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
     }
 
-    if (pageLinks) {
+    if (pageLinks.length > 0) {
         pageLinks.forEach(pageLink => {
             pageLink.classList.remove("active");
         })

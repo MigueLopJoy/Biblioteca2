@@ -108,9 +108,10 @@ const getCreateBookCopyResults = async form => {
 }
 
 const getEditNewCopyResults = async editedFields => {
-    console.log("GETTING EDITED RESULTS")
     try {
-        console.log(
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/bookcopies/edit-bookCopy/${results[0].idBookCopy}`,
             {
                 originalBookCopyId: results[0].idBookCopy,
                 registrationNumber: editedFields[0],
@@ -118,19 +119,7 @@ const getEditNewCopyResults = async editedFields => {
                 status: newBookcopy.bookCopyStatus,
                 borrowed: newBookcopy.borrowed
             }
-        )
-        results = [await fetchRequest(
-            "PUT",
-            `http://localhost:8080/bookcopies/edit-bookCopy/${results[0].idBookCopy}`,
-            {
-                originalBookCopyId: results[0].idBookCopy,
-                signature: editedFields[0],
-                registrationNumber: editedFields[1],
-                status: newBookcopy.bookCopyStatus,
-                borrowed: newBookcopy.borrowed
-            }
         )]
-        console.log(results)
         return results
     } catch (ex) {
         throw ex

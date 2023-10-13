@@ -150,6 +150,7 @@
 }
 
 .icons_container span {
+    cursor: default;
     color: #888;
     font-size: 24px;
 }
@@ -198,21 +199,14 @@
     margin-bottom: .5rem;
 }
 
-.select_btn,
-.ending_btn {
+.modal_btns_container > div {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.create_btns {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
 .modal_btns_container .btn {
-    width: 10rem;
+    width: 12rem;
 }
 
 /*Tables styles*/

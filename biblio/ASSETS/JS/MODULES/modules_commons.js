@@ -30,12 +30,12 @@ import { prepareNewReaderEditionProcess } from "./READERS/readers_registering.js
 
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
-    createBtnsContainer = d.querySelector(".modal_btns_container .create_btns"),
+    createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
     endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn"),
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
-    editBtn = d.querySelector(".modal_btns_container .edit_btn"),
     endingBtn = d.querySelector(".modal_btns_container .ending_btn"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
+    editSymbol = d.querySelector(".icons_container .edit_symbol"),
     closeSymbol = d.querySelector(".close_symbol"),
     successMessage = d.querySelector(".success_message")
 
@@ -66,7 +66,8 @@ const enableModalActions = (results, resultsType, operation, table) => {
         enableSelectResultBtn(results, resultsType, operation, table)
     } else if (operation === "create") {
         toggleCloseModalBtn(resultsType, operation, table, false)
-        enableCreateBtns(results, resultsType, operation, table)
+        enableEditSymbol(results, resultsType, operation, table)
+        enableCreateBtn(results, resultsType, operation, table)
     }
 }
 
@@ -112,8 +113,18 @@ const toggleCloseModalBtn = (resultsType, operation, table, enable) => {
     }
 }
 
+const toggleEditSymbol = (enable) => {
+    if (enable) {
+        if (!editSymbol.classList.contains("active")) {
+            editSymbol.classList.add("active")
+        }
+    } else {
+        editSymbol.classList.remove("active")
+    }
+}
 
-let selectResultBtnClickHandler, confirmBtnClickHandler, editBtnClickHandler
+
+let selectResultBtnClickHandler, confirmBtnClickHandler, editSymbolClickHandler
 
 const enableSelectResultBtn = (results, resultsType, operation, table) => {
     selectResultBtnClickHandler = function () {
@@ -122,20 +133,25 @@ const enableSelectResultBtn = (results, resultsType, operation, table) => {
     selectResultBtn.addEventListener("click", selectResultBtnClickHandler)
 }
 
-const enableCreateBtns = (results, resultsType, operation, table) => {
+const enableEditSymbol = (results, resultsType, operation, table) => {
+    editSymbolClickHandler = function () {
+        executeEditSymbolListener(results, resultsType, operation, table)
+    }
+    editSymbol.addEventListener("click", editSymbolClickHandler)
+    toggleEditSymbol(true)
+}
+
+const disableEditSymbol = () => {
+    editSymbol.removeEventListener("click", editSymbolClickHandler)
+    toggleEditSymbol(false)
+}
+
+const enableCreateBtn = (results, resultsType, operation, table) => {
     if (confirmBtn) {
         confirmBtnClickHandler = function () {
             executeConfirmBtnListener(results, resultsType, operation, table)
         }
         confirmBtn.addEventListener("click", confirmBtnClickHandler)
-    }
-    if (editBtn) {
-        console.log(editBtn, "ENABLED")
-        editBtnClickHandler = function () {
-            console.log("EDIT CLICKED")
-            executeEditBtnListener(results, resultsType, operation, table)
-        }
-        editBtn.addEventListener("click", editBtnClickHandler)
     }
 }
 
@@ -145,17 +161,19 @@ const executeSelectResultBtnListener = (results, resultsType, operation, table) 
 }
 
 const executeConfirmBtnListener = (results, resultsType, operation, table) => {
+    console.log("confirming")
     saveResult(results, resultsType)
-    if (resultsType !== "newEdition" && resultsType !== "newCopy" && resultsType != "newReader") {
+    if (resultsType !== "newEdition" && resultsType !== "newBookcopy" && resultsType != "newReader") {
         endProcess(resultsType, operation, table)
     } else {
         displaySuccessMessage(resultsType)
     }
 }
 
-const executeEditBtnListener = (results, resultsType, operation, table) => {
+const executeEditSymbolListener = (results, resultsType, operation, table) => {
     saveResult(results, resultsType)
     prepareEditonProcess(results, resultsType, operation, table)
+    disableEditSymbol()
 }
 
 const saveResult = (results, resultsType) => {
@@ -205,7 +223,6 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
 
 
 const confirmEdition = async (results, resultsType, operation, table) => {
-    console.log("confirming")
     const tbody = table.querySelector(".results_table_body"),
         errorMessageRow = tbody.querySelector(".error_message_row"),
         editedFields = [...tbody.querySelectorAll("td input")].map(input => input.value)
@@ -284,7 +301,7 @@ const closeModal = (resultsType, operation, table) => {
     if (operation === "search") {
         selectBtnContainer.classList.add("hidden")
     } else if (operation === "create") {
-        createBtnsContainer.classList.add("hidden")
+        createBtnContainer.classList.add("hidden")
     } else if (operation === "ending") {
         endingBtnContainer.classList.add("hidden")
     }
@@ -300,19 +317,19 @@ const displaySuccessMessage = (resultsType) => {
     successMessage.classList.add("active")
     if (resultsType === "newEdition") {
         successMessage.textContent = "New Edition Created Successfully"
-    } else if (resultsType === "newCopy") {
+    } else if (resultsType === "newBookcopy") {
         successMessage.textContent = "New Copy Created Successfully"
     } else if (resultsType === "newReader") {
         successMessage.textContent = "New Reader Created Successfully"
     }
 
-    createBtnsContainer.classList.add("hidden")
+    createBtnContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
     endingBtnClickHandler = function () {
         d.getElementById("main-content").textContent = ""
         if (resultsType === "newEdition") {
             displayCatalogingMainPage()
-        } else if (resultsType === "newCopy") {
+        } else if (resultsType === "newBookcopy") {
             displayRegisteringMainPage()
         } else if (resultsType === "newReader") {
             displayReadersRegisteringMainPage()
@@ -325,7 +342,7 @@ const removeModalElementsListeners = () => {
     closeSymbol.removeEventListener("click", closeSymbolClickHandler)
     selectResultBtn.removeEventListener("click", selectResultBtnClickHandler)
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
-    editBtn.removeEventListener("click", editBtnClickHandler)
+    editSymbol.removeEventListener("click", editSymbolClickHandler)
     endingBtn.removeEventListener("click", endingBtnClickHandler)
 }
 

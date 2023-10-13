@@ -19,7 +19,7 @@ d.addEventListener("submit", async e => {
 
         clearErrorMessages()
 
-        if (currentPage.classList.contains("author_page")) {
+        if (currentPage.classList.contains("readers_registering_page")) {
             await runCreateNewReaderProcess(e.target)
         }
 
@@ -28,6 +28,7 @@ d.addEventListener("submit", async e => {
             error = null
             clearFormsData()
         } else {
+            console.log(operation, table)
             showSearchResults(operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
@@ -35,25 +36,38 @@ d.addEventListener("submit", async e => {
 })
 
 const runCreateNewReaderProcess = async form => {
+    console.log(form)
+    console.log(registeredReaderTable)
     newReader = ""
     table = registeredReaderTable
     resultsType = "newReader"
     operation = "create"
     await getCreateReaderResults(form)
+    console.log(results)
 }
 
 const getCreateReaderResults = async form => {
     try {
+        console.log(
+            {
+                firstName: form.firstname.value.trim(),
+                lastName: form.lastname.value.trim(),
+                email: form.email.value.trim(),
+                phoneNumber: form.phone_number.value.trim(),
+                dateOfBirth: form.birth_date.value.trim(),
+                gender: form.gender.value.trim()
+            }
+        )
         results = [await fetchRequest(
             "POST",
             "http://localhost:8080/readers/save-reader",
             {
-                firstName: form.firstName.value.trim(),
-                lastName: form.lastName.value.trim(),
+                firstName: form.firstname.value.trim(),
+                lastName: form.lastname.value.trim(),
+                dateOfBirth: form.birth_date.value.trim(),
+                gender: form.gender.value.trim(),
                 email: form.email.value.trim(),
-                phoneNumber: form.phoneNumber.value.trim(),
-                dateOfBirth: form.dateOfBirth.value.trim(),
-                gender: form.gender.value.trim()
+                phoneNumber: form.phone_number.value.trim(),
             }
         )]
     } catch (ex) {

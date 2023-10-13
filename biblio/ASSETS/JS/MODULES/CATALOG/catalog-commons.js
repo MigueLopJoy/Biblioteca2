@@ -15,7 +15,7 @@ import { showPage } from "./display_pages.js"
 
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
-    createBtnsContainer = d.querySelector(".modal_btns_container .create_btns"),
+    createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
 
 /* Page's interaction methods*/
@@ -172,7 +172,7 @@ const showSearchResults = (operation, table) => {
             selectResultBtn.textContent = "Save new copy"
         }
     } else if (operation === "create") {
-        createBtnsContainer.classList.remove("hidden")
+        createBtnContainer.classList.remove("hidden")
     }
 }
 
