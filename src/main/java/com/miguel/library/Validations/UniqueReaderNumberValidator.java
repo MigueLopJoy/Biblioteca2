@@ -1,8 +1,6 @@
 package com.miguel.library.Validations;
 
-import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.DTO.UEditReaderDTO;
-import com.miguel.library.DTO.USaveReaderDTO;
 import com.miguel.library.model.UReader;
 import com.miguel.library.services.IUReaderService;
 import jakarta.validation.ConstraintValidator;
@@ -12,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueReaderNumber, UEditReaderDTO> {
-
-
     @Autowired
     private IUReaderService readerService;
 
@@ -23,22 +19,30 @@ public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueRe
     }
 
     @Override
-    public boolean isValid(UEditReaderDTO reader, ConstraintValidatorContext constraintValidatorContext) {
-        Boolean isValidPhoneNumber = true;
+    public boolean isValid(UEditReaderDTO reader, ConstraintValidatorContext context) {
+        Boolean isValidReaderNumber = true;
         String readerNumber;
-        UReader readerWithPhoneNumber = null;
+        UReader readerWithReaderNumber = null;
 
         readerNumber = reader.getReaderNumber();
 
         if (Objects.nonNull(readerNumber)) {
-            readerWithPhoneNumber = readerService.searchByReaderNumber(readerNumber);
+            readerWithReaderNumber = readerService.searchByReaderNumber(readerNumber);
         }
 
-        if (Objects.nonNull(readerWithPhoneNumber)) {
-            if (!readerWithPhoneNumber.getIdUser().equals(reader.getOriginalReaderId())) {
-                isValidPhoneNumber = false;
+        if (Objects.nonNull(readerWithReaderNumber)) {
+            if (!readerWithReaderNumber.getIdUser().equals(reader.getOriginalReaderId())) {
+                isValidReaderNumber = false;
             }
         }
-        return isValidPhoneNumber;
+
+        if (!isValidReaderNumber) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Reader Number Already Taken")
+                    .addPropertyNode("readerNumber")
+                    .addConstraintViolation();
+        }
+
+        return isValidReaderNumber;
     }
 }

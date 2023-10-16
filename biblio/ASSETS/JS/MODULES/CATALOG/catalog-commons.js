@@ -7,6 +7,8 @@ import { generateNewBookeditionTableContent } from "./cataloging.js"
 import { generateBookeditionsTableContent } from "./registering.js"
 import { generateNewBookcopyTableContent } from "./registering.js"
 
+import { generateBrowseAuthorsTableContent } from "./BROWSE/authors_catalog.js"
+
 import { getAuthor } from "./cataloging.js"
 import { getBookwork } from "./cataloging.js"
 import { getBookedition } from "./registering.js"
@@ -28,7 +30,6 @@ const enablePreviousPageBtn = () => {
     const clickHandler = () => {
         showPage(previousPageBtn.classList[2])
         previousPageBtn.removeEventListener("click", clickHandler)
-        enablePreviousPageBtn()
     }
 
     if (previousPageBtn) {
@@ -39,7 +40,6 @@ const enablePreviousPageBtn = () => {
 let nextPageBtnClickHandler
 const toggleNextPageBtn = (nextPageBtn, object) => {
     if (nextPageBtn) {
-
         nextPageBtn.removeEventListener("click", nextPageBtnClickHandler)
 
         const isDisabled = () => {
@@ -97,7 +97,7 @@ const toggleNextPageChanging = resultsType => {
         }
     } else if (resultsType === "bookwork") {
         toggleNextPageBtn(nextPageBtn, getBookwork())
-        togglePageLinks([pageLinks[2]])
+        togglePageLinks([pageLinks[2]], getBookwork())
     } else if (resultsType === "bookedition") {
         toggleNextPageBtn(nextPageBtn, getBookedition())
         togglePageLinks([pageLinks[1]], getBookedition())
@@ -171,7 +171,7 @@ const showSearchResults = (operation, table) => {
         } else if (tableContainsClass(table, "newBookcopy_results_table")) {
             selectResultBtn.textContent = "Save new copy"
         }
-    } else if (operation === "create") {
+    } else if (operation === "create" || operation === "manage") {
         createBtnContainer.classList.remove("hidden")
     }
 }
@@ -187,6 +187,8 @@ const generaTableContent = table => {
         generateBookeditionsTableContent()
     } else if (tableContainsClass(table, "newBookcopy_results_table")) {
         generateNewBookcopyTableContent()
+    } else if (tableContainsClass(table, "b_authors_results_table")) {
+        generateBrowseAuthorsTableContent()
     }
 }
 

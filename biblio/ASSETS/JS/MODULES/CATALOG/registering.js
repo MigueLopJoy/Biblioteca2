@@ -111,7 +111,7 @@ const getEditNewCopyResults = async editedFields => {
     try {
         results = [await fetchRequest(
             "PUT",
-            `http://localhost:8080/bookcopies/edit-bookCopy/${results[0].idBookCopy}`,
+            `http://localhost:8080/bookcopies/edit-bookcopy/${results[0].idBookCopy}`,
             {
                 originalBookCopyId: results[0].idBookCopy,
                 registrationNumber: editedFields[0],

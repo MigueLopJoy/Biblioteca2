@@ -18,17 +18,17 @@ public class UniqueRegistrationNumberValidator implements ConstraintValidator<Un
     private IBookCopyService bookCopyService;
 
     @Override
-    public boolean isValid(Object bookCopy, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object bookCopy, ConstraintValidatorContext context) {
         Boolean isValidRegistrationNumber = true;
         Long registrationNumber = null;
         BooksSaveDTOBookCopy saveDTO = null;
         BooksEditDTOBookCopy editDTO = null;
         BookCopy bookCopyWithRegistrationNumber = null;
 
-        if (bookCopy instanceof BooksSaveDTOBookEdition) {
+        if (bookCopy instanceof BooksSaveDTOBookCopy) {
             saveDTO = (BooksSaveDTOBookCopy) bookCopy;
             registrationNumber = saveDTO.getRegistrationNumber();
-        } else if (bookCopy instanceof BooksEditDTOBookEdition) {
+        } else if (bookCopy instanceof BooksEditDTOBookCopy) {
             editDTO = (BooksEditDTOBookCopy) bookCopy;
             registrationNumber = editDTO.getRegistrationNumber();
         }
@@ -46,6 +46,14 @@ public class UniqueRegistrationNumberValidator implements ConstraintValidator<Un
                 }
             }
         }
+
+        if (!isValidRegistrationNumber) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Registration Number Already Taken")
+                    .addPropertyNode("registrationNumber")
+                    .addConstraintViolation();
+        }
+
         return isValidRegistrationNumber;
     }
 }

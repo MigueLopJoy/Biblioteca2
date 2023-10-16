@@ -60,12 +60,6 @@ const displayRegisteringMainPage = async () => {
     showPageAndEnableLinks("bookedition_page")
 }
 
-const displaySearchReadersMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/search_readers.html", d.getElementById("main-content"))
-    await loadJsFiles("./ASSETS/JS/MODULES/READERS/readers.js")
-    showPageAndEnableLinks("search_readers_page")
-}
-
 const displayReadersRegisteringMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/readers_registering.html", d.getElementById("main-content"))
     await loadJsFiles(
@@ -73,6 +67,15 @@ const displayReadersRegisteringMainPage = async () => {
         "./ASSETS/JS/MODULES/READERS/readers_commons.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("readers_registering_page")
+}
+
+const displayBrowseAuthorsCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/authors_catalog.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/BROWSE/authors_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("b_authors_page")
 }
 
 const showPageAndEnableLinks = page => {
@@ -117,8 +120,8 @@ const showPage = pageOption => {
 
 export { displayCatalogingMainPage }
 export { displayRegisteringMainPage }
-export { displaySearchReadersMainPage }
 export { displayReadersRegisteringMainPage }
+export { displayBrowseAuthorsCatalogMainPage }
 export { enableWindowNavLinkBtns }
 export { loadContent }
 export { showPage }

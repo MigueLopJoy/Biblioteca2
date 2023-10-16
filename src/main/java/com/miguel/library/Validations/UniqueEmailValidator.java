@@ -21,7 +21,7 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, Ob
     }
 
     @Override
-    public boolean isValid(Object reader, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object reader, ConstraintValidatorContext context) {
         Boolean isValidEmail = true;
         String email = null;
         USaveReaderDTO saveDTO = null;
@@ -31,7 +31,7 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, Ob
         if (reader instanceof USaveReaderDTO) {
             saveDTO = (USaveReaderDTO) reader;
             email = saveDTO.getEmail();
-        } else if (reader instanceof BooksSaveDTOBookCopy) {
+        } else if (reader instanceof UEditReaderDTO) {
             editDTO = (UEditReaderDTO) reader;
             email = editDTO.getEmail();
         }
@@ -49,6 +49,14 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, Ob
                 }
             }
         }
+
+        if (!isValidEmail) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Email Already Taken")
+                    .addPropertyNode("email")
+                    .addConstraintViolation();
+        }
+
         return isValidEmail;
     }
 }

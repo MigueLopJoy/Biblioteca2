@@ -1,7 +1,6 @@
 import { displayCatalogingMainPage } from "./CATALOG/display_pages.js"
 import { displayRegisteringMainPage } from "./CATALOG/display_pages.js"
 import { displayReadersRegisteringMainPage } from "./CATALOG/display_pages.js"
-import { displaySearchReadersMainPage } from "./CATALOG/display_pages.js"
 
 import { printSelectedResult } from "./CATALOG/catalog-commons.js"
 import { toggleNextPageChanging } from "./CATALOG/catalog-commons.js"
@@ -22,8 +21,16 @@ import { prepareNewBookcopyEditionProcess } from "./CATALOG/registering.js"
 import { reasigneBookeditionValue } from "./CATALOG/registering.js"
 import { reasigneNewBookcopyValue } from "./CATALOG/registering.js"
 
+
 import { getEditNewReaderResults } from "./READERS/readers_registering.js"
 import { prepareNewReaderEditionProcess } from "./READERS/readers_registering.js"
+import { reasigneNewReaderValue } from "./READERS/readers_registering.js"
+
+import { initializeBrowseAuthorsFormSubmit } from "./CATALOG/BROWSE/authors_catalog.js"
+import { prepareBrowseAuthorEditionProcess } from "./CATALOG/BROWSE/authors_catalog.js"
+import { getEditBrowseAuthorResults } from "./CATALOG/BROWSE/authors_catalog.js"
+import { deleteBrowseAuthor } from "./CATALOG/BROWSE/authors_catalog.js"
+import { reasigneBrowseAuthorValue } from "./CATALOG/BROWSE/authors_catalog.js"
 
 
 /* Global methods */
@@ -36,6 +43,8 @@ const d = document,
     endingBtn = d.querySelector(".modal_btns_container .ending_btn"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
     editSymbol = d.querySelector(".icons_container .edit_symbol"),
+    deleteSymbol = d.querySelector(".icons_container .delete_symbol"),
+    inspectSymbol = d.querySelector(".icons_container .inspect_symbol"),
     closeSymbol = d.querySelector(".close_symbol"),
     successMessage = d.querySelector(".success_message")
 
@@ -63,11 +72,25 @@ const enableModalActions = (results, resultsType, operation, table) => {
     if (operation === "search") {
         enableOptionChangigng()
         toggleCloseModalBtn(resultsType, operation, table, true)
+        toggleBtnState(true)
         enableSelectResultBtn(results, resultsType, operation, table)
     } else if (operation === "create") {
         toggleCloseModalBtn(resultsType, operation, table, false)
-        enableEditSymbol(results, resultsType, operation, table)
+        toggleEditSymbol(results, resultsType, operation, table, true)
         enableCreateBtn(results, resultsType, operation, table)
+    } else if (operation === "manage") {
+
+        console.log(results)
+        console.log(resultsType)
+        console.log(operation)
+        console.log(table)
+
+        toggleCloseModalBtn(resultsType, operation, table, true)
+        toggleDeletetSymbol(true)
+        toggleEditSymbol(results, resultsType, operation, table, true)
+        toggleInspectSymbol(true)
+        enableCreateBtn(results, resultsType, operation, table)
+        confirmBtn.setAttribute("disabled", true)
     }
 }
 
@@ -80,70 +103,106 @@ const enableOptionChangigng = () => {
                 if (cb !== checkbox) {
                     cb.checked = false;
                 }
-            });
-            changeBtnState(e.target);
-        });
-    });
+            })
+        })
+    })
 }
 
-const changeBtnState = checkbox => {
-    if (checkbox.checked === true) {
-        selectResultBtn.removeAttribute("disabled")
-    } else {
-        selectResultBtn.setAttribute("disabled", true)
-    }
-}
+let checkboxClickHandler
+const toggleBtnState = enable => {
+    const checkboxes = document.querySelectorAll('input.result_option');
 
-let closeSymbolClickHandler
-const toggleCloseModalBtn = (resultsType, operation, table, enable) => {
+    console.log("ENABLING CHANGING BTN STATE")
 
-    closeSymbol.removeEventListener("click", closeSymbolClickHandler)
-
-    closeSymbolClickHandler = function () {
-        closeModal(resultsType, operation, table)
-    }
-
-    if (enable) {
-        if (!closeSymbol.classList.contains("active")) {
-            closeSymbol.classList.add("active")
-            closeSymbol.addEventListener("click", closeSymbolClickHandler)
+    checkboxClickHandler = function () {
+        if (findSelectedResult() !== -1) {
+            console.log(findSelectedResult())
+            console.log("ENABLED")
+            selectResultBtn.removeAttribute("disabled")
+        } else {
+            console.log("DISABLED")
+            selectResultBtn.setAttribute("disabled", true)
         }
-    } else {
-        closeSymbol.classList.remove("active")
     }
-}
 
-const toggleEditSymbol = (enable) => {
-    if (enable) {
-        if (!editSymbol.classList.contains("active")) {
-            editSymbol.classList.add("active")
+    checkboxes.forEach(checkbox => {
+        if (enable) {
+            checkbox.addEventListener("change", checkboxClickHandler)
+        } else {
+            checkbox.removeEventListener("change", checkboxClickHandler)
         }
-    } else {
-        editSymbol.classList.remove("active")
-    }
+    })
 }
 
 
-let selectResultBtnClickHandler, confirmBtnClickHandler, editSymbolClickHandler
 
-const enableSelectResultBtn = (results, resultsType, operation, table) => {
-    selectResultBtnClickHandler = function () {
-        executeSelectResultBtnListener(results, resultsType, operation, table)
-    }
-    selectResultBtn.addEventListener("click", selectResultBtnClickHandler)
-}
+let editSymbolClickHandler, inspectSymbolClickHandler, closeSymbolClickHandler
 
-const enableEditSymbol = (results, resultsType, operation, table) => {
+const toggleEditSymbol = (results, resultsType, operation, table, enable = false) => {
     editSymbolClickHandler = function () {
         executeEditSymbolListener(results, resultsType, operation, table)
     }
-    editSymbol.addEventListener("click", editSymbolClickHandler)
-    toggleEditSymbol(true)
+    toggleSymbol(editSymbol, enable)
+    toggleListener(editSymbol, editSymbolClickHandler, enable)
 }
 
-const disableEditSymbol = () => {
-    editSymbol.removeEventListener("click", editSymbolClickHandler)
-    toggleEditSymbol(false)
+const toggleDeletetSymbol = (enable = false) => {
+    inspectSymbolClickHandler = function () {
+
+    }
+    toggleSymbol(deleteSymbol, enable)
+    toggleListener(deleteSymbol, inspectSymbolClickHandler, enable)
+}
+
+const toggleInspectSymbol = (enable = false) => {
+    inspectSymbolClickHandler = function () {
+
+    }
+    toggleSymbol(inspectSymbol, enable)
+    toggleListener(inspectSymbol, inspectSymbolClickHandler, enable)
+}
+
+const toggleCloseModalBtn = (resultsType, operation, table, enable = false) => {
+    closeSymbolClickHandler = function () {
+        closeModal(resultsType, operation, table)
+    }
+    toggleSymbol(closeSymbol, enable)
+    toggleListener(closeSymbol, closeSymbolClickHandler, enable)
+}
+
+const toggleListener = (symbol, listener, enable) => {
+    if (enable) {
+        symbol.addEventListener("click", listener)
+    } else {
+        symbol.removeEventListener("click", listener)
+    }
+}
+
+const toggleSymbol = (symbol, enable) => {
+    if (enable) {
+        if (!symbol.classList.contains("active")) {
+            symbol.classList.add("active")
+        }
+    } else {
+        symbol.classList.remove("active")
+    }
+}
+
+let selectResultBtnClickHandler, confirmBtnClickHandler
+
+const enableSelectResultBtn = (results, resultsType, operation, table) => {
+    if (findCurrentPage().classList[1].startsWith("b_")) {
+        selectResultBtnClickHandler = function () {
+            executeSelectResultBtnListener(results, resultsType, operation, table)
+            initializeBrowseAuthorsFormSubmit()
+        }
+    } else {
+        selectResultBtnClickHandler = function () {
+            toggleBtnState(false)
+            executeSelectResultBtnListener(results, resultsType, operation, table)
+        }
+    }
+    selectResultBtn.addEventListener("click", selectResultBtnClickHandler)
 }
 
 const enableCreateBtn = (results, resultsType, operation, table) => {
@@ -161,34 +220,54 @@ const executeSelectResultBtnListener = (results, resultsType, operation, table) 
 }
 
 const executeConfirmBtnListener = (results, resultsType, operation, table) => {
-    console.log("confirming")
     saveResult(results, resultsType)
-    if (resultsType !== "newEdition" && resultsType !== "newBookcopy" && resultsType != "newReader") {
-        endProcess(resultsType, operation, table)
-    } else {
-        displaySuccessMessage(resultsType)
-    }
+    displaySuccessMessage(resultsType, operation, table)
 }
 
 const executeEditSymbolListener = (results, resultsType, operation, table) => {
-    saveResult(results, resultsType)
+    if (operation !== "manage") saveResult(results, resultsType)
+    else {
+        confirmBtn.removeAttribute("disabled")
+        toggleDeletetSymbol(false)
+        toggleInspectSymbol(false)
+    }
     prepareEditonProcess(results, resultsType, operation, table)
-    disableEditSymbol()
+    toggleEditSymbol(results, resultsType, operation, table, false)
+}
+
+const executeInspectSymbolListener = () => {
+
+}
+
+const executeDeleteSymbolListener = () => {
+
 }
 
 const saveResult = (results, resultsType) => {
-    if (resultsType === "author") {
-        reasigneAuthorValue(results[findSelectedResult()])
-    } else if (resultsType === "bookwork") {
-        reasigneBookworkValue(results[findSelectedResult()])
-    } else if (resultsType === "newEdition") {
-        reasigneNewEditionValue(results[findSelectedResult()])
-    } else if (resultsType === "bookedition") {
-        reasigneBookeditionValue(results[findSelectedResult()])
-    } else if (resultsType === "newBookcopy") {
-        reasigneNewBookcopyValue(results[findSelectedResult()])
-    } else if (resultsType === "newReader") {
-        reasigneNewReaderValue(results[findSelectedResult()])
+    switch (resultsType) {
+        case "author":
+            reasigneAuthorValue(results[findSelectedResult()])
+            break;
+        case "bookwork":
+            reasigneBookworkValue(results[findSelectedResult()])
+            break;
+        case "newEdition":
+            reasigneNewEditionValue(results[findSelectedResult()])
+            break;
+        case "bookedition":
+            reasigneBookeditionValue(results[findSelectedResult()])
+            break;
+        case "newBookCopy":
+            reasigneNewBookcopyValue(results[findSelectedResult()])
+            break;
+        case "newReader":
+            reasigneNewReaderValue(results[findSelectedResult()])
+            break;
+        case "b_author":
+            reasigneBrowseAuthorValue(results[findSelectedResult()])
+            break;
+        default:
+            break;
     }
 }
 
@@ -198,22 +277,31 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
 
     clearPrintedReults(resultsType)
 
-    if (resultsType === "author") {
-        prepareAuthorEditionProcess(cells)
-    } else if (resultsType === "bookwork") {
-        prepareBookworkEditionProcess(cells)
-    } else if (resultsType === "newEdition") {
-        prepareNewEditionEditionProcess(cells)
-    } else if (resultsType === "bookedition") {
-        prepareBookworkEditionProcess(cells)
-    } else if (resultsType === "newBookcopy") {
-        prepareNewBookcopyEditionProcess(cells)
-    } else if (resultsType === "newReader") {
-        prepareNewReaderEditionProcess(cells)
+    switch (resultsType) {
+        case "author":
+            prepareAuthorEditionProcess(cells)
+            break;
+        case "bookwork":
+            prepareBookworkEditionProcess(cells)
+            break;
+        case "newEdition":
+            prepareNewEditionEditionProcess(cells)
+            break;
+        case "newBookcopy":
+            prepareNewBookcopyEditionProcess(cells)
+            break;
+        case "newReader":
+            prepareNewReaderEditionProcess(cells)
+            break;
+        case "b_author":
+            console.log(cells[0].textContent)
+            prepareBrowseAuthorEditionProcess(cells)
+            break;
+        default:
+            break;
     }
 
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
-
     confirmBtnClickHandler = function () {
         confirmEdition(results, resultsType, operation, table)
     }
@@ -239,6 +327,8 @@ const confirmEdition = async (results, resultsType, operation, table) => {
             results = await getEditNewCopyResults(editedFields)
         } else if (resultsType === "newReader") {
             results = await getEditNewReaderResults(editedFields)
+        } else if (resultsType === "b_author") {
+            results = await getEditBrowseAuthorResults(editedFields)
         }
     } catch (ex) {
         error = ex
@@ -263,7 +353,10 @@ const findSelectedResult = () => {
     if (checkboxes.length > 0) {
         for (const checkbox of checkboxes) {
             if (checkbox.checked === true) {
+                console.log(checkbox)
                 return checkbox.value
+            } else {
+                return -1
             }
         }
     } else {
@@ -300,32 +393,47 @@ const closeModal = (resultsType, operation, table) => {
 
     if (operation === "search") {
         selectBtnContainer.classList.add("hidden")
-    } else if (operation === "create") {
+    } else if (operation === "create" || operation === "manage") {
         createBtnContainer.classList.add("hidden")
     } else if (operation === "ending") {
         endingBtnContainer.classList.add("hidden")
     }
 
     removeModalElementsListeners()
-    toggleCloseModalBtn(resultsType, operation, table, false)
+    toggleCloseModalBtn()
+    toggleEditSymbol()
+    toggleDeletetSymbol()
+    toggleInspectSymbol()
     toggleNextPageChanging(resultsType)
     clearFormsData(findCurrentPage())
 }
 
-let endingBtnClickHandler
 const displaySuccessMessage = (resultsType) => {
     successMessage.classList.add("active")
+
     if (resultsType === "newEdition") {
         successMessage.textContent = "New Edition Created Successfully"
     } else if (resultsType === "newBookcopy") {
         successMessage.textContent = "New Copy Created Successfully"
     } else if (resultsType === "newReader") {
         successMessage.textContent = "New Reader Created Successfully"
+    } else if (resultsType === "b_author") {
+        successMessage.textContent = "Author Edited Successfully"
     }
 
+    confirmBtn.setAttribute("disabled", true)
+
+    if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
+        prepareEndingBtn(resultsType)
+    }
+}
+
+let endingBtnClickHandler
+const prepareEndingBtn = resultsType => {
     createBtnContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
     endingBtnClickHandler = function () {
+        closeModal()
         d.getElementById("main-content").textContent = ""
         if (resultsType === "newEdition") {
             displayCatalogingMainPage()

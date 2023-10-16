@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@UniqueEmail
 @UniquePhoneNumber
+@UniqueEmail
 @AllArgsConstructor
 public class USaveReaderDTO {
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Must introduce a valid first name")
@@ -20,6 +20,7 @@ public class USaveReaderDTO {
 
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Must introduce a valid last name")
     private String lastName;
+
     @NotNull(message = "Date of birth required")
     @Past(message = "Dade of birth should not be earlier than current date")
     private LocalDate dateOfBirth;

@@ -21,7 +21,7 @@ public class UniqueISBNValidator implements ConstraintValidator<UniqueISBN , Obj
     }
 
     @Override
-    public boolean isValid(Object bookEdition, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object bookEdition, ConstraintValidatorContext context) {
         Boolean isValidISBN = true;
         String ISBN = null;
         BooksSaveDTOBookEdition saveDTO = null;
@@ -51,8 +51,14 @@ public class UniqueISBNValidator implements ConstraintValidator<UniqueISBN , Obj
                 }
             }
         }
+
+        if (!isValidISBN) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("ISBN Already Taken")
+                    .addPropertyNode("ISBN")
+                    .addConstraintViolation();
+        }
+
         return isValidISBN;
     }
-
-
 }

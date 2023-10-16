@@ -43,6 +43,5 @@ public class UEditReaderDTO {
     @Past(message = "Dade of birth should not be earlier than current date")
     private LocalDate dateOfBirth;
 
-    @Pattern(regexp = "^[MF]$", message = "Must provide a valid gender")
     private Character gender;
 }

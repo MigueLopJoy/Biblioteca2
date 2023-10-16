@@ -20,7 +20,7 @@ public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePho
     }
 
     @Override
-    public boolean isValid(Object reader, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object reader, ConstraintValidatorContext context) {
         Boolean isValidPhoneNumber = true;
         String phoneNumber = null;
         USaveReaderDTO saveDTO = null;
@@ -30,7 +30,7 @@ public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePho
         if (reader instanceof USaveReaderDTO) {
             saveDTO = (USaveReaderDTO) reader;
             phoneNumber = saveDTO.getPhoneNumber();
-        } else if (reader instanceof BooksSaveDTOBookCopy) {
+        } else if (reader instanceof UEditReaderDTO) {
             editDTO = (UEditReaderDTO) reader;
             phoneNumber = editDTO.getPhoneNumber();
         }
@@ -48,6 +48,14 @@ public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePho
                 }
             }
         }
+
+        if (!isValidPhoneNumber) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Phone Number Already Taken")
+                    .addPropertyNode("phoneNumber")
+                    .addConstraintViolation();
+        }
+
         return isValidPhoneNumber;
     }
 }

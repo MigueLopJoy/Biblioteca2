@@ -17,5 +17,4 @@ public @interface UniqueISBN {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

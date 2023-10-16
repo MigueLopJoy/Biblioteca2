@@ -3,6 +3,7 @@ import { fetchRequest } from "./../modules_commons.js"
 import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
+import { enableModalActions } from "./../modules_commons.js"
 
 import { showSearchResults } from "./readers_commons.js"
 
@@ -77,18 +78,29 @@ const getCreateReaderResults = async form => {
 
 const getEditNewReaderResults = async editedFields => {
     try {
-        results = [await fetchRequest(
-            "PUT",
-            `http://localhost:8080/readers/edit-reader/${results[0].idReader}`,
+        console.log(
             {
-                originalReaderId: results[0].idReader,
+                originalReaderId: results[0].idUser,
                 firstName: editedFields[0],
                 lastName: editedFields[1],
                 dateOfBirth: editedFields[2],
                 gender: editedFields[3],
                 email: editedFields[4],
                 phoneNumber: editedFields[5],
-                readerNumber: editedFields[6]
+            }
+        )
+        results = [await fetchRequest(
+            "PUT",
+            `http://localhost:8080/readers/edit-reader/${results[0].idUser}`,
+            {
+                originalReaderId: results[0].idUser,
+                firstName: editedFields[0],
+                lastName: editedFields[1],
+                dateOfBirth: editedFields[2],
+                gender: editedFields[3],
+                email: editedFields[4],
+                phoneNumber: editedFields[5],
+                readerNumber: results[0].readerNumber
             }
         )]
         return results

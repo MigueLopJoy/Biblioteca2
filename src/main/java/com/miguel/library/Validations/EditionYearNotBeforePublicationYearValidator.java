@@ -23,7 +23,7 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
     @Override
     public boolean isValid(
             Object bookEdition,
-            ConstraintValidatorContext constraintValidatorContext
+            ConstraintValidatorContext context
     ) {
         boolean isValidYear = true;
         Integer editionYear = null;
@@ -55,6 +55,14 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
                 isValidYear = false;
             }
         }
+
+        if (!isValidYear) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Edition year should not be earlier than publication year")
+                    .addPropertyNode("editionYear")
+                    .addConstraintViolation();
+        }
+
         return isValidYear;
     }
 }

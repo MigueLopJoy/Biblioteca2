@@ -1,0 +1,82 @@
+<div class="container" id="b_authors_section">
+
+    <div class="current_window">
+
+        <div class="page b_authors_page hidden">
+
+            <div class="page_element_container search_author">
+                <form class="form b_author_form search">
+                    <legend>Search author</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
+                    <input type="submit" id="search_author_btn" class="btn" value="Search">
+                </form>
+            </div>
+
+            <div class="page_element_container create_author">
+                <form class="form b_author_form create">
+                    <legend>Create new author</legend>
+                    <p class="error_message general_error"></p>
+                    <p class="error_message firstName"></p>
+                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
+                    <p class="error_message lastName"></p>
+                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
+                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+                </form>
+            </div>
+
+        </div>
+
+        <div id="modal" class="hidden">
+
+            <div class="modal_content">
+
+                <div class="icons_container">
+                    <div class="left_icons_container">
+                        <span class="material-symbols-outlined edit_symbol">edit_note</span>
+                        <span class="material-symbols-outlined delete_symbol">delete</span>
+                        <span class="material-symbols-outlined inspect_symbol">manage_search</span>
+                    </div>
+                    <div class="close_symbol_container">
+                        <span class="close_symbol">X</span>
+                    </div>
+                </div>
+
+                <div class="tables_container">
+                    <p class="success_message created_edition hidden"></p>
+                    <table class="results_table b_authors_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body">
+                            <tr class="error_message_row hidden">
+                                <td>
+                                    <p class="error_message general_error"></p>
+                                    <p class="error_message firstName"></p>
+                                    <p class="error_message lastName"></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal_btns_container">
+                    <div class="select_btn hidden">
+                        <button class="select_result_btn btn" role="button" disabled>Select author</button>
+                    </div>
+                    <div class="create_btn hidden">
+                        <button class="btn confirm_btn" role="button">Confirm</button>
+                    </div>
+                    <div class="ending_btn hidden">
+                        <button class="btn ending_btn" role="button">Back To Main Page</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -55,7 +55,7 @@ public class BookCopyController {
         return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
     }
 
-    @PutMapping("/edit-bookCopy/{bookCopyId}")
+    @PutMapping("/edit-bookcopy/{bookCopyId}")
     public ResponseEntity<BookCopy> editBookEdition(
             @PathVariable Integer bookCopyId,
             @Valid @RequestBody BooksEditDTOBookCopy bookEdit

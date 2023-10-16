@@ -8,15 +8,21 @@
                 <form class="form readers_registering_form search">
                     <legend>New reader information</legend>
                     <p class="error_message general_error"></p>
+                    <p class="error_message firstName"></p>
                     <input type="text" name="firstname" placeholder="First Name">
+                    <p class="error_message lastname"></p>
                     <input type="text" name="lastname" placeholder="Last Name">
+                    <p class="error_message dateOfBirth"></p>
                     <input type="date" name="birth_date" placeholder="Date OSf Birth">
+                    <p class="error_message gender"></p>
                     <select name="gender">
                         <option disabled selected hidden>Gender</option>
                         <option value="M">Male</option>
                         <option value="F">Female</option>
                     </select>
+                    <p class="error_message email"></p>
                     <input type="text" name="email" placeholder="Email">
+                    <p class="error_message phoneNumber"></p>
                     <input type="text" name="phone_number" placeholder="Phone Numer">
                     <input type="submit" id="readers_registering_btn" class="btn" value="Save reader">
                 </form>
@@ -31,6 +37,7 @@
                     <div class="left_icons_container">
                         <span class="material-symbols-outlined edit_symbol">edit_note</span>
                         <span class="material-symbols-outlined delete_symbol">delete</span>
+                        <span class="material-symbols-outlined inspect_symbol">manage_search</span>
                     </div>
                     <div class="close_symbol_container">
                         <span class="close_symbol">X</span>

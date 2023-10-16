@@ -237,13 +237,13 @@ const getEditNewEditionResults = async editedFields => {
 }
 
 const generateAuthorsTableContent = () => {
+
     if (operation === "search" && !table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select Autor"
         selectColumn.classList.add("select_column")
         table.querySelector("thead tr").appendChild(selectColumn)
     }
-
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i]
@@ -296,7 +296,7 @@ const generateBookworksTableContent = () => {
 
     if (operation === "search" && !table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
-        selectColumn.textContent = "Select book work"
+        selectColumn.textContent = "Select author"
         selectColumn.classList.add("select_column")
         table.querySelector("thead tr").appendChild(selectColumn)
     }
@@ -463,17 +463,3 @@ export { getNewEdition }
 export { reasigneAuthorValue }
 export { reasigneBookworkValue }
 export { reasigneNewEditionValue }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
