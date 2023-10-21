@@ -45,8 +45,7 @@ const d = document,
     editSymbol = d.querySelector(".icons_container .edit_symbol"),
     deleteSymbol = d.querySelector(".icons_container .delete_symbol"),
     inspectSymbol = d.querySelector(".icons_container .inspect_symbol"),
-    closeSymbol = d.querySelector(".close_symbol"),
-    successMessage = d.querySelector(".success_message")
+    closeSymbol = d.querySelector(".close_symbol")
 
 const findCurrentPage = () => {
     const pages = d.querySelectorAll(".page")
@@ -72,19 +71,13 @@ const enableModalActions = (results, resultsType, operation, table) => {
     if (operation === "search") {
         enableOptionChangigng()
         toggleCloseModalBtn(resultsType, operation, table, true)
-        toggleBtnState(true)
+        toggleBtnState(selectResultBtn, true)
         enableSelectResultBtn(results, resultsType, operation, table)
     } else if (operation === "create") {
         toggleCloseModalBtn(resultsType, operation, table, false)
         toggleEditSymbol(results, resultsType, operation, table, true)
         enableCreateBtn(results, resultsType, operation, table)
     } else if (operation === "manage") {
-
-        console.log(results)
-        console.log(resultsType)
-        console.log(operation)
-        console.log(table)
-
         toggleCloseModalBtn(resultsType, operation, table, true)
         toggleDeletetSymbol(true)
         toggleEditSymbol(results, resultsType, operation, table, true)
@@ -109,19 +102,14 @@ const enableOptionChangigng = () => {
 }
 
 let checkboxClickHandler
-const toggleBtnState = enable => {
+const toggleBtnState = (btn, enable) => {
     const checkboxes = document.querySelectorAll('input.result_option');
-
-    console.log("ENABLING CHANGING BTN STATE")
 
     checkboxClickHandler = function () {
         if (findSelectedResult() !== -1) {
-            console.log(findSelectedResult())
-            console.log("ENABLED")
-            selectResultBtn.removeAttribute("disabled")
+            btn.removeAttribute("disabled")
         } else {
-            console.log("DISABLED")
-            selectResultBtn.setAttribute("disabled", true)
+            btn.setAttribute("disabled", true)
         }
     }
 
@@ -219,9 +207,16 @@ const executeSelectResultBtnListener = (results, resultsType, operation, table) 
     endProcess(resultsType, operation, table)
 }
 
-const executeConfirmBtnListener = (results, resultsType, operation, table) => {
+const executeConfirmBtnListener = (results, resultsType, operation, table, crud) => {
     saveResult(results, resultsType)
-    displaySuccessMessage(resultsType, operation, table)
+    displaySuccessMessage(resultsType, crud === undefined ? "create" : "edit")
+    confirmBtn.setAttribute("disabled", true)
+    toggleCloseModalBtn(resultsType, operation, table, true)
+    setTimeout(() => {
+        confirmBtn.removeAttribute("disabled")
+        hiddeSuccessMessage()
+        endProcess(resultsType, operation, table)
+    }, 2500)
 }
 
 const executeEditSymbolListener = (results, resultsType, operation, table) => {
@@ -272,8 +267,13 @@ const saveResult = (results, resultsType) => {
 }
 
 const prepareEditonProcess = (results, resultsType, operation, table) => {
-    const tableResultsRow = table.querySelector(".results_row"),
-        cells = tableResultsRow.querySelectorAll("td")
+    const tableResultsRow = table.querySelector(".results_row")
+
+    console.log(tableResultsRow)
+
+    let cells = tableResultsRow.querySelectorAll("td")
+
+
 
     clearPrintedReults(resultsType)
 
@@ -294,7 +294,6 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
             prepareNewReaderEditionProcess(cells)
             break;
         case "b_author":
-            console.log(cells[0].textContent)
             prepareBrowseAuthorEditionProcess(cells)
             break;
         default:
@@ -343,7 +342,7 @@ const confirmEdition = async (results, resultsType, operation, table) => {
         if (!errorMessageRow.classList.contains("hidden")) {
             errorMessageRow.classList.add("hidden")
         }
-        executeConfirmBtnListener(results, resultsType, operation, table)
+        executeConfirmBtnListener(results, resultsType, operation, table, "edit")
     }
 }
 
@@ -352,13 +351,11 @@ const findSelectedResult = () => {
 
     if (checkboxes.length > 0) {
         for (const checkbox of checkboxes) {
-            if (checkbox.checked === true) {
-                console.log(checkbox)
+            if (checkbox.checked) {
                 return checkbox.value
-            } else {
-                return -1
             }
         }
+        return -1
     } else {
         return 0
     }
@@ -408,24 +405,64 @@ const closeModal = (resultsType, operation, table) => {
     clearFormsData(findCurrentPage())
 }
 
-const displaySuccessMessage = (resultsType) => {
+const displaySuccessMessage = (resultsType, crud = "create") => {
+    const successMessage = d.querySelector(".success_message")
+
     successMessage.classList.add("active")
 
-    if (resultsType === "newEdition") {
-        successMessage.textContent = "New Edition Created Successfully"
-    } else if (resultsType === "newBookcopy") {
-        successMessage.textContent = "New Copy Created Successfully"
-    } else if (resultsType === "newReader") {
-        successMessage.textContent = "New Reader Created Successfully"
-    } else if (resultsType === "b_author") {
-        successMessage.textContent = "Author Edited Successfully"
+    switch (resultsType) {
+        case "author" || "b_author":
+            switch (crud) {
+                case "create":
+                    successMessage.textContent = "Author Created Successfully"
+                    break;
+                case "edit":
+                    successMessage.textContent = "Author Edited Successfully"
+                    break;
+                case "delete":
+                    successMessage.textContent = "Author Deleted Successfully"
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "bookwork" || "b_bookwork":
+            switch (crud) {
+                case "create":
+                    successMessage.textContent = "Book Work Created Successfully"
+                    break;
+                case "edit":
+                    successMessage.textContent = "Book Work Edited Successfully"
+                    break;
+                case "delete":
+                    successMessage.textContent = "Book Work Deleted Successfully"
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "newEdition":
+            successMessage.textContent = "New Edition Created SuccessFully"
+            break;
+        case "newBookCopy":
+            successMessage.textContent = "New Copy Created Successfully"
+            break;
+        case "newReader":
+            successMessage.textContent = "New Reader Created Successfully"
+            break;
+        default:
+            break;
     }
-
-    confirmBtn.setAttribute("disabled", true)
 
     if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
         prepareEndingBtn(resultsType)
     }
+}
+
+const hiddeSuccessMessage = () => {
+    const successMessage = d.querySelector(".success_message")
+    successMessage.textContent = ""
+    if (successMessage.classList.contains("active")) successMessage.classList.remove("active")
 }
 
 let endingBtnClickHandler

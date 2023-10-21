@@ -58,10 +58,8 @@ const toggleNextPageBtn = (nextPageBtn, object) => {
                 nextPageBtn.classList.add("disabled")
             }
         } else {
-            if (isDisabled()) {
-                nextPageBtn.classList.remove("disabled")
-                nextPageBtn.addEventListener("click", nextPageBtnClickHandler)
-            }
+            nextPageBtn.classList.remove("disabled")
+            nextPageBtn.addEventListener("click", nextPageBtnClickHandler)
         }
     }
 }
@@ -105,41 +103,40 @@ const toggleNextPageChanging = resultsType => {
 }
 
 const clearPrintedReults = resultsType => {
-    if (resultsType === "author") {
-        d.querySelectorAll(".selected_author").forEach(el => {
-            if (el.hasAttribute("readonly")) {
-                el.value = ""
-            } else {
-                el.textContent = "Author: "
-            }
-        })
-    } else if (resultsType === "bookwork") {
-        d.querySelectorAll(".selected_bookwork").forEach(el => {
-            if (el.hasAttribute("readonly")) {
-                el.value = ""
-            } else {
-                el.textContent = "Book work: "
-            }
-        })
-    } else if (resultsType === "bookedition") {
-        d.querySelectorAll(".selected_bookedition").forEach(el => {
-            if (el.hasAttribute("readonly")) {
-                el.value = ""
-            } else {
-                el.textContent = "Book edition: "
-            }
-        })
-
-        d.querySelectorAll(".selected_result_holder .selected_bookwork").forEach(el => {
-            el.textContent = "Book work: "
-        })
-        d.querySelectorAll(".selected_result_holder .selected_bookedition").forEach(el => {
-            el.textContent = "Book edition: "
-        })
-        d.querySelector(".form .selected_title").value = ""
-        d.querySelector(".form .selected_author").value = ""
-        d.querySelector(".form .selected_editorAndYear").value = ""
-        d.querySelector(".form .selected_isbn").value = ""
+    switch (resultsType) {
+        case "author":
+            d.querySelectorAll(".selected_author").forEach(el => {
+                if (el.hasAttribute("readonly")) {
+                    el.value = ""
+                } else {
+                    el.textContent = "Author: "
+                }
+            })
+            break;
+        case "bookwork":
+            d.querySelectorAll(".selected_bookwork").forEach(el => {
+                if (el.hasAttribute("readonly")) {
+                    el.value = ""
+                } else {
+                    el.textContent = "Book work: "
+                }
+            })
+            break;
+        case "bookedition":
+            d.querySelectorAll(".selected_bookedition").forEach(el => {
+                if (el.hasAttribute("readonly")) {
+                    el.value = ""
+                } else {
+                    el.textContent = "Book edition: "
+                }
+            })
+            d.querySelector(".form .selected_title").value = ""
+            d.querySelector(".form .selected_author").value = ""
+            d.querySelector(".form .selected_editorAndYear").value = ""
+            d.querySelector(".form .selected_isbn").value = ""
+            break;
+        default:
+            break;
     }
 }
 
