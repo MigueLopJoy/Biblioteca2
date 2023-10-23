@@ -8,9 +8,11 @@ import { enableModalActions } from "../../modules_commons.js"
 
 import { toggleNextPageChanging } from "../catalog-commons.js"
 import { showSearchResults } from "../catalog-commons.js"
+import { showCatalogCard } from "../catalog-commons.js"
 
 const d = document,
-    authorsForm = d.querySelector(".form.b_author_form"),
+    searchAuthorForm = d.querySelector(".form.b_author_form.search"),
+    createAuthorForm = d.querySelector(".form.b_author_form.create"),
     authorsResultsTable = d.querySelector(".results_table.b_authors_results_table")
 
 let author, results, error, table, resultsType, operation
@@ -28,12 +30,16 @@ const initializeBrowseAuthorsFormSubmit = async form => {
     if (!form) {
         form = setFormInputsValues()
         operation = "manage"
-    } else operation = "search"
+    } else {
+        if (form === searchAuthorForm) operation === "search"
+        else operation = "create"
+    }
 
     clearErrorMessages()
 
     if (findCurrentPage().classList.contains("b_authors_page")) {
-        await runAuthorProcess(form)
+        if (operation === "search")
+            await runAuthorProcess(form)
     }
 
     if (error) {
@@ -42,7 +48,8 @@ const initializeBrowseAuthorsFormSubmit = async form => {
         toggleNextPageChanging(resultsType)
         clearFormsData()
     } else {
-        showSearchResults(resultsType, operation, table)
+        if (operation === "search") showSearchResults(table)
+        else showCatalogCard(operation, table)
         enableModalActions(results, resultsType, operation, table)
     }
 }
@@ -56,7 +63,10 @@ const runAuthorProcess = async form => {
     author = ""
     table = authorsResultsTable
     resultsType = "b_author"
-    await getSearchAuthorResults(form)
+    console.log(form)
+
+    if (form = searchAuthorForm) await getSearchAuthorResults(form)
+    else await getCreateAuthorResults(form)
 }
 
 const getSearchAuthorResults = async form => {
@@ -70,6 +80,21 @@ const getSearchAuthorResults = async form => {
                 }
             )
         )
+    } catch (ex) {
+        error = ex
+    }
+}
+
+const getCreateAuthorResults = async form => {
+    try {
+        results = [await fetchRequest(
+            "POST",
+            "http://localhost:8080/authors-catalog/save-author",
+            {
+                firstName: form.firstName.value.trim(),
+                lastName: form.lastName.value.trim()
+            }
+        )]
     } catch (ex) {
         error = ex
     }

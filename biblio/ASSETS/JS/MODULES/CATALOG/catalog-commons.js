@@ -3,6 +3,7 @@ import { findCurrentPage } from "./../modules_commons.js"
 import { generateAuthorsTableContent } from "./cataloging.js"
 import { generateBookworksTableContent } from "./cataloging.js"
 import { generateNewBookeditionTableContent } from "./cataloging.js"
+import { generateAuthorCatalogCard } from "./cataloging.js"
 
 import { generateBookeditionsTableContent } from "./registering.js"
 import { generateNewBookcopyTableContent } from "./registering.js"
@@ -148,36 +149,39 @@ const tableContainsClass = (table, className) => {
     return table.classList.contains(className)
 }
 
-const showSearchResults = (resultsType, operation, table) => {
+const showSearchResults = (table) => {
     const modal = d.getElementById("modal")
-
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
     generaTableContent(table)
-    switch (operation) {
-        case "search":
-            selectBtnContainer.classList.remove("hidden")
+    selectBtnContainer.classList.remove("hidden")
 
-            if (tableContainsClass(table, "authors_results_table")) {
-                selectResultBtn.textContent = "Select author"
-            } else if (tableContainsClass(table, "bookworks_results_table")) {
-                selectResultBtn.textContent = "Select book work"
-            } else if (tableContainsClass(table, "newEdition_results_table")) {
-                selectResultBtn.textContent = "Save new edition"
-            } else if (tableContainsClass(table, "bookeditions_results_table")) {
-                selectResultBtn.textContent = "Select book edition"
-            } else if (tableContainsClass(table, "newBookcopy_results_table")) {
-                selectResultBtn.textContent = "Save new copy"
-            }
-            break;
-        case "create" || "manage":
-            if (operation === "create") displaySuccessMessage(resultsType)
-            createBtnContainer.classList.remove("hidden")
-            break;
-        default:
-            break;
+    if (tableContainsClass(table, "authors_results_table")) {
+        selectResultBtn.textContent = "Select author"
+    } else if (tableContainsClass(table, "bookworks_results_table")) {
+        selectResultBtn.textContent = "Select book work"
+    } else if (tableContainsClass(table, "bookeditions_results_table")) {
+        selectResultBtn.textContent = "Select book edition"
     }
+}
+
+const showCatalogCard = (resultsType, operation) => {
+    const modal = d.getElementById("modal")
+    modal.classList.remove("hidden")
+
+    generateCatalogCard()
+
+    if (resultsType === "") {
+        selectResultBtn.textContent = "Save New Author"
+    } else if (resultsType === "newEdition") {
+        selectResultBtn.textContent = "Save New Edition"
+    } else if (resultsType === "newBookcopy") {
+        selectResultBtn.textContent = "Save New Copy"
+    } else if ()
+
+        if (operation === "create") displaySuccessMessage(resultsType)
+    createBtnContainer.classList.remove("hidden")
 }
 
 const generaTableContent = table => {
@@ -196,6 +200,11 @@ const generaTableContent = table => {
     }
 }
 
+const generateCatalogCard = (form) => {
+    if (form.classList.contains("author_form")) {
+        generateAuthorCatalogCard()
+    }
+}
 
 const printSelectedResult = resultsType => {
     if (resultsType === "author") {
@@ -234,3 +243,4 @@ export { toggleNextPageChanging }
 export { clearPrintedReults }
 export { printSelectedResult }
 export { showSearchResults }
+export { showCatalogCard }

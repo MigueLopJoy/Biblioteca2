@@ -8,6 +8,7 @@ import { enableModalActions } from "./../modules_commons.js"
 import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
 import { showSearchResults } from "./catalog-commons.js"
+import { showCatalogCard } from "./catalog-commons.js"
 
 const d = document,
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
@@ -38,7 +39,8 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            showSearchResults(resultsType, operation, table)
+            if (operation === "search") showSearchResults(table)
+            else showCatalogCard(operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
     }
@@ -120,7 +122,6 @@ const getCreateAuthorResults = async form => {
     } catch (ex) {
         error = ex
     }
-
 }
 
 
@@ -275,12 +276,13 @@ const getEditNewEditionResults = async editedFields => {
 
 const generateAuthorsTableContent = () => {
 
-    if (operation === "search" && !table.querySelector("th.select_column")) {
+    if (!table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select Autor"
         selectColumn.classList.add("select_column")
         table.querySelector("thead tr").appendChild(selectColumn)
     }
+
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i]
@@ -294,23 +296,18 @@ const generateAuthorsTableContent = () => {
         let lastName = d.createElement("td")
         lastName.textContent = result.lastName
 
-        let selectAuthor, checkbox
-        if (operation === "search") {
-            selectAuthor = d.createElement("td")
+        let selectAuthor = d.createElement("td"),
             checkbox = d.createElement("input")
-            checkbox.type = "checkbox"
-            checkbox.name = `select_author`
-            checkbox.classList.add('result_option')
-            checkbox.classList.add('author_result_option')
-            checkbox.value = i;
-            selectAuthor.appendChild(checkbox)
-        }
+        checkbox.type = "checkbox"
+        checkbox.name = `select_author`
+        checkbox.classList.add('result_option')
+        checkbox.classList.add('author_result_option')
+        checkbox.value = i;
+        selectAuthor.appendChild(checkbox)
 
         newRow.appendChild(firstName)
         newRow.appendChild(lastName)
-        if (selectAuthor) {
-            newRow.appendChild(selectAuthor)
-        }
+        newRow.appendChild(selectAuthor)
 
         const tableBody = table.querySelector(".results_table_body")
 
@@ -329,9 +326,12 @@ const generateAuthorsTableContent = () => {
     }
 }
 
-const generateBookworksTableContent = () => {
+const generateAuthorCatalogCard = () => {
 
-    if (operation === "search" && !table.querySelector("th.select_column")) {
+}
+
+const generateBookworksTableContent = () => {
+    if (!table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select author"
         selectColumn.classList.add("select_column")
@@ -492,6 +492,7 @@ export { deleteNewBookedition }
 export { generateAuthorsTableContent }
 export { generateBookworksTableContent }
 export { generateNewBookeditionTableContent }
+export { generateAuthorCatalogCard }
 
 export { prepareAuthorEditionProcess }
 export { prepareBookworkEditionProcess }
