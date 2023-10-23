@@ -8,6 +8,7 @@ import com.miguel.library.repository.IAuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class ImpAuthorService implements IAuthorService {
         if (allAuthors.isEmpty()) {
             throw new ExceptionNoSearchResultsFound("No authors were found");
         }
+        Collections.sort(allAuthors);
         return allAuthors;
     }
 
@@ -53,6 +55,7 @@ public class ImpAuthorService implements IAuthorService {
         if (searchResults.isEmpty()) {
             throw new ExceptionNoSearchResultsFound("No search results were found");
         }
+        Collections.sort(searchResults);
         return searchResults;
     }
 

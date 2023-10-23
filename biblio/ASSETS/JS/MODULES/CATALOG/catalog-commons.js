@@ -15,6 +15,8 @@ import { getBookedition } from "./registering.js"
 
 import { showPage } from "./display_pages.js"
 
+import { displaySuccessMessage } from "./../modules_commons.js"
+
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
     createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
@@ -146,30 +148,35 @@ const tableContainsClass = (table, className) => {
     return table.classList.contains(className)
 }
 
-const showSearchResults = (operation, table) => {
+const showSearchResults = (resultsType, operation, table) => {
     const modal = d.getElementById("modal")
 
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
     generaTableContent(table)
+    switch (operation) {
+        case "search":
+            selectBtnContainer.classList.remove("hidden")
 
-    if (operation === "search") {
-        selectBtnContainer.classList.remove("hidden")
-
-        if (tableContainsClass(table, "authors_results_table")) {
-            selectResultBtn.textContent = "Select author"
-        } else if (tableContainsClass(table, "bookworks_results_table")) {
-            selectResultBtn.textContent = "Select book work"
-        } else if (tableContainsClass(table, "newEdition_results_table")) {
-            selectResultBtn.textContent = "Save new edition"
-        } else if (tableContainsClass(table, "bookeditions_results_table")) {
-            selectResultBtn.textContent = "Select book edition"
-        } else if (tableContainsClass(table, "newBookcopy_results_table")) {
-            selectResultBtn.textContent = "Save new copy"
-        }
-    } else if (operation === "create" || operation === "manage") {
-        createBtnContainer.classList.remove("hidden")
+            if (tableContainsClass(table, "authors_results_table")) {
+                selectResultBtn.textContent = "Select author"
+            } else if (tableContainsClass(table, "bookworks_results_table")) {
+                selectResultBtn.textContent = "Select book work"
+            } else if (tableContainsClass(table, "newEdition_results_table")) {
+                selectResultBtn.textContent = "Save new edition"
+            } else if (tableContainsClass(table, "bookeditions_results_table")) {
+                selectResultBtn.textContent = "Select book edition"
+            } else if (tableContainsClass(table, "newBookcopy_results_table")) {
+                selectResultBtn.textContent = "Save new copy"
+            }
+            break;
+        case "create" || "manage":
+            if (operation === "create") displaySuccessMessage(resultsType)
+            createBtnContainer.classList.remove("hidden")
+            break;
+        default:
+            break;
     }
 }
 

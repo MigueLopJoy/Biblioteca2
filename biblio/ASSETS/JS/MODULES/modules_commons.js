@@ -9,6 +9,9 @@ import { clearPrintedReults } from "./CATALOG/catalog-commons.js"
 import { getEditAuthorResults } from "./CATALOG/cataloging.js"
 import { getEditBookworkResults } from "./CATALOG/cataloging.js"
 import { getEditNewEditionResults } from "./CATALOG/cataloging.js"
+import { deleteAuthor } from "./CATALOG/cataloging.js"
+import { deleteBookwork } from "./CATALOG/cataloging.js"
+import { deleteNewBookedition } from "./CATALOG/cataloging.js"
 import { prepareAuthorEditionProcess } from "./CATALOG/cataloging.js"
 import { prepareBookworkEditionProcess } from "./CATALOG/cataloging.js"
 import { prepareNewEditionEditionProcess } from "./CATALOG/cataloging.js"
@@ -16,11 +19,11 @@ import { reasigneAuthorValue } from "./CATALOG/cataloging.js"
 import { reasigneBookworkValue } from "./CATALOG/cataloging.js"
 import { reasigneNewEditionValue } from "./CATALOG/cataloging.js"
 
-import { getEditNewCopyResults } from "./CATALOG/registering.js"
+import { getEditNewCopyResults, getNewBookcopy } from "./CATALOG/registering.js"
+import { deleteNewCopy } from "./CATALOG/registering.js"
 import { prepareNewBookcopyEditionProcess } from "./CATALOG/registering.js"
 import { reasigneBookeditionValue } from "./CATALOG/registering.js"
 import { reasigneNewBookcopyValue } from "./CATALOG/registering.js"
-
 
 import { getEditNewReaderResults } from "./READERS/readers_registering.js"
 import { prepareNewReaderEditionProcess } from "./READERS/readers_registering.js"
@@ -75,6 +78,7 @@ const enableModalActions = (results, resultsType, operation, table) => {
         enableSelectResultBtn(results, resultsType, operation, table)
     } else if (operation === "create") {
         toggleCloseModalBtn(resultsType, operation, table, false)
+        toggleDeletetSymbol(results, resultsType, operation, table, true)
         toggleEditSymbol(results, resultsType, operation, table, true)
         enableCreateBtn(results, resultsType, operation, table)
     } else if (operation === "manage") {
@@ -124,7 +128,7 @@ const toggleBtnState = (btn, enable) => {
 
 
 
-let editSymbolClickHandler, inspectSymbolClickHandler, closeSymbolClickHandler
+let editSymbolClickHandler, deleteSymbolClickHandler, inspectSymbolClickHandler, closeSymbolClickHandler
 
 const toggleEditSymbol = (results, resultsType, operation, table, enable = false) => {
     editSymbolClickHandler = function () {
@@ -134,12 +138,12 @@ const toggleEditSymbol = (results, resultsType, operation, table, enable = false
     toggleListener(editSymbol, editSymbolClickHandler, enable)
 }
 
-const toggleDeletetSymbol = (enable = false) => {
-    inspectSymbolClickHandler = function () {
-
+const toggleDeletetSymbol = (results, resultsType, operation, table, enable = false) => {
+    deleteSymbolClickHandler = function () {
+        executeDeleteSymbolListener(results, resultsType, operation, table)
     }
     toggleSymbol(deleteSymbol, enable)
-    toggleListener(deleteSymbol, inspectSymbolClickHandler, enable)
+    toggleListener(deleteSymbol, deleteSymbolClickHandler, enable)
 }
 
 const toggleInspectSymbol = (enable = false) => {
@@ -196,7 +200,12 @@ const enableSelectResultBtn = (results, resultsType, operation, table) => {
 const enableCreateBtn = (results, resultsType, operation, table) => {
     if (confirmBtn) {
         confirmBtnClickHandler = function () {
-            executeConfirmBtnListener(results, resultsType, operation, table)
+            if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
+                saveResult(results, resultsType)
+                prepareEndingBtn(resultsType)
+            } else {
+                executeConfirmBtnListener(results, resultsType, operation, table)
+            }
         }
         confirmBtn.addEventListener("click", confirmBtnClickHandler)
     }
@@ -209,23 +218,29 @@ const executeSelectResultBtnListener = (results, resultsType, operation, table) 
 
 const executeConfirmBtnListener = (results, resultsType, operation, table, crud) => {
     saveResult(results, resultsType)
-    displaySuccessMessage(resultsType, crud === undefined ? "create" : "edit")
+    hiddeSuccessMessage()
+    endProcess(resultsType, operation, table)
+}
+
+const executeConfirmCrudOperationBtn = (results, resultsType, operation, table, crud) => {
+    saveResult(results, resultsType)
+    displaySuccessMessage(resultsType, crud)
     confirmBtn.setAttribute("disabled", true)
     toggleCloseModalBtn(resultsType, operation, table, true)
     setTimeout(() => {
         confirmBtn.removeAttribute("disabled")
         hiddeSuccessMessage()
-        endProcess(resultsType, operation, table)
-    }, 2500)
+        if (crud === "edit") endProcess(resultsType, operation, table)
+        else closeModal(resultsType, operation, table)
+    }, 2000)
 }
 
 const executeEditSymbolListener = (results, resultsType, operation, table) => {
     if (operation !== "manage") saveResult(results, resultsType)
-    else {
-        confirmBtn.removeAttribute("disabled")
-        toggleDeletetSymbol(false)
-        toggleInspectSymbol(false)
-    }
+
+    confirmBtn.removeAttribute("disabled")
+    toggleDeletetSymbol(false)
+    toggleInspectSymbol(false)
     prepareEditonProcess(results, resultsType, operation, table)
     toggleEditSymbol(results, resultsType, operation, table, false)
 }
@@ -234,8 +249,46 @@ const executeInspectSymbolListener = () => {
 
 }
 
-const executeDeleteSymbolListener = () => {
+const executeDeleteSymbolListener = (results, resultsType, operation, table) => {
+    confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+    toggleDeletetSymbol(false)
+    toggleInspectSymbol(false)
+    toggleEditSymbol(false)
 
+    confirmBtn.textContent = "Click to confirm deletion"
+    confirmBtnClickHandler = function () {
+        clearPrintedReults(resultsType)
+        deleteCreatedObject(results, resultsType)
+        confirmBtn.textContent = "Confirm"
+        results = ""
+        executeConfirmCrudOperationBtn(results, resultsType, operation, table, "delete")
+    }
+    confirmBtn.addEventListener("click", confirmBtnClickHandler)
+}
+
+const deleteCreatedObject = (results, resultsType) => {
+    switch (resultsType) {
+        case "author":
+            deleteAuthor(results[findSelectedResult()].idAuthor)
+            break;
+        case "bookwork":
+            deleteBookwork(results[findSelectedResult()].idBookWork)
+            break;
+        case "newEdition":
+            deleteNewBookedition(results[findSelectedResult()].idBookEdition)
+            break;
+        case "bookedition":
+            break;
+        case "newBookcopy":
+            deleteNewCopy(results[findSelectedResult()].idBookCopy)
+            break;
+        case "newReader":
+            break;
+        case "b_author":
+            break;
+        default:
+            break;
+    }
 }
 
 const saveResult = (results, resultsType) => {
@@ -252,7 +305,7 @@ const saveResult = (results, resultsType) => {
         case "bookedition":
             reasigneBookeditionValue(results[findSelectedResult()])
             break;
-        case "newBookCopy":
+        case "newBookcopy":
             reasigneNewBookcopyValue(results[findSelectedResult()])
             break;
         case "newReader":
@@ -267,13 +320,8 @@ const saveResult = (results, resultsType) => {
 }
 
 const prepareEditonProcess = (results, resultsType, operation, table) => {
-    const tableResultsRow = table.querySelector(".results_row")
-
-    console.log(tableResultsRow)
-
-    let cells = tableResultsRow.querySelectorAll("td")
-
-
+    const tableResultsRow = table.querySelector(".results_row"),
+        cells = tableResultsRow.querySelectorAll("td")
 
     clearPrintedReults(resultsType)
 
@@ -306,8 +354,6 @@ const prepareEditonProcess = (results, resultsType, operation, table) => {
     }
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
-
-
 
 const confirmEdition = async (results, resultsType, operation, table) => {
     const tbody = table.querySelector(".results_table_body"),
@@ -342,7 +388,17 @@ const confirmEdition = async (results, resultsType, operation, table) => {
         if (!errorMessageRow.classList.contains("hidden")) {
             errorMessageRow.classList.add("hidden")
         }
-        executeConfirmBtnListener(results, resultsType, operation, table, "edit")
+
+        switch (resultsType) {
+            case "newBookedition":
+            case "newBookcopy":
+                displaySuccessMessage(resultsType, "edit")
+                prepareEndingBtn(resultsType)
+                break;
+            default:
+                executeConfirmCrudOperationBtn(results, resultsType, operation, table, "edit")
+                break;
+        }
     }
 }
 
@@ -442,20 +498,39 @@ const displaySuccessMessage = (resultsType, crud = "create") => {
             }
             break;
         case "newEdition":
-            successMessage.textContent = "New Edition Created SuccessFully"
+            switch (crud) {
+                case "create":
+                    successMessage.textContent = "New Edition Created SuccessFully"
+                    break;
+                case "edit":
+                    successMessage.textContent = "New Edition Edited Successfully"
+                    break;
+                case "delete":
+                    successMessage.textContent = "New Edition Deleted Successfully"
+                    break;
+                default:
+                    break;
+            }
             break;
-        case "newBookCopy":
-            successMessage.textContent = "New Copy Created Successfully"
-            break;
+        case "newBookcopy":
+            switch (crud) {
+                case "create":
+                    successMessage.textContent = "New Copy Created SuccessFully"
+                    break;
+                case "edit":
+                    successMessage.textContent = "New Copy Edited Successfully"
+                    break;
+                case "delete":
+                    successMessage.textContent = "New Copy Deleted Successfully"
+                    break;
+                default:
+                    break;
+            }            break;
         case "newReader":
             successMessage.textContent = "New Reader Created Successfully"
             break;
         default:
             break;
-    }
-
-    if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
-        prepareEndingBtn(resultsType)
     }
 }
 
@@ -487,6 +562,7 @@ const removeModalElementsListeners = () => {
     closeSymbol.removeEventListener("click", closeSymbolClickHandler)
     selectResultBtn.removeEventListener("click", selectResultBtnClickHandler)
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
+    confirmBtn.removeEventListener("click", executeConfirmBtnListener)
     editSymbol.removeEventListener("click", editSymbolClickHandler)
     endingBtn.removeEventListener("click", endingBtnClickHandler)
 }
@@ -507,6 +583,8 @@ const fetchRequest = async (method, url, bodyContent) => {
             res = await fetch(url, options)
 
         if (!res.ok) throw res
+
+        if (method.toUpperCase() === "DELETE") return await res.text()
 
         return await res.json()
 
@@ -576,3 +654,4 @@ export { joinParamsToURL }
 export { handleErrorMessages }
 export { clearErrorMessages }
 export { clearFormsData }
+export { displaySuccessMessage }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class ImpBookWorkService implements IBookWorkService{
         if (allBookWorks.isEmpty()) {
             throw new ExceptionNoSearchResultsFound("No book works were found");
         }
+        Collections.sort(allBookWorks);
         return allBookWorks;
     }
 
@@ -92,7 +94,10 @@ public class ImpBookWorkService implements IBookWorkService{
             throw new ExceptionObjectNotFound("Searched author not found");
         }
 
-        return bookWorkRepository.findByAuthor(author);
+        List<BookWork> authorBookWorks = bookWorkRepository.findByAuthor(author);
+        Collections.sort(authorBookWorks);
+
+        return authorBookWorks;
     }
 
     @Override

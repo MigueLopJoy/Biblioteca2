@@ -42,7 +42,7 @@ const initializeBrowseAuthorsFormSubmit = async form => {
         toggleNextPageChanging(resultsType)
         clearFormsData()
     } else {
-        showSearchResults(operation, table)
+        showSearchResults(resultsType, operation, table)
         enableModalActions(results, resultsType, operation, table)
     }
 }

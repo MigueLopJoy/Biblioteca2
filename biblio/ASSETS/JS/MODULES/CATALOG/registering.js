@@ -36,7 +36,7 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            showSearchResults(operation, table)
+            showSearchResults(resultsType, operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
     }
@@ -45,6 +45,7 @@ d.addEventListener("submit", async e => {
 const runBookEditionProcess = async form => {
     bookedition = ""
     table = editionsResultsTable
+
     resultsType = "bookedition"
     clearPrintedReults(resultsType)
     operation = "search"
@@ -61,6 +62,16 @@ const runBookCopyProcess = async form => {
 }
 
 const getSearchBookeditionResults = async form => {
+    console.log(
+        {
+            title: form.title.value,
+            author: form.author.value,
+            isbn: form.isbn.value,
+            editor: form.editor_name.value,
+            language: form.edition_language.value,
+        }
+    )
+
     try {
         results = await fetchRequest(
             "POST",
@@ -73,6 +84,7 @@ const getSearchBookeditionResults = async form => {
                 language: form.edition_language.value,
             }
         )
+        console.log(results)
     } catch (ex) {
         error = ex
     }
@@ -126,8 +138,19 @@ const getEditNewCopyResults = async editedFields => {
     }
 }
 
-const generateBookeditionsTableContent = () => {
+const deleteNewCopy = async bookcopyId => {
+    try {
+        await fetchRequest(
+            "DELETE",
+            `http://localhost:8080/bookcopies/delete-bookcopy/${bookcopyId}`,
+        )
+        results = ""
+    } catch (ex) {
+        throw ex
+    }
+}
 
+const generateBookeditionsTableContent = () => {
     if (!table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
         selectColumn.textContent = "Select book edition"
@@ -254,6 +277,7 @@ const reasigneNewBookcopyValue = newBookworkValue => {
 }
 
 export { getEditNewCopyResults }
+export { deleteNewCopy }
 export { prepareNewBookcopyEditionProcess }
 export { generateBookeditionsTableContent }
 export { generateNewBookcopyTableContent }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.awt.print.Book;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,6 +149,7 @@ public class ImpBookSearchService implements IBookSearchService {
         this.addBookEditionPredicates(
                 criteriaBuilder,
                 criteriaBuilder.createQuery(BookEdition.class).from(BookEdition.class),
+                bookEditionToBookWorkJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -167,6 +169,7 @@ public class ImpBookSearchService implements IBookSearchService {
         this.addBookEditionPredicates(
                 criteriaBuilder,
                 root,
+                bookEditionToBookWorkJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -186,6 +189,7 @@ public class ImpBookSearchService implements IBookSearchService {
     private void addBookEditionPredicates(
             CriteriaBuilder criteriaBuilder,
             Root<BookEdition> root,
+            Join<BookEdition, BookWork> bookEditionBookWorkJoin,
             Join<BookWork, Author> bookWorkAuthorJoin,
             BookSearchRequestBookEdition bookSearchRequest,
             List<Predicate> predicates
@@ -207,13 +211,28 @@ public class ImpBookSearchService implements IBookSearchService {
             predicates.add(criteriaBuilder.equal(root.get("language"), language));
         }
 
-        this.addBookWorksPredicates(
-                criteriaBuilder,
-                criteriaBuilder.createQuery(BookWork.class).from(BookWork.class),
-                bookWorkAuthorJoin,
-                bookSearchRequest,
-                predicates
-        );
+        String author = bookSearchRequest.getAuthor();
+        String title = bookSearchRequest.getTitle();
+
+        if (isValidString(author)) {
+            Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);
+
+            predicates.add(
+                    criteriaBuilder.like(
+                            authorName,
+                            "%" + author + "%"
+                    )
+            );
+        }
+
+        if (isValidString(title)) {
+            predicates.add(
+                    criteriaBuilder.like(
+                            bookEditionBookWorkJoin.get("title"),
+                            "%" + title + "%"
+                    )
+            );
+        }
     }
 
     private List<BookWork> searchBookWorks(BookSearchRequestBookWork bookSearchRequest) {

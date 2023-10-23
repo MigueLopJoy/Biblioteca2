@@ -5,10 +5,8 @@ import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
 import { enableModalActions } from "./../modules_commons.js"
-
 import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
-
 import { showSearchResults } from "./catalog-commons.js"
 
 const d = document,
@@ -40,7 +38,7 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            showSearchResults(operation, table)
+            showSearchResults(resultsType, operation, table)
             enableModalActions(results, resultsType, operation, table)
         }
     }
@@ -142,6 +140,18 @@ const getEditAuthorResults = async editedFields => {
     }
 }
 
+const deleteAuthor = async authorId => {
+    try {
+        await fetchRequest(
+            "DELETE",
+            `http://localhost:8080/authors-catalog/delete-author/${authorId}`,
+        )
+        results = ""
+    } catch (ex) {
+        error = ex
+    }
+}
+
 const getSearchBookworkResults = async form => {
     try {
         results = await fetchRequest(
@@ -192,6 +202,19 @@ const getEditBookworkResults = async editedFields => {
     }
 }
 
+const deleteBookwork = async bookworkId => {
+    try {
+        await fetchRequest(
+            "DELETE",
+            `http://localhost:8080/bookworks-catalog/delete-bookwork/${bookworkId}`,
+        )
+        results = ""
+    } catch (ex) {
+        error = ex
+    }
+}
+
+
 const getCreateBookeditionResults = async form => {
     try {
         results = [await fetchRequest(
@@ -217,6 +240,18 @@ const getCreateBookeditionResults = async form => {
     }
 }
 
+const deleteNewBookedition = async bookeditionId => {
+    try {
+        await fetchRequest(
+            "DELETE",
+            `http://localhost:8080/general-catalog/delete-bookedition/${bookeditionId}`,
+        )
+        results = ""
+    } catch (ex) {
+        error = ex
+    }
+}
+
 const getEditNewEditionResults = async editedFields => {
     try {
         results = [await fetchRequest(
@@ -235,6 +270,8 @@ const getEditNewEditionResults = async editedFields => {
         throw ex
     }
 }
+
+
 
 const generateAuthorsTableContent = () => {
 
@@ -448,6 +485,9 @@ const reasigneNewEditionValue = newEditionValue => {
 export { getEditAuthorResults }
 export { getEditBookworkResults }
 export { getEditNewEditionResults }
+export { deleteAuthor }
+export { deleteBookwork }
+export { deleteNewBookedition }
 
 export { generateAuthorsTableContent }
 export { generateBookworksTableContent }

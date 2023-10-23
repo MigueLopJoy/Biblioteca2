@@ -11,10 +11,20 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Authors")
-public class Author {
+public class Author implements Comparable<Author> {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer idAuthor;
     private String firstName;
     private String lastName;
+
+    @Override
+    public int compareTo(Author otherAuthor) {
+        int orderResult = this.firstName.compareTo(otherAuthor.getFirstName());
+
+        if (orderResult == 0) {
+            orderResult = this.lastName.compareTo(otherAuthor.getLastName());
+        }
+        return orderResult;
+    }
 }

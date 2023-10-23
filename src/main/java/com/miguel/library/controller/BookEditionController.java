@@ -59,12 +59,11 @@ public class BookEditionController {
     ) {
         return ResponseEntity.ok(bookEditionService.editBookEdition(bookEditionId, bookEdit));
     }
-
-    @DeleteMapping("/delete-bookedition/{BookEditionId}")
+    @DeleteMapping("/delete-bookedition/{bookEditionId}")
     public ResponseEntity<String> deleteBookEdition(
             @PathVariable Integer bookEditionId
     ) {
         bookEditionService.deleteBookEdition(bookEditionId);
-        return ResponseEntity.ok("Book Edtion Deleted Successfully");
+        return ResponseEntity.ok("Book Edition Deleted Successfully");
     }
 }
