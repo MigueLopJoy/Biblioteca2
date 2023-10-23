@@ -5,6 +5,7 @@ import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
 import { enableModalActions } from "./../modules_commons.js"
+import { enableCreateModalActions } from "./../modules_commons.js"
 import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
 import { showSearchResults } from "./catalog-commons.js"
@@ -13,9 +14,12 @@ import { showCatalogCard } from "./catalog-commons.js"
 const d = document,
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
     bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
-    bookEditionTable = d.querySelector(".results_table.newEdition_results_table")
+    bookEditionTable = d.querySelector(".results_table.newEdition_results_table"),
+    authorCatalogCard = d.querySelector(".author_catalog_card"),
+    bookworkCatalogCard = d.querySelector(".bookwork_catalog_card"),
+    bookeditionCatalogCard = d.querySelector(".bookedition_catalog_card")
 
-let author, bookwork, newEdition, results, error, table, resultsType, operation
+let author, bookwork, newEdition, results, error, table, catalogCard, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
@@ -39,28 +43,33 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            if (operation === "search") showSearchResults(table)
-            else showCatalogCard(operation, table)
-            enableModalActions(results, resultsType, operation, table)
+            if (operation === "search") {
+                showSearchResults(resultsType, table)
+                enableModalActions(results, resultsType, operation, table)
+            } else if (operation === "create") {
+                console.log(catalogCard)
+                showCatalogCard(resultsType, operation, catalogCard)
+                enableCreateModalActions(results, resultsType, operation, catalogCard)
+            }
         }
     }
 })
 
-
 const runAuthorProcess = async form => {
     author = ""
-    table = authorsResultsTable
     resultsType = "author"
     clearPrintedReults(resultsType)
 
     if (form.classList.contains("author_form") &&
         form.classList.contains("search")
     ) {
+        table = authorsResultsTable
         operation = "search"
         await getSearchAuthorResults(form)
     } else if (form.classList.contains("author_form") &&
         form.classList.contains("create")
     ) {
+        catalogCard = authorCatalogCard
         operation = "create"
         await getCreateAuthorResults(form)
     }
@@ -68,7 +77,6 @@ const runAuthorProcess = async form => {
 
 const runBookworkProcess = async form => {
     bookwork = ""
-    table = bookworksResultsTable
     resultsType = "bookwork"
     clearPrintedReults(resultsType)
 
@@ -76,11 +84,13 @@ const runBookworkProcess = async form => {
         form.classList.contains("search")
     ) {
         operation = "search"
+        table = bookworksResultsTable
         await getSearchBookworkResults(form)
     } else if (form.classList.contains("bookwork_form") &&
         form.classList.contains("create")
     ) {
         operation = "create"
+        catalogCard = bookworkCatalogCard
         await getCreatehBookworkResults(form)
     }
 }
@@ -153,6 +163,21 @@ const deleteAuthor = async authorId => {
     }
 }
 
+const getAuthorBookWorks = async authorName => {
+    try {
+        return await fetchRequest(
+            "POST",
+            "http://localhost:8080/bookworks-catalog/search-bookwork",
+            {
+                title: "",
+                author: authorName
+            }
+        )
+    } catch (ex) {
+        error = ex
+    }
+}
+
 const getSearchBookworkResults = async form => {
     try {
         results = await fetchRequest(
@@ -215,7 +240,6 @@ const deleteBookwork = async bookworkId => {
     }
 }
 
-
 const getCreateBookeditionResults = async form => {
     try {
         results = [await fetchRequest(
@@ -272,8 +296,6 @@ const getEditNewEditionResults = async editedFields => {
     }
 }
 
-
-
 const generateAuthorsTableContent = () => {
 
     if (!table.querySelector("th.select_column")) {
@@ -326,8 +348,14 @@ const generateAuthorsTableContent = () => {
     }
 }
 
-const generateAuthorCatalogCard = () => {
-
+const generateAuthorCatalogCard = catalogCard => {
+    let author = results[0],
+        authorName = `${author.firstName} ${author.lastName}`,
+        authroBookWorks = getAuthorBookWorks().length,
+    authorCatalogCard = d.querySelector(".author_catalog_card")
+    authorCatalogCard.classList.remove("hidden")
+    authorCatalogCard.author_name.value = authorName
+    authorCatalogCard.author_bookWorks = authroBookWorks
 }
 
 const generateBookworksTableContent = () => {

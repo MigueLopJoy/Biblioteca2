@@ -267,6 +267,18 @@
     outline: none;
 }
 
+/* CATALOG CARDS STYLES */
+
+.catalog_card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    padding: 2.5rem;
+    width: 60%;
+    margin-bottom: 1rem;  
+}
+
 /*Buttons styles*/
 
 .btn {

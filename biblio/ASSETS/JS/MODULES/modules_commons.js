@@ -76,11 +76,6 @@ const enableModalActions = (results, resultsType, operation, table) => {
         toggleCloseModalBtn(resultsType, operation, table, true)
         toggleBtnState(selectResultBtn, true)
         enableSelectResultBtn(results, resultsType, operation, table)
-    } else if (operation === "create") {
-        toggleCloseModalBtn(resultsType, operation, table, false)
-        toggleDeletetSymbol(results, resultsType, operation, table, true)
-        toggleEditSymbol(results, resultsType, operation, table, true)
-        enableCreateBtn(results, resultsType, operation, table)
     } else if (operation === "manage") {
         toggleCloseModalBtn(resultsType, operation, table, true)
         toggleDeletetSymbol(true)
@@ -89,6 +84,13 @@ const enableModalActions = (results, resultsType, operation, table) => {
         enableCreateBtn(results, resultsType, operation, table)
         confirmBtn.setAttribute("disabled", true)
     }
+}
+
+const enableCreateModalActions = (results, resultsType, operation, catalogCard) => {
+    toggleCloseModalBtn(resultsType, operation, catalogCard, false)
+    toggleDeletetSymbol(results, resultsType, operation, catalogCard, true)
+    toggleEditSymbol(results, resultsType, operation, catalogCard, true)
+    enableCreateBtn(results, resultsType, operation, catalogCard)
 }
 
 const enableOptionChangigng = () => {
@@ -130,17 +132,17 @@ const toggleBtnState = (btn, enable) => {
 
 let editSymbolClickHandler, deleteSymbolClickHandler, inspectSymbolClickHandler, closeSymbolClickHandler
 
-const toggleEditSymbol = (results, resultsType, operation, table, enable = false) => {
+const toggleEditSymbol = (results, resultsType, operation, catalogCard, enable = false) => {
     editSymbolClickHandler = function () {
-        executeEditSymbolListener(results, resultsType, operation, table)
+        executeEditSymbolListener(results, resultsType, operation, catalogCard)
     }
     toggleSymbol(editSymbol, enable)
     toggleListener(editSymbol, editSymbolClickHandler, enable)
 }
 
-const toggleDeletetSymbol = (results, resultsType, operation, table, enable = false) => {
+const toggleDeletetSymbol = (results, resultsType, operation, resultsContainer, enable = false) => {
     deleteSymbolClickHandler = function () {
-        executeDeleteSymbolListener(results, resultsType, operation, table)
+        executeDeleteSymbolListener(results, resultsType, operation, resultsContainer)
     }
     toggleSymbol(deleteSymbol, enable)
     toggleListener(deleteSymbol, deleteSymbolClickHandler, enable)
@@ -154,9 +156,9 @@ const toggleInspectSymbol = (enable = false) => {
     toggleListener(inspectSymbol, inspectSymbolClickHandler, enable)
 }
 
-const toggleCloseModalBtn = (resultsType, operation, table, enable = false) => {
+const toggleCloseModalBtn = (resultsType, operation, resultsContainer, enable = false) => {
     closeSymbolClickHandler = function () {
-        closeModal(resultsType, operation, table)
+        closeModal(resultsType, operation, resultsContainer)
     }
     toggleSymbol(closeSymbol, enable)
     toggleListener(closeSymbol, closeSymbolClickHandler, enable)
@@ -222,26 +224,26 @@ const executeConfirmBtnListener = (results, resultsType, operation, table, crud)
     endProcess(resultsType, operation, table)
 }
 
-const executeConfirmCrudOperationBtn = (results, resultsType, operation, table, crud) => {
+const executeConfirmCrudOperationBtn = (results, resultsType, operation, resultsContainer, crud) => {
     saveResult(results, resultsType)
     displaySuccessMessage(resultsType, crud)
     confirmBtn.setAttribute("disabled", true)
-    toggleCloseModalBtn(resultsType, operation, table, true)
+    toggleCloseModalBtn(resultsType, operation, resultsContainer, true)
     setTimeout(() => {
         confirmBtn.removeAttribute("disabled")
         hiddeSuccessMessage()
-        if (crud === "edit") endProcess(resultsType, operation, table)
-        else closeModal(resultsType, operation, table)
+        if (crud === "edit") endProcess(resultsType, operation, resultsContainer)
+        else closeModal(resultsType, operation, resultsContainer)
     }, 2000)
 }
 
-const executeEditSymbolListener = (results, resultsType, operation, table) => {
+const executeEditSymbolListener = (results, resultsType, operation, catalogCard) => {
     if (operation !== "manage") saveResult(results, resultsType)
 
     confirmBtn.removeAttribute("disabled")
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
-    prepareEditonProcess(results, resultsType, operation, table)
+    prepareEditonProcess(results, resultsType, operation, catalogCard)
     toggleEditSymbol(results, resultsType, operation, table, false)
 }
 
@@ -249,11 +251,11 @@ const executeInspectSymbolListener = () => {
 
 }
 
-const executeDeleteSymbolListener = (results, resultsType, operation, table) => {
+const executeDeleteSymbolListener = (results, resultsType, operation, resultsContainer) => {
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
-    toggleEditSymbol(false)
+    toggleEditSymbol(false) 
 
     confirmBtn.textContent = "Click to confirm deletion"
     confirmBtnClickHandler = function () {
@@ -261,7 +263,7 @@ const executeDeleteSymbolListener = (results, resultsType, operation, table) => 
         deleteCreatedObject(results, resultsType)
         confirmBtn.textContent = "Confirm"
         results = ""
-        executeConfirmCrudOperationBtn(results, resultsType, operation, table, "delete")
+        executeConfirmCrudOperationBtn(results, resultsType, operation, resultsContainer, "delete")
     }
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
@@ -319,15 +321,15 @@ const saveResult = (results, resultsType) => {
     }
 }
 
-const prepareEditonProcess = (results, resultsType, operation, table) => {
-    const tableResultsRow = table.querySelector(".results_row"),
-        cells = tableResultsRow.querySelectorAll("td")
+const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
+    const form = catalogCard.querySelector(".results_row"),
+        inputs = catalogCard.querySelectorAll("input")
 
     clearPrintedReults(resultsType)
 
     switch (resultsType) {
         case "author":
-            prepareAuthorEditionProcess(cells)
+            prepareAuthorEditionProcess(inputs)
             break;
         case "bookwork":
             prepareBookworkEditionProcess(cells)
@@ -417,29 +419,15 @@ const findSelectedResult = () => {
     }
 }
 
-const endProcess = (resultsType, operation, table) => {
+const endProcess = (resultsType, operation, resultsContainer) => {
     printSelectedResult(resultsType)
-    closeModal(resultsType, operation, table)
+    closeModal(resultsType, operation, resultsContainer)
 }
 
-const closeModal = (resultsType, operation, table) => {
-    if (table) {
-        let tableBody = table.querySelector(".results_table_body"),
-            errorMessageRow = tableBody.querySelector(".error_message_row")
+const closeModal = (resultsType, operation, resultsContainer) => {
 
-        tableBody.innerHTML = ""
-        if (errorMessageRow) {
-            tableBody.appendChild(errorMessageRow)
-        }
-
-        table.classList.add("hidden")
-
-        if (table.querySelector("th.select_column")) {
-            table.querySelector("th.select_column").remove()
-        }
-
-        table = ""
-    }
+    if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
+    else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
 
     modal.classList.add("hidden")
     selectResultBtn.setAttribute("disabled", true)
@@ -459,6 +447,34 @@ const closeModal = (resultsType, operation, table) => {
     toggleInspectSymbol()
     toggleNextPageChanging(resultsType)
     clearFormsData(findCurrentPage())
+}
+
+const hiddeTable = table => {
+    if (table) {
+        let tableBody = table.querySelector(".results_table_body"),
+            errorMessageRow = tableBody.querySelector(".error_message_row")
+
+        tableBody.innerHTML = ""
+        if (errorMessageRow) {
+            tableBody.appendChild(errorMessageRow)
+        }
+
+        table.classList.add("hidden")
+
+        if (table.querySelector("th.select_column")) {
+            table.querySelector("th.select_column").remove()
+        }
+
+        table = ""
+    }
+}
+
+const hiddeCatalogCard = catalogCard => {
+    if (catalogCard) {
+        if (catalogCard.classList.contains("hidden")) {
+            catalogCard.classList.add("hidden")
+        }
+    }
 }
 
 const displaySuccessMessage = (resultsType, crud = "create") => {
@@ -649,6 +665,7 @@ const clearFormsData = () => {
 
 export { findCurrentPage }
 export { enableModalActions }
+export { enableCreateModalActions }
 export { fetchRequest }
 export { joinParamsToURL }
 export { handleErrorMessages }

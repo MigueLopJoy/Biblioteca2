@@ -145,63 +145,52 @@ const clearPrintedReults = resultsType => {
 
 /* Handle results methods */
 
-const tableContainsClass = (table, className) => {
-    return table.classList.contains(className)
-}
-
-const showSearchResults = (table) => {
+const showSearchResults = (resultsType, table) => {
     const modal = d.getElementById("modal")
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
-    generaTableContent(table)
+    generaTableContent()
     selectBtnContainer.classList.remove("hidden")
 
-    if (tableContainsClass(table, "authors_results_table")) {
+    if (resultsType === "author") {
         selectResultBtn.textContent = "Select author"
-    } else if (tableContainsClass(table, "bookworks_results_table")) {
+    } else if (resultsType === "bookwork") {
         selectResultBtn.textContent = "Select book work"
-    } else if (tableContainsClass(table, "bookeditions_results_table")) {
+    } else if (resultsType === "bookedition") {
         selectResultBtn.textContent = "Select book edition"
     }
 }
 
-const showCatalogCard = (resultsType, operation) => {
+const showCatalogCard = (resultsType, operation, catalogCard) => {
     const modal = d.getElementById("modal")
     modal.classList.remove("hidden")
+    catalogCard.classList.remove("hidden")
 
     generateCatalogCard()
 
-    if (resultsType === "") {
-        selectResultBtn.textContent = "Save New Author"
-    } else if (resultsType === "newEdition") {
-        selectResultBtn.textContent = "Save New Edition"
-    } else if (resultsType === "newBookcopy") {
-        selectResultBtn.textContent = "Save New Copy"
-    } else if ()
-
-        if (operation === "create") displaySuccessMessage(resultsType)
+    if (operation === "create") displaySuccessMessage(resultsType)
     createBtnContainer.classList.remove("hidden")
 }
 
-const generaTableContent = table => {
-    if (tableContainsClass(table, "authors_results_table")) {
+const generaTableContent = () => {
+    if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
-    } else if (tableContainsClass(table, "bookworks_results_table")) {
+    } else if (table.classList.contains("bookworks_results_table")) {
         generateBookworksTableContent()
-    } else if (tableContainsClass(table, "newEdition_results_table")) {
+    } else if (table.classList.contains("newEdition_results_table")) {
         generateNewBookeditionTableContent()
-    } else if (tableContainsClass(table, "bookeditions_results_table")) {
+    } else if (table.classList.contains("bookeditions_results_table")) {
         generateBookeditionsTableContent()
-    } else if (tableContainsClass(table, "newBookcopy_results_table")) {
+    } else if (table.classList.contains("newBookcopy_results_table")) {
         generateNewBookcopyTableContent()
-    } else if (tableContainsClass(table, "b_authors_results_table")) {
+    } else if (table.classList.contains("b_authors_results_table")) {
         generateBrowseAuthorsTableContent()
     }
 }
 
-const generateCatalogCard = (form) => {
-    if (form.classList.contains("author_form")) {
+const generateCatalogCard = resultsType => {
+    if (resultsType === "author") {
         generateAuthorCatalogCard()
     }
 }
