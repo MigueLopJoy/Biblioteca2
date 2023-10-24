@@ -128,6 +128,14 @@
     font-size: 1rem;
 }
 
+.form .input-group-text {
+    border: 1px solid #888;
+}
+
+.form .input-group input {
+    flex: 1 1 auto;
+    width: 1%;
+}
 
 /*Modal styles*/
 
@@ -199,7 +207,7 @@
     margin-bottom: .5rem;
 }
 
-.modal_btns_container > div {
+.modal_btns_container>div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -269,30 +277,38 @@
 
 /* CATALOG CARDS STYLES */
 
+.catalog_cards_container {
+    margin: auto;
+}
+
 .catalog_card {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid #ccc;
     padding: 2.5rem;
-    width: 60%;
-    margin-bottom: 1rem;  
+    margin-bottom: 1rem;
+}
+
+.catalog_card legend {
+    text-align: center;
 }
 
 /*Buttons styles*/
 
 .btn {
-    background-color: var(--primary-color);
-    border: 1px solid rgba(27, 31, 35, .15);
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 20px;
-    padding: 6px 16px;
-    text-align: center;
-    white-space: nowrap;
-    transition: background-color 0.3s;
+    background-color: var(--primary-color) !important;
+    border: 1px solid rgba(27, 31, 35, .15) !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    line-height: 20px !important;
+    padding: 6px 16px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    transition: background-color 0.3s !important;
 }
 
 .btn:hover {

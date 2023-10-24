@@ -8,7 +8,10 @@ const loadContent = async (url, component) => {
 
 const loadJsFiles = async (...sources) => {
 
-    removeScriptsExcept('http://localhost/biblio/ASSETS/JS/scripts.js')
+    removeScriptsExcept(
+        'http://localhost/biblio/ASSETS/JS/scripts.js',
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    )
 
     for (let src of sources) {
         const script = document.createElement("script")

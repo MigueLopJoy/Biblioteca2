@@ -4,6 +4,7 @@ import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.model.BookEdition;
+import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
 import com.miguel.library.services.IBookEditionService;
 import com.miguel.library.services.IBookSearchService;
@@ -43,6 +44,13 @@ public class BookEditionController {
     @GetMapping("/get-all")
     public ResponseEntity<List<BookEdition>> getAllBookEditions() {
         return ResponseEntity.ok(bookEditionService.findAll());
+    }
+
+    @GetMapping("/get-bookwork-editions/{bookWorkId}")
+    public ResponseEntity<List<BookEdition>> getAuthorBookWorks(
+            @PathVariable Integer bookWorkId
+    ) {
+        return ResponseEntity.ok(bookEditionService.searchBookWorkEditions(bookWorkId));
     }
 
     @PostMapping("/search-bookeditions")

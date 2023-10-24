@@ -181,15 +181,20 @@
                     </table>
                 </div>
 
-                <div class="catalog_cards_container">
-                    <p class="success_message"></p>
+                <div class="catalog_cards_container mb-3">
+                    <p class="success_message mb-3"></p>
 
                     <div class="catalog_card author_catalog_card hidden">
                         <form class="form author_form">
                             <legend>Author Catalog Card</legend>
                             <p class="error_message general_error"></p>
-                            <input type="text" name="author_name" id="author_fullName">
-                            <input type="text" name="author_bookworks" id="author_bookworks">
+                            <input type="text" name="author_name" class="author_name" readonly>
+                            <div class="input-group">
+                                <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
                         </form>
                     </div>
 
@@ -198,12 +203,20 @@
                             <legend>Book Work Catalog Card</legend>
                             <p class="error_message general_error"></p>
                             <p class="error_message title"></p>
-                            <input type="text" name="title" placeholder="Book work title">
+                            <input type="text" name="title" class="title" readonly>
+                            <p class="error_message author"></p>
+                            <input type="number" name="author" class="author" readonly>
                             <p class="error_message publicationYear"></p>
-                            <input type="number" name="publication_year" placeholder="Book work publication year">
-                        </form>                        
+                            <input type="number" name="publication_year" class="publication_year" readonly>
+                            <div class="input-group">
+                                <input type="text" name="bookwork_editions" class="bookwork_editions mb-0" readonly>
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
+                        </form>
                     </div>
-                    
+
                     <div class="catalog_card bookedition_catalog_card hidden">
                         <form class="form edition_form">
                             <legend>Create new book edition</legend>
@@ -211,14 +224,20 @@
                             <input type="text" name="author_name" class="selected_author" readonly>
                             <input type="text" name="title" class="selected_bookwork" readonly>
                             <p class="error_message ISBN"></p>
-                            <input type="text" name="isbn" placeholder="ISBN">
+                            <input type="text" name="isbn" placeholder="ISBN" readonly>
                             <p class="error_message editor"></p>
-                            <input type="text" name="editor_name" placeholder="Editor name">
+                            <input type="text" name="editor_name" placeholder="Editor name" readonly>
                             <p class="error_message editionYear"></p>
-                            <input type="number" name="edition_year" placeholder="Edition year">
+                            <input type="number" name="edition_year" placeholder="Edition year" readonly>
                             <p class="error_message language"></p>
-                            <input type="text" name="edition_language" placeholder="Language">
-                            <input type="submit" id="create_bookwork_btn" class="btn">
+                            <input type="text" name="edition_language" placeholder="Language" readonly>
+                            <input type="submit" id="create_bookwork_btn" class="btn" readonly>
+                            <div class="input-group">
+                                <input type="text" name="bookedition_copies" class="bookedition_copes mb-0" readonly>
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
                         </form>
                     </div>
                 </div>

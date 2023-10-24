@@ -12,12 +12,15 @@
   padding: .5rem .5rem .5rem 1rem;
   text-decoration: none;
   font-size: 1.25rem;
-  color: #818181;
   display: block;
   border: none;
   background: none;
   text-align: left;
   outline: none;
+}
+
+.dropdown_link {
+  color: #818181 !important;
 }
 
 .sidenav a:hover,

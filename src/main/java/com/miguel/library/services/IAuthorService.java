@@ -12,6 +12,7 @@ public interface IAuthorService {
 
     public List<Author> findAll();
 
+    public Author searchByAuthorId(Integer authorId);
     public Author searchByAuthorName(Author author);
 
     public List<Author> searchByCustomizedSearch(String authorName);

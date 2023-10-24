@@ -14,7 +14,7 @@ public interface IBookEditionService {
 
     public BookEdition searchByISBN(String ISBN);
 
-    public List<BookEdition> searchBookWorkEditions(BookWork bookWork);
+    public List<BookEdition> searchBookWorkEditions(Integer bookWorkId);
 
     public BookEdition editBookEdition(Integer bookEditionId, BooksEditDTOBookEdition bookEdit);
 

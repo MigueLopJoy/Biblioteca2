@@ -59,6 +59,11 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
+    public BookWork searchByBookWorkId(Integer bookWorkId) {
+        return bookWorkRepository.findById(bookWorkId).orElse(null);
+    }
+
+    @Override
     public BookWork searchByTitleAndAuthor(BookWork bookWork) {
 
         if (Objects.isNull(bookWork)) {
@@ -82,21 +87,25 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public List<BookWork> searchAuthorBookWorks(Author author) {
+    public List<BookWork> searchAuthorBookWorks(Integer authorId) {
+
+        Author author = authorService.searchByAuthorId(authorId);
 
         if (Objects.isNull(author)) {
             throw new ExceptionNullObject("Author should not be null");
         }
 
         Author fetchedAuthor = authorService.searchByAuthorName(author);
-
         if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Searched author not found");
         }
 
         List<BookWork> authorBookWorks = bookWorkRepository.findByAuthor(author);
-        Collections.sort(authorBookWorks);
+        if (authorBookWorks.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No book works were found");
+        }
 
+        Collections.sort(authorBookWorks);
         return authorBookWorks;
     }
 

@@ -37,7 +37,7 @@
         <div class="page bookcopy_page hidden">
 
             <div class="page_element_container create_bookcopy">
-                <form class="form bookwork_form create">
+                <form class="form newBookcopy_form create">
                     <legend>Create new book work</legend>
                     <div></div>
                     <p class="error_message general_error"></p>
@@ -112,6 +112,25 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="catalog_cards_container">
+                    <p class="success_message"></p>
+
+                    <div class="catalog_card bookedition_catalog_card hidden">
+                        <form class="form newBookcopy_form">
+                            <legend>Create new book work</legend>
+                            <p class="error_message general_error"></p>
+                            <input type="text" name="title" class="selected_title" readonly>
+                            <input type="text" name="author" class="selected_author" readonly>
+                            <input type="text" name="editorAndYear" class="selected_editorAndYear" readonly>
+                            <input type="text" name="isbn" class="selected_isbn" readonly>
+                            <p class="error_message registrationNumber"></p>
+                            <input type="number" name="registration_number" placeholder="Registration number">
+                            <p class="error_message signature"></p>
+                            <input type="text" name="signature" placeholder="Signature">
+                        </form>
+                    </div>
                 </div>
 
                 <div class="modal_btns_container">

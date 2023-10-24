@@ -4,6 +4,8 @@ import { generateAuthorsTableContent } from "./cataloging.js"
 import { generateBookworksTableContent } from "./cataloging.js"
 import { generateNewBookeditionTableContent } from "./cataloging.js"
 import { generateAuthorCatalogCard } from "./cataloging.js"
+import { generateBookWorkCatalogCard } from "./cataloging.js"
+import { generateBookEditionCatalogCard } from "./cataloging.js"
 
 import { generateBookeditionsTableContent } from "./registering.js"
 import { generateNewBookcopyTableContent } from "./registering.js"
@@ -150,7 +152,7 @@ const showSearchResults = (resultsType, table) => {
     modal.classList.remove("hidden")
     table.classList.remove("hidden")
 
-    generaTableContent()
+    generaTableContent(table)
     selectBtnContainer.classList.remove("hidden")
 
     if (resultsType === "author") {
@@ -162,18 +164,16 @@ const showSearchResults = (resultsType, table) => {
     }
 }
 
-const showCatalogCard = (resultsType, operation, catalogCard) => {
+const showCatalogCard = (resultsType, catalogCard) => {
     const modal = d.getElementById("modal")
     modal.classList.remove("hidden")
     catalogCard.classList.remove("hidden")
-
-    generateCatalogCard()
-
-    if (operation === "create") displaySuccessMessage(resultsType)
+    generateCatalogCard(resultsType)
+    displaySuccessMessage(resultsType)
     createBtnContainer.classList.remove("hidden")
 }
 
-const generaTableContent = () => {
+const generaTableContent = table => {
     if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
@@ -192,6 +192,10 @@ const generaTableContent = () => {
 const generateCatalogCard = resultsType => {
     if (resultsType === "author") {
         generateAuthorCatalogCard()
+    } else if (resultsType === "bookwork") {
+        generateBookWorkCatalogCard()
+    } else if (resultsType === "bookedition") {
+        generateBookEditionCatalogCard()
     }
 }
 

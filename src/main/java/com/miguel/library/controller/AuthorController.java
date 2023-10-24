@@ -23,7 +23,7 @@ public class AuthorController {
     @PostMapping("/save-author")
     public ResponseEntity<Author> saveNewAuthor(
             @Valid @RequestBody AuthorsDTOSaveNewAuthor author
-        ) {
+    ) {
         return ResponseEntity.ok(
                 authorService.saveNewAuthor(
                         authorService.createAuthorFromDTO(author)

@@ -45,6 +45,11 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     @Override
+    public Author searchByAuthorId(Integer authorId) {
+        return authorRepository.findById(authorId).orElse(null);
+    }
+
+    @Override
     public Author searchByAuthorName(Author author) {
         return authorRepository.findByAuthorName(this.getFullAuthorName(author)).orElse(null);
     }

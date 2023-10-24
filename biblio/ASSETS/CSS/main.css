@@ -1,3 +1,5 @@
+/* GENERAL STYLES BEGIN */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -15,6 +17,9 @@ body {
     height: 100vh;
     background-color: #F2F2F2;
 }
+
+/* GENERAL STYLES END */
+
 
 #index-wrapper {
     width: 100%;
@@ -36,7 +41,6 @@ body {
     border-bottom: 2px solid #A2A2A2;
     box-shadow: 0.15rem 0.15rem 0.5rem 0.05rem #A2A2A2;
 }
-
 
 #sidebar {
     display: table-cell;
