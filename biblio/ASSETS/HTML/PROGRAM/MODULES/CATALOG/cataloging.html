@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="tables_container">
-                    <p class="success_message"></p>
+                    <p class="success_message mb-1"></p>
 
                     <table class="results_table authors_results_table hidden">
                         <thead>
@@ -182,13 +182,17 @@
                 </div>
 
                 <div class="catalog_cards_container mb-3">
-                    <p class="success_message mb-3"></p>
+                    <p class="success_message mb-1"></p>
 
                     <div class="catalog_card author_catalog_card hidden">
                         <form class="form author_form">
                             <legend>Author Catalog Card</legend>
                             <p class="error_message general_error"></p>
-                            <input type="text" name="author_name" class="author_name" readonly>
+                            <label for="firstName">First Name:</label>
+                            <input type="text" name="firstName" class="firstName" readonly>
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" name="lastName" class="lastName" readonly>
+                            <label for="author_bookworks">Author's Book Works:</label>
                             <div class="input-group">
                                 <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
                                 <span class="input-group-text">
@@ -203,10 +207,13 @@
                             <legend>Book Work Catalog Card</legend>
                             <p class="error_message general_error"></p>
                             <p class="error_message title"></p>
+                            <label for="title">Title:</label>
                             <input type="text" name="title" class="title" readonly>
                             <p class="error_message author"></p>
+                            <label for="author">Author:</label>
                             <input type="number" name="author" class="author" readonly>
                             <p class="error_message publicationYear"></p>
+                            <label for="publication_year">Publication Year:</label>
                             <input type="number" name="publication_year" class="publication_year" readonly>
                             <div class="input-group">
                                 <input type="text" name="bookwork_editions" class="bookwork_editions mb-0" readonly>

@@ -113,9 +113,10 @@
     margin-bottom: 0.5rem;
 }
 
-.form legend {
+.form legend:first-child {
+    text-align: center;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: .25rem;
 }
 
 .form input[type="text"],
@@ -126,6 +127,11 @@
     border: 1px solid #888;
     border-radius: 4px;
     font-size: 1rem;
+    outline: none;
+}
+
+.catalog_card input.editing {
+    border: 2px solid #00CC00;
 }
 
 .form .input-group-text {
@@ -192,7 +198,6 @@
     min-width: 50%;
     max-width: 80%;
     width: auto;
-    max-height: 75vh;
     background-color: #fff;
     margin: 7.5% auto;
     padding: 1.25rem;
@@ -204,7 +209,6 @@
 #modal .tables_container {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: .5rem;
 }
 
 .modal_btns_container>div {
@@ -289,10 +293,6 @@
     border: 1px solid #ccc;
     padding: 2.5rem;
     margin-bottom: 1rem;
-}
-
-.catalog_card legend {
-    text-align: center;
 }
 
 /*Buttons styles*/

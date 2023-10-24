@@ -244,7 +244,7 @@ const executeEditSymbolListener = (results, resultsType, operation, catalogCard)
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
     prepareEditonProcess(results, resultsType, operation, catalogCard)
-    toggleEditSymbol(results, resultsType, operation, table, false)
+    toggleEditSymbol(results, resultsType, operation, catalogCard, false)
 }
 
 const executeInspectSymbolListener = () => {
@@ -255,7 +255,7 @@ const executeDeleteSymbolListener = (results, resultsType, operation, resultsCon
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
-    toggleEditSymbol(false) 
+    toggleEditSymbol(false)
 
     confirmBtn.textContent = "Click to confirm deletion"
     confirmBtnClickHandler = function () {
@@ -322,8 +322,7 @@ const saveResult = (results, resultsType) => {
 }
 
 const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
-    const form = catalogCard.querySelector(".results_row"),
-        inputs = catalogCard.querySelectorAll("input")
+    const inputs = catalogCard.querySelectorAll(".form > input")
 
     clearPrintedReults(resultsType)
 
@@ -332,19 +331,19 @@ const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
             prepareAuthorEditionProcess(inputs)
             break;
         case "bookwork":
-            prepareBookworkEditionProcess(cells)
+            prepareBookworkEditionProcess(inputs)
             break;
         case "newEdition":
-            prepareNewEditionEditionProcess(cells)
+            prepareNewEditionEditionProcess(inputs)
             break;
         case "newBookcopy":
-            prepareNewBookcopyEditionProcess(cells)
+            prepareNewBookcopyEditionProcess(inputs)
             break;
         case "newReader":
-            prepareNewReaderEditionProcess(cells)
+            prepareNewReaderEditionProcess(inputs)
             break;
         case "b_author":
-            prepareBrowseAuthorEditionProcess(cells)
+            prepareBrowseAuthorEditionProcess(inputs)
             break;
         default:
             break;
@@ -352,45 +351,43 @@ const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
 
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
     confirmBtnClickHandler = function () {
-        confirmEdition(results, resultsType, operation, table)
+        confirmEdition(results, resultsType, operation, catalogCard)
     }
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
 
-const confirmEdition = async (results, resultsType, operation, table) => {
-    const tbody = table.querySelector(".results_table_body"),
-        errorMessageRow = tbody.querySelector(".error_message_row"),
-        editedFields = [...tbody.querySelectorAll("td input")].map(input => input.value)
+const confirmEdition = async (results, resultsType, operation, catalogCard) => {
+    const editedInputs = [...catalogCard.querySelectorAll(".form > input")].map(input => input.value)
 
     let error
     try {
         if (resultsType === "author") {
-            results = await getEditAuthorResults(editedFields)
+            results = await getEditAuthorResults(editedInputs)
         } else if (resultsType === "bookwork") {
-            results = await getEditBookworkResults(editedFields)
+            results = await getEditBookworkResults(editedInputs)
         } else if (resultsType === "newEdition") {
-            results = await getEditNewEditionResults(editedFields)
+            results = await getEditNewEditionResults(editedInputs)
         } else if (resultsType === "newBookcopy") {
-            results = await getEditNewCopyResults(editedFields)
+            results = await getEditNewCopyResults(editedInputs)
         } else if (resultsType === "newReader") {
-            results = await getEditNewReaderResults(editedFields)
+            results = await getEditNewReaderResults(editedInputs)
         } else if (resultsType === "b_author") {
-            results = await getEditBrowseAuthorResults(editedFields)
+            results = await getEditBrowseAuthorResults(editedInputs)
         }
     } catch (ex) {
         error = ex
     }
 
     clearErrorMessages()
+    d.querySelectorAll(".form > input").forEach(input => {
+        if (input.classList.contains("editing")) {
+            input.classList.remove("editing")
+        }
+    })
 
     if (error) {
-        errorMessageRow.classList.remove("hidden")
-        handleErrorMessages(error, tbody)
+        handleErrorMessages(error, catalogCard)
     } else {
-        if (!errorMessageRow.classList.contains("hidden")) {
-            errorMessageRow.classList.add("hidden")
-        }
-
         switch (resultsType) {
             case "newBookedition":
             case "newBookcopy":
@@ -398,7 +395,7 @@ const confirmEdition = async (results, resultsType, operation, table) => {
                 prepareEndingBtn(resultsType)
                 break;
             default:
-                executeConfirmCrudOperationBtn(results, resultsType, operation, table, "edit")
+                executeConfirmCrudOperationBtn(results, resultsType, operation, catalogCard, "edit")
                 break;
         }
     }
@@ -425,6 +422,8 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 }
 
 const closeModal = (resultsType, operation, resultsContainer) => {
+
+    console.log(resultsContainer)
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
@@ -471,7 +470,7 @@ const hiddeTable = table => {
 
 const hiddeCatalogCard = catalogCard => {
     if (catalogCard) {
-        if (catalogCard.classList.contains("hidden")) {
+        if (!catalogCard.classList.contains("hidden")) {
             catalogCard.classList.add("hidden")
         }
     }

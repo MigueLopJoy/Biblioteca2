@@ -135,6 +135,7 @@ const getCreateAuthorResults = async form => {
 
 const getEditAuthorResults = async editedFields => {
     try {
+        console.log(editedFields)
         results = [await fetchRequest(
             "PUT",
             `http://localhost:8080/authors-catalog/edit-author/${results[0].idAuthor}`,
@@ -359,8 +360,7 @@ const generateAuthorsTableContent = () => {
 
 const generateAuthorCatalogCard = () => {
     let author = results[0],
-        authorName = `${author.firstName} ${author.lastName}`,
-        authorBookWorks = getAuthorBookWorks().length,
+        authorBookWorks = getAuthorBookWorks(author.idAuthor).length,
         authorBookWorksMessage,
         authorCatalogCard = d.querySelector(".author_catalog_card")
     authorCatalogCard.classList.remove("hidden")
@@ -372,7 +372,8 @@ const generateAuthorCatalogCard = () => {
     }
 
     authorCatalogCard.querySelector(".author_bookworks").value = authorBookWorksMessage
-    authorCatalogCard.querySelector(".author_name").value = authorName
+    authorCatalogCard.querySelector(".firstName").value = author.firstName
+    authorCatalogCard.querySelector(".lastName").value = author.lastName
 }
 
 const generateBookWorkCatalogCard = () => {
@@ -381,7 +382,7 @@ const generateBookWorkCatalogCard = () => {
         authorName = `${author.firstName} ${author.lastName}`,
         title = bookwork.title,
         publicationYear = bookWork.publicationYear,
-        bookWorkEditions = getBookWorkEditions().length,
+        bookWorkEditions = getBookWorkEditions(bookWork.idBookWork).length,
         bookWorkEditionsMessage,
         bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
     bookWorkCatalogCard.classList.remove("hidden")
@@ -398,9 +399,9 @@ const generateBookWorkCatalogCard = () => {
 }
 
 const generateBookEditionCatalogCard = () => {
-    let author = results[0],
+    let bookEdition = results[0],
         authorName = `${author.firstName} ${author.lastName}`,
-        authorBookWorks = getAuthorBookWorks().length,
+        authorBookWorks = getAuthorBookWorks(book).length,
         authorBookWorksMessage,
         authorCatalogCard = d.querySelector(".author_catalog_card")
     authorCatalogCard.classList.remove("hidden")
@@ -526,14 +527,22 @@ const generateNewBookeditionTableContent = () => {
     }
 }
 
-const prepareAuthorEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="edition" value="${author.firstName}" >`
-    cells[1].innerHTML = `<input type="text" class="edition"value="${author.lastName}" >`
+const prepareAuthorEditionProcess = inputs => {
+    for (const input of inputs) {
+        input.classList.add("edition")
+        input.removeAttribute("readonly")
+        input.classList.add("editing")
+    }
 }
 
-const prepareBookworkEditionProcess = cells => {
-    cells[0].innerHTML = `<input type="text" class="edition" value="${bookwork.title}" >`
-    cells[2].innerHTML = `<input type="number" class="edition" value="${bookwork.publicationYear}" >`
+const prepareBookworkEditionProcess = inputs => {
+    inputs.forEach((input, index) => {
+        if (index != 1) {
+            input.classList.add("edition")
+            input.removeAttribute("readonly")
+            input.classList.add("editing")
+        }
+    })
 }
 
 const prepareNewEditionEditionProcess = cells => {

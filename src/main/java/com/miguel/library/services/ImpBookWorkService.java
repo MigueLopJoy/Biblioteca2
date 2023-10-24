@@ -102,7 +102,7 @@ public class ImpBookWorkService implements IBookWorkService{
 
         List<BookWork> authorBookWorks = bookWorkRepository.findByAuthor(author);
         if (authorBookWorks.isEmpty()) {
-            throw new ExceptionNoSearchResultsFound("No book works were found");
+            throw new ExceptionNoSearchResultsFound("No Book Works Were Found");
         }
 
         Collections.sort(authorBookWorks);
