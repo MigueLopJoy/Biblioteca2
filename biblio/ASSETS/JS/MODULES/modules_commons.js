@@ -357,7 +357,7 @@ const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
 }
 
 const confirmEdition = async (results, resultsType, operation, catalogCard) => {
-    const editedInputs = [...catalogCard.querySelectorAll(".form > input")].map(input => input.value)
+    const editedInputs = [...catalogCard.querySelectorAll(".form > input.editing")].map(input => input.value)
 
     let error
     try {
@@ -422,8 +422,6 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 }
 
 const closeModal = (resultsType, operation, resultsContainer) => {
-
-    console.log(resultsContainer)
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)

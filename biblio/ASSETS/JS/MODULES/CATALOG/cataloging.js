@@ -47,7 +47,6 @@ d.addEventListener("submit", async e => {
                 showSearchResults(resultsType, table)
                 enableModalActions(results, resultsType, operation, table)
             } else if (operation === "create") {
-                console.log(catalogCard)
                 showCatalogCard(resultsType, catalogCard)
                 enableCreateModalActions(results, resultsType, operation, catalogCard)
             }
@@ -66,8 +65,6 @@ const runAuthorProcess = async form => {
         await getSearchAuthorResults(form)
     } else if (form.classList.contains("create")) {
         catalogCard = authorCatalogCard
-        console.log(authorCatalogCard)
-        console.log(catalogCard)
         operation = "create"
         await getCreateAuthorResults(form)
     }
@@ -135,7 +132,6 @@ const getCreateAuthorResults = async form => {
 
 const getEditAuthorResults = async editedFields => {
     try {
-        console.log(editedFields)
         results = [await fetchRequest(
             "PUT",
             `http://localhost:8080/authors-catalog/edit-author/${results[0].idAuthor}`,
@@ -216,7 +212,7 @@ const getEditBookworkResults = async editedFields => {
             `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
             {
                 title: editedFields[0],
-                publicationYear: editedFields[1]
+                publicationYear: editedFields[2]
             }
         )]
         return results
@@ -376,47 +372,6 @@ const generateAuthorCatalogCard = () => {
     authorCatalogCard.querySelector(".lastName").value = author.lastName
 }
 
-const generateBookWorkCatalogCard = () => {
-    let bookWork = results[0],
-        author = bookWork.author,
-        authorName = `${author.firstName} ${author.lastName}`,
-        title = bookwork.title,
-        publicationYear = bookWork.publicationYear,
-        bookWorkEditions = getBookWorkEditions(bookWork.idBookWork).length,
-        bookWorkEditionsMessage,
-        bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
-    bookWorkCatalogCard.classList.remove("hidden")
-
-    if (bookWorkEditions > 0) {
-        bookWorkEditionsMessage = `Book Work Editions: ${bookWorkEditions}`
-    } else {
-        bookWorkEditionsMessage = "No Associated Book Editions"
-    }
-    bookWorkCatalogCard.querySelector(".title").value = title
-    bookWorkCatalogCard.querySelector(".author").value = authorName
-    bookWorkCatalogCard.querySelector(".publication_year").value = publicationYear
-    bookWorkCatalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
-}
-
-const generateBookEditionCatalogCard = () => {
-    let bookEdition = results[0],
-        authorName = `${author.firstName} ${author.lastName}`,
-        authorBookWorks = getAuthorBookWorks(book).length,
-        authorBookWorksMessage,
-        authorCatalogCard = d.querySelector(".author_catalog_card")
-    authorCatalogCard.classList.remove("hidden")
-
-    if (authorBookWorks > 0) {
-        authorBookWorksMessage = `Author Book Works: ${countAuthorBookWorks}`
-    } else {
-        authorBookWorksMessage = "No Associated Book Copies"
-    }
-
-    authorCatalogCard.querySelector(".author_bookworks").value = authorBookWorksMessage
-    authorCatalogCard.querySelector(".author_name").value = authorName
-}
-
-
 const generateBookworksTableContent = () => {
     if (!table.querySelector("th.select_column")) {
         let selectColumn = d.createElement("th")
@@ -478,6 +433,47 @@ const generateBookworksTableContent = () => {
         }
     }
 }
+
+const generateBookWorkCatalogCard = () => {
+    let bookwork = results[0],
+        author = bookwork.author,
+        authorName = `${author.firstName} ${author.lastName}`,
+        title = bookwork.title,
+        publicationYear = bookwork.publicationYear,
+        bookWorkEditions = getBookWorkEditions(bookwork.idBookWork).length,
+        bookWorkEditionsMessage,
+        bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
+    bookWorkCatalogCard.classList.remove("hidden")
+
+    if (bookWorkEditions > 0) {
+        bookWorkEditionsMessage = `Book Work Editions: ${bookWorkEditions}`
+    } else {
+        bookWorkEditionsMessage = "No Associated Book Editions"
+    }
+    bookWorkCatalogCard.querySelector(".bookwork_title").value = title
+    bookWorkCatalogCard.querySelector(".bookwork_author").value = authorName
+    bookWorkCatalogCard.querySelector(".bookwork_publication_year").value = publicationYear
+    bookWorkCatalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
+}
+
+const generateBookEditionCatalogCard = () => {
+    let bookEdition = results[0],
+        authorName = `${author.firstName} ${author.lastName}`,
+        authorBookWorks = getAuthorBookWorks(book).length,
+        authorBookWorksMessage,
+        authorCatalogCard = d.querySelector(".author_catalog_card")
+    authorCatalogCard.classList.remove("hidden")
+
+    if (authorBookWorks > 0) {
+        authorBookWorksMessage = `Author Book Works: ${countAuthorBookWorks}`
+    } else {
+        authorBookWorksMessage = "No Associated Book Copies"
+    }
+
+    authorCatalogCard.querySelector(".author_bookworks").value = authorBookWorksMessage
+    authorCatalogCard.querySelector(".author_name").value = authorName
+}
+
 
 const generateNewBookeditionTableContent = () => {
     for (let i = 0; i < results.length; i++) {
