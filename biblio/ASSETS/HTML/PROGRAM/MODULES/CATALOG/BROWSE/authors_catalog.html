@@ -63,17 +63,34 @@
                     </table>
                 </div>
 
-                <div class="catalog_card_container">
-                    <div class="catalog_card author_catalog_card">
-                        <h3>Author Catalog Card</h3>
-                        <form class="form b_author_form author_catalog_card_form">
-                            <legend>Search author</legend>
-                            <p class="error_message general_error"></p>
-                            <input type="text" name="author_name" id="author_fullName">
-                            <input type="text" name="author_bookworks" id="author_bookworks"
-                                placeholder="Author's Book Works: ">
-                        </form>
-                    </div>
+                <div class="catalog_cards_container">
+                    <div class="catalog_cards_container">
+                        <p class="success_message mb-1"></p>
+    
+                        <div class="catalog_card author_catalog_card hidden">
+                            <form class="form author_form">
+                                <legend>Author Catalog Card</legend>
+                                
+                                <p class="error_message general_error mb-0"></p>
+                                
+                                <p class="error_message firstName mb-0"></p>
+                                <label>First Name:</label>
+                                <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
+                                
+                                <p class="error_message lastName mb-0"></p>
+                                <label>Last Name:</label>
+                                <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
+                                
+                                <label for="author_bookworks">Author's Book Works:</label>
+                                <div class="input-group">
+                                    <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                </div>
+                                
+                            </form>
+                        </div>
                 </div>
 
                 <div class="modal_btns_container">

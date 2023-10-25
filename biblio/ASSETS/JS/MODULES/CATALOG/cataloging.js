@@ -159,11 +159,10 @@ const deleteAuthor = async authorId => {
 
 const getAuthorBookWorks = async authorId => {
     try {
-        let authorBookWorks = await fetchRequest(
+        return await fetchRequest(
             "GET",
             `http://localhost:8080/bookworks-catalog/get-author-bookworks/${authorId}`,
         )
-        return authorBookWorks
     } catch (ex) {
         throw ex
     }
@@ -205,10 +204,6 @@ const getCreatehBookworkResults = async form => {
 
 const getEditBookworkResults = async editedFields => {
     try {
-        console.log({
-            title: editedFields[0],
-            publicationYear: editedFields[1]
-        })
         results = [await fetchRequest(
             "PUT",
             `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
@@ -274,11 +269,10 @@ const getCreateBookeditionResults = async form => {
 
 const getEditionCopies = async bookEditionId => {
     try {
-        let bookEditionCopies = await fetchRequest(
+        return await fetchRequest(
             "GET",
             `http://localhost:8080/bookcopies/get-bookwork-editions/${bookEditionId}`,
         )
-        return bookEditionCopies
     } catch (ex) {
         throw ex
     }
@@ -369,8 +363,8 @@ const generateAuthorsTableContent = () => {
 
 const generateAuthorCatalogCard = async () => {
     let author = results[0],
-        authorBookWorksMessage,
-        authorCatalogCard = d.querySelector(".author_catalog_card")
+        authorBookWorksMessage
+        
     authorCatalogCard.classList.remove("hidden")
 
     authorCatalogCard.querySelector(".author_firstName").value = author.firstName

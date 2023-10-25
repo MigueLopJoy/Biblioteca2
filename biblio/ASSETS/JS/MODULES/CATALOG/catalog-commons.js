@@ -162,7 +162,6 @@ const showSearchResults = (resultsType, table) => {
 }
 
 const showCatalogCard = (resultsType, catalogCard) => {
-    console.log(catalogCard)
     renderModal()
     catalogCard.classList.remove("hidden")
     generateCatalogCard(resultsType)
@@ -201,6 +200,8 @@ const generateCatalogCard = resultsType => {
         generateBookEditionCatalogCard()
     } else if (resultsType === "newBookcopy") {
         generateBookCopyCatalogCard()
+    } else if (resultsType === "b_author") {
+        generateBrowseAuthorCatalogCard()
     }
 }
 

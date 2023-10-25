@@ -312,15 +312,13 @@ const saveResult = (results, resultsType) => {
 }
 
 const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
-    const inputs = catalogCard.querySelectorAll(".form > input.card_info")
-
-    clearPrintedReults(resultsType)
-
+    const inputs = catalogCard.querySelectorAll(".form input.card_info")
     for (const input of inputs) {
-        input.classList.add("edition")
         input.removeAttribute("readonly")
         input.classList.add("editing")
     }
+
+    clearPrintedReults(resultsType)
 
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
     confirmBtnClickHandler = function () {
@@ -330,40 +328,19 @@ const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
 }
 
 const confirmEdition = async (results, resultsType, operation, catalogCard) => {
-    const editedInputs = [...catalogCard.querySelectorAll(".form > input.editing")].map(input => input.value)
-
-    let error
-    try {
-        if (resultsType === "author") {
-            results = await getEditAuthorResults(editedInputs)
-        } else if (resultsType === "bookwork") {
-            results = await getEditBookworkResults(editedInputs)
-            console.log(results)
-        } else if (resultsType === "newEdition") {
-            results = await getEditNewEditionResults(editedInputs)
-        } else if (resultsType === "newBookcopy") {
-            results = await getEditNewCopyResults(editedInputs)
-        } else if (resultsType === "newReader") {
-            results = await getEditNewReaderResults(editedInputs)
-        } else if (resultsType === "b_author") {
-            results = await getEditBrowseAuthorResults(editedInputs)
-        }
-    } catch (ex) {
-        error = ex
-    }
+    const editedInputs = [...catalogCard.querySelectorAll(".form input.editing")].map(input => input.value)
 
     clearErrorMessages()
+    try {
+        results = await getEditionResults(resultsType, editedInputs)
 
-    if (error) {
-        handleErrorMessages(error, catalogCard)
-    } else {
+        console.log(results)
 
-        d.querySelectorAll(".form > input").forEach(input => {
+        d.querySelectorAll(".form input.card_info").forEach(input => {
             if (input.classList.contains("editing")) {
                 input.classList.remove("editing")
             }
         })
-
         switch (resultsType) {
             case "newBookedition":
             case "newBookcopy":
@@ -374,7 +351,25 @@ const confirmEdition = async (results, resultsType, operation, catalogCard) => {
                 executeConfirmCrudOperationBtn(results, resultsType, operation, catalogCard, "edit")
                 break;
         }
+    } catch (ex) {
+        handleErrorMessages(ex, catalogCard)
     }
+}
+
+const getEditionResults = async (resultsType, editedInputs) => {
+        if (resultsType === "author") {
+            return await getEditAuthorResults(editedInputs)
+        } else if (resultsType === "bookwork") {
+            return await getEditBookworkResults(editedInputs)
+        } else if (resultsType === "newEdition") {
+            return await getEditNewEditionResults(editedInputs)
+        } else if (resultsType === "newBookcopy") {
+            return await getEditNewCopyResults(editedInputs)
+        } else if (resultsType === "newReader") {
+            return await getEditNewReaderResults(editedInputs)
+        } else if (resultsType === "b_author") {
+            return await getEditBrowseAuthorResults(editedInputs)
+        }
 }
 
 const findSelectedResult = () => {
@@ -398,8 +393,6 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 }
 
 const closeModal = (resultsType, operation, resultsContainer) => {
-
-    console.log(resultsContainer)
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
@@ -603,6 +596,7 @@ const joinParamsToURL = (baseURL, params) => {
 /* Error handling methods*/
 
 const handleErrorMessages = (error, layer) => {
+    console.log(error)
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
             let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)

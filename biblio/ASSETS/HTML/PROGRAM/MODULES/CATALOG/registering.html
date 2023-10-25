@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="tables_container">
-                    <p class="success_message"></p>
+                    <p class="success_message mb-0"></p>
 
                     <table class="results_table bookeditions_results_table hidden">
                         <thead>
@@ -93,10 +93,11 @@
                 </div>
 
                 <div class="catalog_cards_container">
-                    <p class="success_message"></p>
+                    
+                    <p class="success_message mb-0"></p>
                     <div class="catalog_card bookcopy_catalog_card hidden">
                         <form class="form newBookcopy_form">
-                            <legend>Create new book work</legend>
+                            <legend>Book Copy Catalog Card</legend>
 
                             <div class="d-flex justify-content-between">
                                 <div class="col-6 pe-1">
@@ -110,13 +111,13 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <div class="col-8 pe-1">
+                                <div class="col-6 pe-1">
                                     <label>ISBN:</label>
                                     <input type="text" name="bookedition_isbn" class="bookedition_isbn" readonly>
                                 </div>
-                                <div class="col-4 ps-1">
+                                <div class="col-6 ps-1">
                                     <label>Language:</label>
-                                    <input type="number" name="bookedition_language" class="bookedition_language" readonly>
+                                    <input type="text" name="bookedition_language" class="bookedition_language" readonly>
                                 </div>
                             </div>
 
@@ -133,32 +134,37 @@
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between">
-                                <div class="col-6 pe-1">
-                                    <label>Bar Code:</label>
-                                    <input type="text" name="bookCopy_barCode" class="bookCopy_barCode" readonly>
-                                </div>
-                                <div class="col-6 ps-1">
-                                    <p class="error_message signature mb-0"></p>
-                                    <label>Signature:</label>
-                                    <input type="number" name="bookCopy_signature" class="bookCopy_signature card_info" readonly>
+                            <div>
+                                <p class="error_message signature mb-0"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <label>Bar Code:</label>
+                                        <input type="text" name="bookCopy_barCode" class="bookCopy_barCode" readonly>
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <label>Signature:</label>
+                                        <input type="text" name="bookCopy_signature" class="bookCopy_signature card_info" readonly>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between">
-                                <div class="col-6 pe-1">
-                                    <label>Registration Date:</label>
-                                    <p class="error_message barCode mb-0"></p>
-                                    <input type="text" name="bookCopy_registration_date" class="bookCopy_registration_date" readonly>
-                                </div>
-                                <div class="col-6 ps-1">
-                                    <p class="error_message editionYear mb-0"></p>
-                                    <label>Registration Number:</label>
-                                    <input type="number" name="bookCopy_registration_number"
-                                        class="bookCopy_registration_number card_info" readonly>
+                            <div>
+                                <p class="error_message registrationNumber mb-0"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <label>Registration Date:</label>
+                                        <p class="error_message barCode mb-0"></p>
+                                        <input type="text" name="bookCopy_registration_date" class="bookCopy_registration_date" readonly>
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <label>Registration Number:</label>
+                                        <input type="number" name="bookCopy_registration_number"
+                                            class="bookCopy_registration_number card_info" readonly>
+                                    </div>
                                 </div>
                             </div>
                         </form>
+                        <p class="error_message general_error"></p>
                     </div>
                 </div>
 
