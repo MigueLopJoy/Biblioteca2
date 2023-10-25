@@ -163,7 +163,6 @@ const getAuthorBookWorks = async authorId => {
             "GET",
             `http://localhost:8080/bookworks-catalog/get-author-bookworks/${authorId}`,
         )
-        console.log(authorBookWorks)
         return authorBookWorks
     } catch (ex) {
         throw ex
@@ -475,51 +474,23 @@ const generateBookEditionCatalogCard = async () => {
         author = bookwork.author,
         bookWork = bookEdition.bookWork,
         authorName = `${author.firstName} ${author.lastName}`,
-        title = bookWork.title,
-        editionCopiesMessage,
-        editionCatalogCard = d.querySelector(".bookedition_catalog_card")
-    editionCatalogCard.classList.remove("hidden")
+        editionCopiesMessage
 
-    editionCatalogCard.querySelector(".bookedition_bookwork").value = `${title} / ${authorName}`
-    editionCatalogCard.querySelector(".bookedition_isbn").value = bookEdition.isbn
-    editionCatalogCard.querySelector(".bookedition_editor").value = bookEdition.editor
-    editionCatalogCard.querySelector(".bookedition_edition_year").value = bookEdition.editionYear
+    bookeditionCatalogCard.classList.remove("hidden")
 
+    bookeditionCatalogCard.querySelector(".bookwork_title").value = bookWork.title
+    bookeditionCatalogCard.querySelector(".bookwork_author").value = authorName
+    bookeditionCatalogCard.querySelector(".bookedition_isbn").value = bookEdition.isbn
+    bookeditionCatalogCard.querySelector(".bookedition_editor").value = bookEdition.editor
+    bookeditionCatalogCard.querySelector(".bookedition_edition_year").value = bookEdition.editionYear
+    bookeditionCatalogCard.querySelector(".bookedition_language").value = bookEdition.language
     try {
         let bookEditionCopies = await getEditionCopies(bookEdition.idBookEdition)
         editionCopiesMessage = `Author Book Works: ${bookEditionCopies.length}`
     } catch (error) {
         editionCopiesMessage = error.message
     }
-    editionCatalogCard.querySelector(".bookedition_language").value = bookEdition.language
-}
-
-const prepareAuthorEditionProcess = inputs => {
-    for (const input of inputs) {
-        input.classList.add("edition")
-        input.removeAttribute("readonly")
-        input.classList.add("editing")
-    }
-}
-
-const prepareBookworkEditionProcess = inputs => {
-    inputs.forEach((input, index) => {
-        if (index !== 1) {
-            input.classList.add("edition")
-            input.removeAttribute("readonly")
-            input.classList.add("editing")
-        }
-    })
-}
-
-const prepareNewEditionEditionProcess = inputs => {
-    inputs.forEach((input, index) => {
-        if (index !== 0 && index !== 1) {
-            input.classList.add("edition")
-            input.removeAttribute("readonly")
-            input.classList.add("editing")
-        }
-    })
+    bookeditionCatalogCard.querySelector(".bookedition_copies").value = editionCopiesMessage
 }
 
 const getAuthor = () => {
@@ -559,10 +530,6 @@ export { generateBookworksTableContent }
 export { generateAuthorCatalogCard }
 export { generateBookWorkCatalogCard }
 export { generateBookEditionCatalogCard }
-
-export { prepareAuthorEditionProcess }
-export { prepareBookworkEditionProcess }
-export { prepareNewEditionEditionProcess }
 
 export { getAuthor }
 export { getBookwork }

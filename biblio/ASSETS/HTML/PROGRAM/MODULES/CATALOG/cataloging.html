@@ -163,13 +163,17 @@
                     <div class="catalog_card author_catalog_card hidden">
                         <form class="form author_form">
                             <legend>Author Catalog Card</legend>
+                            
                             <p class="error_message general_error mb-0"></p>
+                            
                             <p class="error_message firstName mb-0"></p>
                             <label>First Name:</label>
-                            <input type="text" name="author_firstName" class="author_firstName" readonly>
+                            <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
+                            
                             <p class="error_message lastName mb-0"></p>
                             <label>Last Name:</label>
-                            <input type="text" name="author_lastName" class="author_lastName" readonly>
+                            <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
+                            
                             <label for="author_bookworks">Author's Book Works:</label>
                             <div class="input-group">
                                 <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
@@ -177,22 +181,27 @@
                                     <i class="bi bi-search"></i>
                                 </span>
                             </div>
+                            
                         </form>
                     </div>
 
                     <div class="catalog_card bookwork_catalog_card hidden">
                         <form class="form bookwork_form ">
                             <legend>Book Work Catalog Card</legend>
+
                             <p class="error_message general_error mb-0"></p>
+                            
                             <p class="error_message title mb-0"></p>
                             <label for="title">Title:</label>
-                            <input type="text" name="title" class="bookwork_title" readonly>
-                            <p class="error_message author mb-0"></p>
+                            <input type="text" name="title" class="bookwork_title card_info" readonly>
+                            
                             <label for="author">Author:</label>
                             <input type="text" name="author" class="bookwork_author" readonly>
+                            
                             <p class="error_message publicationYear mb-0"></p>
                             <label for="publication_year">Publication Year:</label>
-                            <input type="number" name="publication_year" class="bookwork_publication_year" readonly>
+                            <input type="number" name="publication_year" class="bookwork_publication_year card_info" readonly>
+                            
                             <label>Book Work Editions</label>
                             <div class="input-group">
                                 <input type="text" name="bookwork_editions" class="bookwork_editions mb-0" readonly>
@@ -200,34 +209,50 @@
                                     <i class="bi bi-search"></i>
                                 </span>
                             </div>
+
                         </form>
                     </div>
 
                     <div class="catalog_card bookedition_catalog_card hidden">
                         <form class="form edition_form">
+                            
                             <legend>Book Edition Catalog Card</legend>
+                            
                             <p class="error_message general_error mb-0"></p>
-                            <label>Book Work:</label>
-                            <input type="text" name="bookedition_bookwork" class="bookedition_bookwork" readonly>
-                            <label>ISBN:</label>
-                            <p class="error_message ISBN mb-0"></p>
-                            <input type="text" name="bookedition_isbn" class="bookedition_isbn" readonly>
+                            
                             <div class="d-flex justify-content-between">
                                 <div class="col-6 pe-1">
-                                    <label>Editor:</label>
+                                    <label>Title:</label>
+                                    <input type="text" name="bookwork_title" class="bookwork_title" readonly>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <label>Author:</label>
+                                    <input type="text" name="bookwork_title" class="bookwork_title" readonly>
+                                </div>
+                            </div>
+
+                            <p class="error_message ISBN mb-0"></p>
+                            <label>ISBN:</label>
+                            <input type="text" name="bookedition_isbn" class="bookedition_isbn card_info" readonly>
+                            
+                            <div class="d-flex justify-content-between">
+                                <div class="col-6 pe-1">
                                     <p class="error_message editor mb-0"></p>
-                                    <input type="text" name="bookedition_editor" class="bookedition_editor" readonly>
+                                    <label>Editor:</label>
+                                    <input type="text" name="bookedition_editor" class="bookedition_editor card_info" readonly>
                                 </div>
                                 <div class="col-6 ps-1">
                                     <p class="error_message editionYear mb-0"></p>
                                     <label>Edition Year:</label>
-                                    <input type="number" name="bookedition_edition_year"
+                                    <input type="number" name="bookedition_edition_year card_info"
                                         class="bookedition_edition_year" readonly>
                                 </div>
                             </div>
+                            
                             <p class="error_message language mb-0"></p>
                             <label>Language:</label>
-                            <input type="text" name="bookedition_language" class="bookedition_language" readonly>
+                            <input type="text" name="bookedition_language" class="bookedition_language card_info" readonly>
+                            
                             <label>bookedition_copies</label>
                             <div class="input-group">
                                 <input type="text" name="bookedition_copies" class="bookedition_copies mb-0" readonly>

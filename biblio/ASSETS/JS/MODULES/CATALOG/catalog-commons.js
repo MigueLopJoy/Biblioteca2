@@ -7,7 +7,7 @@ import { generateBookWorkCatalogCard } from "./cataloging.js"
 import { generateBookEditionCatalogCard } from "./cataloging.js"
 
 import { generateBookeditionsTableContent } from "./registering.js"
-import { generateNewBookcopyTableContent } from "./registering.js"
+import { generateBookCopyCatalogCard } from "./registering.js"
 
 import { generateBrowseAuthorsTableContent } from "./BROWSE/authors_catalog.js"
 
@@ -162,6 +162,7 @@ const showSearchResults = (resultsType, table) => {
 }
 
 const showCatalogCard = (resultsType, catalogCard) => {
+    console.log(catalogCard)
     renderModal()
     catalogCard.classList.remove("hidden")
     generateCatalogCard(resultsType)
@@ -198,6 +199,8 @@ const generateCatalogCard = resultsType => {
         generateBookWorkCatalogCard()
     } else if (resultsType === "newEdition") {
         generateBookEditionCatalogCard()
+    } else if (resultsType === "newBookcopy") {
+        generateBookCopyCatalogCard()
     }
 }
 

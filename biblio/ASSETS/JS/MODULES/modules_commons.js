@@ -12,27 +12,20 @@ import { getEditNewEditionResults } from "./CATALOG/cataloging.js"
 import { deleteAuthor } from "./CATALOG/cataloging.js"
 import { deleteBookwork } from "./CATALOG/cataloging.js"
 import { deleteNewBookedition } from "./CATALOG/cataloging.js"
-import { prepareAuthorEditionProcess } from "./CATALOG/cataloging.js"
-import { prepareBookworkEditionProcess } from "./CATALOG/cataloging.js"
-import { prepareNewEditionEditionProcess } from "./CATALOG/cataloging.js"
 import { reasigneAuthorValue } from "./CATALOG/cataloging.js"
 import { reasigneBookworkValue } from "./CATALOG/cataloging.js"
 import { reasigneNewEditionValue } from "./CATALOG/cataloging.js"
 
 import { getEditNewCopyResults, getNewBookcopy } from "./CATALOG/registering.js"
 import { deleteNewCopy } from "./CATALOG/registering.js"
-import { prepareNewBookcopyEditionProcess } from "./CATALOG/registering.js"
 import { reasigneBookeditionValue } from "./CATALOG/registering.js"
 import { reasigneNewBookcopyValue } from "./CATALOG/registering.js"
 
 import { getEditNewReaderResults } from "./READERS/readers_registering.js"
-import { prepareNewReaderEditionProcess } from "./READERS/readers_registering.js"
 import { reasigneNewReaderValue } from "./READERS/readers_registering.js"
 
 import { initializeBrowseAuthorsFormSubmit } from "./CATALOG/BROWSE/authors_catalog.js"
-import { prepareBrowseAuthorEditionProcess } from "./CATALOG/BROWSE/authors_catalog.js"
 import { getEditBrowseAuthorResults } from "./CATALOG/BROWSE/authors_catalog.js"
-import { deleteBrowseAuthor } from "./CATALOG/BROWSE/authors_catalog.js"
 import { reasigneBrowseAuthorValue } from "./CATALOG/BROWSE/authors_catalog.js"
 
 
@@ -239,17 +232,12 @@ const executeConfirmCrudOperationBtn = (results, resultsType, operation, results
 
 const executeEditSymbolListener = (results, resultsType, operation, catalogCard) => {
     if (operation !== "manage") saveResult(results, resultsType)
-
     hiddeSuccessMessage()
     confirmBtn.removeAttribute("disabled")
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
     prepareEditonProcess(results, resultsType, operation, catalogCard)
     toggleEditSymbol(results, resultsType, operation, catalogCard, false)
-}
-
-const executeInspectSymbolListener = () => {
-
 }
 
 const executeDeleteSymbolListener = (results, resultsType, operation, resultsContainer) => {
@@ -324,33 +312,14 @@ const saveResult = (results, resultsType) => {
 }
 
 const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
-    const inputs = catalogCard.querySelectorAll(".form > input")
-
-    console.log(inputs)
+    const inputs = catalogCard.querySelectorAll(".form > input.card_info")
 
     clearPrintedReults(resultsType)
 
-    switch (resultsType) {
-        case "author":
-            prepareAuthorEditionProcess(inputs)
-            break;
-        case "bookwork":
-            prepareBookworkEditionProcess(inputs)
-            break;
-        case "newEdition":
-            prepareNewEditionEditionProcess(inputs)
-            break;
-        case "newBookcopy":
-            prepareNewBookcopyEditionProcess(inputs)
-            break;
-        case "newReader":
-            prepareNewReaderEditionProcess(inputs)
-            break;
-        case "b_author":
-            prepareBrowseAuthorEditionProcess(inputs)
-            break;
-        default:
-            break;
+    for (const input of inputs) {
+        input.classList.add("edition")
+        input.removeAttribute("readonly")
+        input.classList.add("editing")
     }
 
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)

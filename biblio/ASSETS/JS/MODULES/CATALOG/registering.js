@@ -4,17 +4,19 @@ import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
 import { enableModalActions } from "./../modules_commons.js"
+import { enableCreateModalActions } from "./../modules_commons.js"
 
 import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
-
 import { showSearchResults } from "./catalog-commons.js"
+import { showCatalogCard } from "./catalog-commons.js"
+
 
 const d = document,
     editionsResultsTable = d.querySelector(".results_table.bookeditions_results_table"),
-    bookcopiesResultsTable = d.querySelector(".results_table.newBookcopy_results_table")
+    bookCopyCatalogCard = d.querySelector(".catalog_card.bookcopy_catalog_card")
 
-let bookedition, newBookcopy, results, error, table, resultsType, operation
+let bookedition, newBookcopy, results, error, table, catalogCard, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
@@ -36,17 +38,22 @@ d.addEventListener("submit", async e => {
             toggleNextPageChanging(resultsType)
             clearFormsData()
         } else {
-            showSearchResults(resultsType, operation, table)
-            enableModalActions(results, resultsType, operation, table)
+            if (operation === "search") {
+                console.log(table)
+                showSearchResults(resultsType, table)
+                enableModalActions(results, resultsType, operation, table)
+            } else if (operation === "create") {
+                showCatalogCard(resultsType, catalogCard)
+                enableCreateModalActions(results, resultsType, operation, catalogCard)
+            }
         }
     }
 })
 
 const runBookEditionProcess = async form => {
     bookedition = ""
-    table = editionsResultsTable
-
     resultsType = "bookedition"
+    table = editionsResultsTable
     clearPrintedReults(resultsType)
     operation = "search"
     await getSearchBookeditionResults(form)
@@ -54,24 +61,14 @@ const runBookEditionProcess = async form => {
 
 const runBookCopyProcess = async form => {
     newBookcopy = ""
-    table = bookcopiesResultsTable
     resultsType = "newBookcopy"
+    catalogCard = bookCopyCatalogCard
     clearPrintedReults(resultsType)
     operation = "create"
     await getCreateBookCopyResults(form)
 }
 
 const getSearchBookeditionResults = async form => {
-    console.log(
-        {
-            title: form.title.value,
-            author: form.author.value,
-            isbn: form.isbn.value,
-            editor: form.editor_name.value,
-            language: form.edition_language.value,
-        }
-    )
-
     try {
         results = await fetchRequest(
             "POST",
@@ -202,63 +199,26 @@ const generateBookeditionsTableContent = () => {
     }
 }
 
-const generateNewBookcopyTableContent = () => {
-    const tableBody = table.querySelector(".results_table_body")
+const generateBookCopyCatalogCard = async () => {
+    let bookCopy = results[0],
+        bookEdition = bookCopy.bookEdition, 
+        bookWork = bookEdition.bookWork,
+        author = bookWork.author,
+        authorName = `${author.firstName} ${author.lastName}`
 
-    for (let i = 0; i < results.length; i++) {
+    bookCopyCatalogCard.classList.remove("hidden")
 
-        let result = results[i],
-            bookedition = result.bookEdition,
-            bookwork = bookedition.bookWork,
-            author = bookwork.author
-
-        let newRow = d.createElement("tr")
-        newRow.classList.add("results_row")
-
-        let title = d.createElement("td")
-        title.textContent = bookwork.title
-
-        let bookAuthor = d.createElement("td")
-        bookAuthor.textContent = `${author.firstName} ${author.lastName}`
-
-        let isbn = d.createElement("td")
-        isbn.textContent = bookedition.isbn
-
-        let editor = d.createElement("td")
-        editor.textContent = bookedition.editor
-
-        let registrationNuber = d.createElement("td")
-        registrationNuber.textContent = result.registrationNumber
-
-        let signature = d.createElement("td")
-        signature.textContent = result.signature
-
-        newRow.appendChild(title);
-        newRow.appendChild(bookAuthor);
-        newRow.appendChild(isbn);
-        newRow.appendChild(editor);
-        newRow.appendChild(registrationNuber);
-        newRow.appendChild(signature);
-
-        table.querySelector(".results_table_body").appendChild(newRow);
-
-
-        if (tableBody.firstChild) {
-            tableBody.insertBefore(newRow, tableBody.firstChild)
-
-            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
-            errorMessageTd.setAttribute("colspan", 6)
-        } else {
-            tableBody.appendChild(newRow)
-        }
-    }
+    bookCopyCatalogCard.querySelector(".bookwork_title").value = bookWork.title
+    bookCopyCatalogCard.querySelector(".bookwork_author").value = authorName
+    bookCopyCatalogCard.querySelector(".bookedition_isbn").value = bookEdition.isbn
+    bookCopyCatalogCard.querySelector(".bookedition_editor").value = bookEdition.editor
+    bookCopyCatalogCard.querySelector(".bookedition_edition_year").value = bookEdition.editionYear
+    bookCopyCatalogCard.querySelector(".bookedition_language").value = bookEdition.language
+    bookCopyCatalogCard.querySelector(".bookCopy_barCode").value = bookCopy.barCode
+    bookCopyCatalogCard.querySelector(".bookCopy_signature").value = bookCopy.signature
+    bookCopyCatalogCard.querySelector(".bookCopy_registration_date").value = bookCopy.registrationDate
+    bookCopyCatalogCard.querySelector(".bookCopy_registration_number").value = bookCopy.registrationNumber
 }
-
-const prepareNewBookcopyEditionProcess = cells => {
-    cells[4].innerHTML = `<input type="text" class="edition" value="${newBookcopy.registrationNumber}" >`
-    cells[5].innerHTML = `<input type="text" class="edition"value="${newBookcopy.signature}" >`
-}
-
 
 const getBookedition = () => {
     return bookedition
@@ -278,9 +238,8 @@ const reasigneNewBookcopyValue = newBookworkValue => {
 
 export { getEditNewCopyResults }
 export { deleteNewCopy }
-export { prepareNewBookcopyEditionProcess }
 export { generateBookeditionsTableContent }
-export { generateNewBookcopyTableContent }
+export { generateBookCopyCatalogCard }
 export { getBookedition }
 export { getNewBookcopy }
 export { reasigneBookeditionValue }
