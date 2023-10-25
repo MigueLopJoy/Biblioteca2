@@ -15,7 +15,7 @@ public interface IBookCopyService {
 
     public BookCopy searchByRegistrationNumber(Long registrationNumber);
 
-    public List<BookCopy> searchBookEditionCopies(BookEdition bookEdition);
+    public List<BookCopy> searchBookEditionCopies(Integer bookEditionId);
 
     public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit);
 

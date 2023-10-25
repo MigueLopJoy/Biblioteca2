@@ -13,7 +13,7 @@
             <div class="page_element_container search_author">
                 <form class="form author_form search">
                     <legend>Search author</legend>
-                    <p class="error_message general_error"></p>
+                    <p class="error_message general_error mb-0"></p>
                     <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
                     <input type="submit" id="search_author_btn" class="btn" value="Search">
                 </form>
@@ -22,10 +22,10 @@
             <div class="page_element_container create_author">
                 <form class="form author_form create">
                     <legend>Create new author</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message firstName"></p>
+                    <p class="error_message general_error mb-0"></p>
+                    <p class="error_message firstName mb-0"></p>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">
-                    <p class="error_message lastName"></p>
+                    <p class="error_message lastName mb-0"></p>
                     <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
                     <input type="submit" id="create_author_btn" class="btn" value="Create">
                 </form>
@@ -47,7 +47,7 @@
             <div class="page_element_container search_bookwork">
                 <form class="form bookwork_form search">
                     <legend>Search book work</legend>
-                    <p class="error_message general_error"></p>
+                    <p class="error_message general_error mb-0"></p>
                     <input type="text" name="title" placeholder="Introduce book work's title">
                     <input type="submit" id="search_bookwork_btn" class="btn" value="Search">
                 </form>
@@ -56,10 +56,10 @@
             <div class="page_element_container create_bookwork">
                 <form class="form bookwork_form create">
                     <legend>Create new book work</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message title"></p>
+                    <p class="error_message general_error mb-0"></p>
+                    <p class="error_message title mb-0" mb-0></p>
                     <input type="text" name="title" placeholder="Book work title">
-                    <p class="error_message publicationYear"></p>
+                    <p class="error_message publicationYear mb-0"></p>
                     <input type="number" name="publication_year" placeholder="Book work publication year">
                     <input type="submit" id="create_bookwork_btn" class="btn" value="Create">
                 </form>
@@ -81,16 +81,16 @@
             <div class="page_element_container create_bookedition">
                 <form class="form edition_form create">
                     <legend>Create new book edition</legend>
-                    <p class="error_message general_error"></p>
+                    <p class="error_message general_error mb-0"></p>
                     <input type="text" name="author_name" class="selected_author" readonly>
                     <input type="text" name="title" class="selected_bookwork" readonly>
-                    <p class="error_message ISBN"></p>
+                    <p class="error_message ISBN mb-0"></p>
                     <input type="text" name="isbn" placeholder="ISBN">
-                    <p class="error_message editor"></p>
+                    <p class="error_message editor mb-0"></p>
                     <input type="text" name="editor_name" placeholder="Editor name">
-                    <p class="error_message editionYear"></p>
+                    <p class="error_message editionYear mb-0"></p>
                     <input type="number" name="edition_year" placeholder="Edition year">
-                    <p class="error_message language"></p>
+                    <p class="error_message language mb-0"></p>
                     <input type="text" name="edition_language" placeholder="Language">
                     <input type="submit" id="create_bookwork_btn" class="btn">
                 </form>
@@ -155,43 +155,21 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <table class="results_table newEdition_results_table hidden">
-                        <thead>
-                            <tr>
-                                <th>Title</td>
-                                <th>Author</th>
-                                <th>ISBN</th>
-                                <th>Editor</th>
-                                <th>Edition Year</th>
-                                <th>Language</th>
-                            </tr>
-                        </thead>
-                        <tbody class="results_table_body">
-                            <tr class="error_message_row hidden">
-                                <td colspan="6">
-                                    <p class="error_message general_error"></p>
-                                    <p class="error_message ISBN"></p>
-                                    <p class="error_message editor"></p>
-                                    <p class="error_message editionYear"></p>
-                                    <p class="error_message language"></p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
 
-                <div class="catalog_cards_container mb-3">
+                <div class="catalog_cards_container">
                     <p class="success_message mb-1"></p>
 
                     <div class="catalog_card author_catalog_card hidden">
                         <form class="form author_form">
                             <legend>Author Catalog Card</legend>
-                            <p class="error_message general_error"></p>
-                            <label for="firstName">First Name:</label>
-                            <input type="text" name="firstName" class="firstName" readonly>
-                            <label for="lastName">Last Name:</label>
-                            <input type="text" name="lastName" class="lastName" readonly>
+                            <p class="error_message general_error mb-0"></p>
+                            <p class="error_message firstName mb-0"></p>
+                            <label>First Name:</label>
+                            <input type="text" name="author_firstName" class="author_firstName" readonly>
+                            <p class="error_message lastName mb-0"></p>
+                            <label>Last Name:</label>
+                            <input type="text" name="author_lastName" class="author_lastName" readonly>
                             <label for="author_bookworks">Author's Book Works:</label>
                             <div class="input-group">
                                 <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
@@ -205,17 +183,16 @@
                     <div class="catalog_card bookwork_catalog_card hidden">
                         <form class="form bookwork_form ">
                             <legend>Book Work Catalog Card</legend>
-                            <p class="error_message general_error"></p>
-                            <p class="error_message title"></p>
+                            <p class="error_message general_error mb-0"></p>
+                            <p class="error_message title mb-0"></p>
                             <label for="title">Title:</label>
                             <input type="text" name="title" class="bookwork_title" readonly>
-                            <p class="error_message author"></p>
+                            <p class="error_message author mb-0"></p>
                             <label for="author">Author:</label>
                             <input type="text" name="author" class="bookwork_author" readonly>
-                            <p class="error_message publicationYear"></p>
+                            <p class="error_message publicationYear mb-0"></p>
                             <label for="publication_year">Publication Year:</label>
                             <input type="number" name="publication_year" class="bookwork_publication_year" readonly>
-                            <p></p>
                             <label>Book Work Editions</label>
                             <div class="input-group">
                                 <input type="text" name="bookwork_editions" class="bookwork_editions mb-0" readonly>
@@ -228,21 +205,32 @@
 
                     <div class="catalog_card bookedition_catalog_card hidden">
                         <form class="form edition_form">
-                            <legend>Create new book edition</legend>
-                            <p class="error_message general_error"></p>
-                            <input type="text" name="author_name" class="selected_author" readonly>
-                            <input type="text" name="title" class="selected_bookwork" readonly>
-                            <p class="error_message ISBN"></p>
-                            <input type="text" name="isbn" placeholder="ISBN" readonly>
-                            <p class="error_message editor"></p>
-                            <input type="text" name="editor_name" placeholder="Editor name" readonly>
-                            <p class="error_message editionYear"></p>
-                            <input type="number" name="edition_year" placeholder="Edition year" readonly>
-                            <p class="error_message language"></p>
-                            <input type="text" name="edition_language" placeholder="Language" readonly>
-                            <input type="submit" id="create_bookwork_btn" class="btn" readonly>
+                            <legend>Book Edition Catalog Card</legend>
+                            <p class="error_message general_error mb-0"></p>
+                            <label>Book Work:</label>
+                            <input type="text" name="bookedition_bookwork" class="bookedition_bookwork" readonly>
+                            <label>ISBN:</label>
+                            <p class="error_message ISBN mb-0"></p>
+                            <input type="text" name="bookedition_isbn" class="bookedition_isbn" readonly>
+                            <div class="d-flex justify-content-between">
+                                <div class="col-6 pe-1">
+                                    <label>Editor:</label>
+                                    <p class="error_message editor mb-0"></p>
+                                    <input type="text" name="bookedition_editor" class="bookedition_editor" readonly>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <p class="error_message editionYear mb-0"></p>
+                                    <label>Edition Year:</label>
+                                    <input type="number" name="bookedition_edition_year"
+                                        class="bookedition_edition_year" readonly>
+                                </div>
+                            </div>
+                            <p class="error_message language mb-0"></p>
+                            <label>Language:</label>
+                            <input type="text" name="bookedition_language" class="bookedition_language" readonly>
+                            <label>bookedition_copies</label>
                             <div class="input-group">
-                                <input type="text" name="bookedition_copies" class="bookedition_copes mb-0" readonly>
+                                <input type="text" name="bookedition_copies" class="bookedition_copies mb-0" readonly>
                                 <span class="input-group-text">
                                     <i class="bi bi-search"></i>
                                 </span>

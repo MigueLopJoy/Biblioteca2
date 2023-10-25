@@ -199,14 +199,14 @@ const enableSelectResultBtn = (results, resultsType, operation, table) => {
     selectResultBtn.addEventListener("click", selectResultBtnClickHandler)
 }
 
-const enableCreateBtn = (results, resultsType, operation, table) => {
+const enableCreateBtn = (results, resultsType, operation, resultsContainer) => {
     if (confirmBtn) {
         confirmBtnClickHandler = function () {
             if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
                 saveResult(results, resultsType)
-                prepareEndingBtn(resultsType)
+                prepareEndingBtn(resultsType, operation, resultsContainer)
             } else {
-                executeConfirmBtnListener(results, resultsType, operation, table)
+                executeConfirmBtnListener(results, resultsType, operation, resultsContainer)
             }
         }
         confirmBtn.addEventListener("click", confirmBtnClickHandler)
@@ -240,6 +240,7 @@ const executeConfirmCrudOperationBtn = (results, resultsType, operation, results
 const executeEditSymbolListener = (results, resultsType, operation, catalogCard) => {
     if (operation !== "manage") saveResult(results, resultsType)
 
+    hiddeSuccessMessage()
     confirmBtn.removeAttribute("disabled")
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
@@ -256,6 +257,7 @@ const executeDeleteSymbolListener = (results, resultsType, operation, resultsCon
     toggleDeletetSymbol(false)
     toggleInspectSymbol(false)
     toggleEditSymbol(false)
+    hiddeSuccessMessage()
 
     confirmBtn.textContent = "Click to confirm deletion"
     confirmBtnClickHandler = function () {
@@ -324,6 +326,8 @@ const saveResult = (results, resultsType) => {
 const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
     const inputs = catalogCard.querySelectorAll(".form > input")
 
+    console.log(inputs)
+
     clearPrintedReults(resultsType)
 
     switch (resultsType) {
@@ -365,6 +369,7 @@ const confirmEdition = async (results, resultsType, operation, catalogCard) => {
             results = await getEditAuthorResults(editedInputs)
         } else if (resultsType === "bookwork") {
             results = await getEditBookworkResults(editedInputs)
+            console.log(results)
         } else if (resultsType === "newEdition") {
             results = await getEditNewEditionResults(editedInputs)
         } else if (resultsType === "newBookcopy") {
@@ -379,20 +384,22 @@ const confirmEdition = async (results, resultsType, operation, catalogCard) => {
     }
 
     clearErrorMessages()
-    d.querySelectorAll(".form > input").forEach(input => {
-        if (input.classList.contains("editing")) {
-            input.classList.remove("editing")
-        }
-    })
 
     if (error) {
         handleErrorMessages(error, catalogCard)
     } else {
+
+        d.querySelectorAll(".form > input").forEach(input => {
+            if (input.classList.contains("editing")) {
+                input.classList.remove("editing")
+            }
+        })
+
         switch (resultsType) {
             case "newBookedition":
             case "newBookcopy":
                 displaySuccessMessage(resultsType, "edit")
-                prepareEndingBtn(resultsType)
+                prepareEndingBtn(resultsType, operation, catalogCard)
                 break;
             default:
                 executeConfirmCrudOperationBtn(results, resultsType, operation, catalogCard, "edit")
@@ -422,6 +429,8 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 }
 
 const closeModal = (resultsType, operation, resultsContainer) => {
+
+    console.log(resultsContainer)
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
@@ -554,11 +563,11 @@ const hiddeSuccessMessage = () => {
 }
 
 let endingBtnClickHandler
-const prepareEndingBtn = resultsType => {
+const prepareEndingBtn = (resultsType, operation, catalogCard) => {
     createBtnContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
     endingBtnClickHandler = function () {
-        closeModal()
+        closeModal(resultsType, operation, catalogCard)
         d.getElementById("main-content").textContent = ""
         if (resultsType === "newEdition") {
             displayCatalogingMainPage()

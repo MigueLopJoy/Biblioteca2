@@ -5,12 +5,15 @@ import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 
+import java.awt.print.Book;
 import java.util.List;
 
 public interface IBookEditionService {
     public BookEdition saveNewBookEdition(BookEdition bookEdition);
 
     public List<BookEdition> findAll();
+
+    public BookEdition searchById(Integer bookEditionId);
 
     public BookEdition searchByISBN(String ISBN);
 

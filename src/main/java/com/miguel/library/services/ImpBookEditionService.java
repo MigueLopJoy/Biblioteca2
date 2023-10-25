@@ -63,6 +63,9 @@ public class ImpBookEditionService implements IBookEditionService{
         return allBookEditions;
     }
 
+    public BookEdition searchById(Integer bookEditionId) {
+        return bookEditionRepository.findById(bookEditionId).orElse(null);
+    }
     @Override
     public BookEdition searchByISBN(String ISBN) {
         return bookEditionRepository.findByISBN(ISBN).orElse(null);

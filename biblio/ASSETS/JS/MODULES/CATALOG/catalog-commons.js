@@ -2,7 +2,6 @@ import { findCurrentPage } from "./../modules_commons.js"
 
 import { generateAuthorsTableContent } from "./cataloging.js"
 import { generateBookworksTableContent } from "./cataloging.js"
-import { generateNewBookeditionTableContent } from "./cataloging.js"
 import { generateAuthorCatalogCard } from "./cataloging.js"
 import { generateBookWorkCatalogCard } from "./cataloging.js"
 import { generateBookEditionCatalogCard } from "./cataloging.js"
@@ -148,10 +147,8 @@ const clearPrintedReults = resultsType => {
 /* Handle results methods */
 
 const showSearchResults = (resultsType, table) => {
-    const modal = d.getElementById("modal")
-    modal.classList.remove("hidden")
+    renderModal()
     table.classList.remove("hidden")
-
     generaTableContent(table)
     selectBtnContainer.classList.remove("hidden")
 
@@ -165,12 +162,19 @@ const showSearchResults = (resultsType, table) => {
 }
 
 const showCatalogCard = (resultsType, catalogCard) => {
-    const modal = d.getElementById("modal")
-    modal.classList.remove("hidden")
+    renderModal()
     catalogCard.classList.remove("hidden")
     generateCatalogCard(resultsType)
     displaySuccessMessage(resultsType)
     createBtnContainer.classList.remove("hidden")
+}
+
+const renderModal = () => {
+    const modal = d.getElementById("modal")
+    modal.classList.remove("hidden")
+    modal.style.display = "flex"
+    modal.style.justifyContent = "center"
+    modal.style.alignItems = "center"
 }
 
 const generaTableContent = table => {
@@ -178,8 +182,6 @@ const generaTableContent = table => {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
         generateBookworksTableContent()
-    } else if (table.classList.contains("newEdition_results_table")) {
-        generateNewBookeditionTableContent()
     } else if (table.classList.contains("bookeditions_results_table")) {
         generateBookeditionsTableContent()
     } else if (table.classList.contains("newBookcopy_results_table")) {
@@ -194,7 +196,7 @@ const generateCatalogCard = resultsType => {
         generateAuthorCatalogCard()
     } else if (resultsType === "bookwork") {
         generateBookWorkCatalogCard()
-    } else if (resultsType === "bookedition") {
+    } else if (resultsType === "newEdition") {
         generateBookEditionCatalogCard()
     }
 }

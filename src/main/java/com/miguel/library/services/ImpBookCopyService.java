@@ -73,9 +73,8 @@ public class ImpBookCopyService implements IBookCopyService {
     }
 
     @Override
-    public List<BookCopy> searchBookEditionCopies(BookEdition bookEdition) {
-        List<BookCopy> bookEditionCopies = new ArrayList<>();
-
+    public List<BookCopy> searchBookEditionCopies(Integer bookEditionId) {
+        BookEdition bookEdition = bookEditionService.searchById(bookEditionId);
         if (Objects.isNull(bookEdition)) {
             throw new ExceptionNullObject("Book edition should not be null");
         }
@@ -85,7 +84,12 @@ public class ImpBookCopyService implements IBookCopyService {
         if (Objects.isNull(fetchedBookEdition)) {
             throw new ExceptionObjectNotFound("Book edition not found");
         }
-        bookEditionCopies.addAll(bookCopyRepository.findByBookEdition(fetchedBookEdition));
+
+        List<BookCopy> bookEditionCopies = bookCopyRepository.findByBookEdition(fetchedBookEdition);
+
+        if (bookEditionCopies.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No Editions were found");
+        }
 
         return bookEditionCopies;
     }
