@@ -364,7 +364,7 @@ const generateAuthorsTableContent = () => {
 const generateAuthorCatalogCard = async () => {
     let author = results[0],
         authorBookWorksMessage
-        
+
     authorCatalogCard.classList.remove("hidden")
 
     authorCatalogCard.querySelector(".author_firstName").value = author.firstName

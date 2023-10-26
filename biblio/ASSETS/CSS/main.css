@@ -32,7 +32,6 @@ body {
 #program-wrapper {
     width: calc(100% - 4rem);
     height: 100%;
-    display: table;
     padding: 2rem;
 }
 
@@ -52,9 +51,9 @@ body {
 }
 
 #main-content {
-    display: table-cell;
     width: 80%;
     vertical-align: top;
+    position: relative;
 }
 
 .container {

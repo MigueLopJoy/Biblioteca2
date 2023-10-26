@@ -1,23 +1,31 @@
-import { findCurrentPage } from "./../modules_commons.js"
-
-import { generateAuthorsTableContent } from "./cataloging.js"
-import { generateBookworksTableContent } from "./cataloging.js"
-import { generateAuthorCatalogCard } from "./cataloging.js"
-import { generateBookWorkCatalogCard } from "./cataloging.js"
-import { generateBookEditionCatalogCard } from "./cataloging.js"
-
-import { generateBookeditionsTableContent } from "./registering.js"
-import { generateBookCopyCatalogCard } from "./registering.js"
-
-import { generateBrowseAuthorsTableContent } from "./BROWSE/authors_catalog.js"
-
-import { getAuthor } from "./cataloging.js"
-import { getBookwork } from "./cataloging.js"
-import { getBookedition } from "./registering.js"
+import {
+    findCurrentPage,
+    displaySuccessMessage
+} from "./../modules_commons.js"
 
 import { showPage } from "./display_pages.js"
 
-import { displaySuccessMessage } from "./../modules_commons.js"
+import {
+    generateAuthorsTableContent,
+    generateBookworksTableContent,
+    generateAuthorCatalogCard,
+    generateBookWorkCatalogCard,
+    generateBookEditionCatalogCard,
+    getAuthor,
+    getBookwork
+} from "./cataloging.js"
+
+import {
+    generateBookeditionsTableContent,
+    generateBookCopyCatalogCard,
+    getBookedition
+} from "./registering.js"
+
+import {
+    generateBrowseAuthorCatalogCard,
+    generateBrowseAuthorsTableContent
+} from "./BROWSE/authors_catalog.js"
+
 
 const d = document,
     selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
@@ -161,11 +169,13 @@ const showSearchResults = (resultsType, table) => {
     }
 }
 
-const showCatalogCard = (resultsType, catalogCard) => {
+const showCatalogCard = (resultsType, catalogCard, results) => {
     renderModal()
     catalogCard.classList.remove("hidden")
-    generateCatalogCard(resultsType)
-    displaySuccessMessage(resultsType)
+    generateCatalogCard(resultsType, results)
+    if (resultsType.substring(0, 2) !== "b_") {
+        displaySuccessMessage(resultsType)
+    }
     createBtnContainer.classList.remove("hidden")
 }
 
@@ -184,14 +194,12 @@ const generaTableContent = table => {
         generateBookworksTableContent()
     } else if (table.classList.contains("bookeditions_results_table")) {
         generateBookeditionsTableContent()
-    } else if (table.classList.contains("newBookcopy_results_table")) {
-        generateNewBookcopyTableContent()
     } else if (table.classList.contains("b_authors_results_table")) {
         generateBrowseAuthorsTableContent()
     }
 }
 
-const generateCatalogCard = resultsType => {
+const generateCatalogCard = (resultsType, results) => {
     if (resultsType === "author") {
         generateAuthorCatalogCard()
     } else if (resultsType === "bookwork") {
@@ -201,7 +209,7 @@ const generateCatalogCard = resultsType => {
     } else if (resultsType === "newBookcopy") {
         generateBookCopyCatalogCard()
     } else if (resultsType === "b_author") {
-        generateBrowseAuthorCatalogCard()
+        generateBrowseAuthorCatalogCard(results)
     }
 }
 

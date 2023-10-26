@@ -1,80 +1,57 @@
-import { findCurrentPage } from "../../modules_commons.js"
-import { fetchRequest } from "../../modules_commons.js"
-import { joinParamsToURL } from "../../modules_commons.js"
-import { handleErrorMessages } from "../../modules_commons.js"
-import { clearErrorMessages } from "../../modules_commons.js"
-import { clearFormsData } from "../../modules_commons.js"
-import { enableModalActions } from "../../modules_commons.js"
-import { enableCreateModalActions } from "../../modules_commons.js"
+import {
+    fetchRequest,
+    joinParamsToURL,
+    handleErrorMessages,
+    clearErrorMessages,
+    clearFormsData,
+    enableModalActions,
+    enableCreateModalActions,
+} from "../../modules_commons.js"
 
-import { toggleNextPageChanging } from "../catalog-commons.js"
-import { showSearchResults } from "../catalog-commons.js"
-import { showCatalogCard } from "../catalog-commons.js"
+import {
+    showSearchResults,
+    showCatalogCard
+} from "../catalog-commons.js"
 
 const d = document,
     authorsResultsTable = d.querySelector(".results_table.b_authors_results_table"),
     authorCatalogCard = d.querySelector(".catalog_card.author_catalog_card")
 
-let author, results, error, table, resultsType, operation
+let author, results, error, table, catalogCard, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
     if (d.getElementById("b_authors_section")) {
-        initializeBrowseAuthorsFormSubmit(e.target)
-    }
-})
+        clearErrorMessages()
+        await runAuthorProcess(e.target)
 
-const initializeBrowseAuthorsFormSubmit = async form => {
-
-    if (!form) {
-        form = setFormInputsValues()
-        operation = "manage"
-    } else {
-        if (form.classList.contains("search")) operation = "search"
-        else operation = "create"
-    }
-
-    clearErrorMessages()
-
-    if (findCurrentPage().classList.contains("b_authors_page")) {
-        if (operation === "search")
-            await runAuthorProcess(form)
-    }
-
-    if (error) {
-        handleErrorMessages(error, form)
-        error = null
-        toggleNextPageChanging(resultsType)
-        clearFormsData()
-    } else {
-
-        if (operation === "search") {
-            showSearchResults(resultsType, table)
-            enableModalActions(results, resultsType, operation, table)
-        } else if (operation === "create") {
-            showCatalogCard(resultsType, catalogCard)
-            enableCreateModalActions(results, resultsType, operation, catalogCard)
+        if (error) {
+            handleErrorMessages(error, form)
+            error = null
+            toggleNextPageChanging(resultsType)
+            clearFormsData()
+        } else {
+            if (operation === "search") {
+                showSearchResults(resultsType, table)
+                enableModalActions(results, resultsType, operation, table)
+            } else if (operation === "create") {
+                showCatalogCard(resultsType, catalogCard)
+                enableCreateModalActions(results, resultsType, operation, catalogCard)
+            }
         }
     }
-}
-
-const setFormInputsValues = () => {
-    authorsForm.author_name.value = `${author.firstName} ${author.lastName}`
-    return authorsForm
-}
+})
 
 const runAuthorProcess = async form => {
     author = ""
     resultsType = "b_author"
-    clearPrintedReults(resultsType)
 
     if (form.classList.contains("search")) {
         table = authorsResultsTable
         operation = "search"
         await getSearchAuthorResults(form)
-    }
-    else {
+    } else {
         catalogCard = authorCatalogCard
         operation = "create"
         await getCreateAuthorResults(form)
@@ -179,7 +156,7 @@ const generateBrowseAuthorsTableContent = (base = results) => {
         checkbox.classList.add('author_result_option')
         checkbox.value = i;
         selectAuthor.appendChild(checkbox)
-        
+
 
         newRow.appendChild(firstName)
         newRow.appendChild(lastName)
@@ -202,10 +179,10 @@ const generateBrowseAuthorsTableContent = (base = results) => {
     }
 }
 
-const generateBrowseAuthorCatalogCard = async () => {
-    let author = results[0],
+const generateBrowseAuthorCatalogCard = async (browseResults = results) => {
+    let author = browseResults[0],
         authorBookWorksMessage
-        
+
     authorCatalogCard.classList.remove("hidden")
 
     authorCatalogCard.querySelector(".author_firstName").value = author.firstName
@@ -227,11 +204,9 @@ const reasigneBrowseAuthorValue = newAuthorValue => {
     author = newAuthorValue
 }
 
-export { initializeBrowseAuthorsFormSubmit }
 export { getEditBrowseAuthorResults }
 export { deleteBrowseAuthor }
 export { generateBrowseAuthorsTableContent }
 export { generateBrowseAuthorCatalogCard }
-export { prepareBrowseAuthorEditionProcess }
 export { getBrowseAuthor }
 export { reasigneBrowseAuthorValue }

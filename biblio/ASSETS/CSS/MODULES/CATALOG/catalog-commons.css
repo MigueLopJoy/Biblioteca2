@@ -146,7 +146,7 @@
 /*Modal styles*/
 
 #modal {
-    position: fixed;
+    position: absolute;
     z-index: 1;
     left: 0;
     top: 0;
@@ -197,9 +197,9 @@
     flex-direction: column;
     min-width: 50%;
     max-width: 80%;
+    max-height: 85vh;
     width: auto;
     background-color: #fff;
-    max-height: 90vh;
     padding: 1.25rem;
     border: 1px solid #888;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -294,6 +294,10 @@
     padding: 2.5rem;
     padding-top: 1.5rem;
     margin-bottom: 1rem;
+}
+
+.search_related_objects.active {
+    border: 1px solid #00CC00;
 }
 
 /*Buttons styles*/
