@@ -1,32 +1,40 @@
-import { displayCatalogingMainPage } from "./CATALOG/display_pages.js"
-import { displayRegisteringMainPage } from "./CATALOG/display_pages.js"
-import { displayReadersRegisteringMainPage } from "./CATALOG/display_pages.js"
+import { 
+    displayCatalogingMainPage,
+    displayRegisteringMainPage,
+    displayReadersRegisteringMainPage } from "./CATALOG/display_pages.js"
 
-import { printSelectedResult, showCatalogCard } from "./CATALOG/catalog-commons.js"
-import { toggleNextPageChanging } from "./CATALOG/catalog-commons.js"
-import { clearPrintedReults } from "./CATALOG/catalog-commons.js"
+import { 
+    printSelectedResult, 
+    showCatalogCard,
+    showSearchResults,
+    toggleNextPageChanging,
+    clearPrintedReults } from "./CATALOG/catalog-commons.js"
 
-import { getEditAuthorResults } from "./CATALOG/cataloging.js"
-import { getEditBookworkResults } from "./CATALOG/cataloging.js"
-import { getEditNewEditionResults } from "./CATALOG/cataloging.js"
-import { deleteAuthor } from "./CATALOG/cataloging.js"
-import { deleteBookwork } from "./CATALOG/cataloging.js"
-import { deleteNewBookedition } from "./CATALOG/cataloging.js"
-import { reasigneAuthorValue } from "./CATALOG/cataloging.js"
-import { reasigneBookworkValue } from "./CATALOG/cataloging.js"
-import { reasigneNewEditionValue } from "./CATALOG/cataloging.js"
+import { 
+    getEditAuthorResults,
+    getEditBookworkResults,
+    getEditNewEditionResults,
+    deleteAuthor,
+    deleteBookwork,
+    deleteNewBookedition,
+    reasigneAuthorValue,
+    reasigneBookworkValue,
+    reasigneNewEditionValue } from "./CATALOG/cataloging.js"
 
-import { getEditNewCopyResults } from "./CATALOG/registering.js"
-import { deleteNewCopy } from "./CATALOG/registering.js"
-import { reasigneBookeditionValue } from "./CATALOG/registering.js"
-import { reasigneNewBookcopyValue } from "./CATALOG/registering.js"
+import { 
+    getEditNewCopyResults,
+    deleteNewCopy,
+    reasigneBookeditionValue,
+    reasigneNewBookcopyValue } from "./CATALOG/registering.js"
 
-import { getEditNewReaderResults } from "./READERS/readers_registering.js"
-import { reasigneNewReaderValue } from "./READERS/readers_registering.js"
+import { 
+    getEditNewReaderResults,
+    reasigneNewReaderValue} from "./READERS/readers_registering.js"
+import {  } from "./READERS/readers_registering.js"
 
-import { getEditBrowseAuthorResults } from "./CATALOG/BROWSE/authors_catalog.js"
-import { reasigneBrowseAuthorValue } from "./CATALOG/BROWSE/authors_catalog.js"
-
+import { 
+    getEditBrowseAuthorResults,
+    reasigneBrowseAuthorValue } from "./CATALOG/BROWSE/authors_catalog.js"
 
 /* Global methods */
 
@@ -40,7 +48,7 @@ const d = document,
     editSymbol = d.querySelector(".icons_container .edit_symbol"),
     deleteSymbol = d.querySelector(".icons_container .delete_symbol"),
     closeSymbol = d.querySelector(".close_symbol"),
-    searchRelatedObjectsSymbol = d.querySelector(". search_related_objects")
+    searchRelatedObjectsSymbol = d.querySelector(".search_related_objects")
 
 
 const findCurrentPage = () => {
@@ -142,12 +150,12 @@ const toggleCloseModalSymbol = (resultsType, operation, resultsContainer, enable
     toggleListener(closeSymbol, closeSymbolClickHandler, enable)
 }
 
-const toggleSearchRelatedObjectsSymbol = () => {
+const toggleSearchRelatedObjectsSymbol = (results, resultsType, catalogCard, enable = false) => {
     searchRelatedObjectsClickHandler = function () {
-
+        executeSearchRelatedObjectsListener(results, resultsType, catalogCard)        
     }
-    toggleSymbol()
-    toggleListener()
+    toggleSymbol(searchRelatedObjectsSymbol, enable)
+    toggleListener(searchRelatedObjectsSymbol, searchRelatedObjectsClickHandler, enable)
 }
 
 const toggleListener = (symbol, listener, enable) => {
@@ -194,21 +202,25 @@ const enableCreateBtn = (results, resultsType, operation, resultsContainer) => {
 
 const executeSelectResultBtnListener = (results, resultsType, operation, table) => {
     results = results[findSelectedResult()]
+    console.log(results)
+    console.log([results])
     saveResult(results, resultsType)
     endProcess(resultsType, operation, table)
-    browseObject(results, resultsType, operation)
+    browseObject(results, resultsType)
 }
 
-const browseObject = (results, resultsType, operation) => {
+const browseObject = (results, resultsType) => {
     if (resultsType.substring(0, 2) === "b_") {
-        operation = "create"
-        let catalogCard = d.querySelector(".catalog_card.author_catalog_card")
+        let catalogCard = d.querySelector(".catalog_card.author_catalog_card"),
+            inputs = d.querySelectorAll(".catalog_card .form input"),
+            operation = "create"
+
         showCatalogCard(resultsType, catalogCard, [results])
         enableCreateModalActions(results, resultsType, operation, catalogCard)
-        let inputs = d.querySelectorAll(".catalog_card .form input")
+        
         if (inputs[inputs.length - 1].value.substring(0, 2) !== "No") {
             searchRelatedObjectsSymbol.classList.add("active")
-            toggleSearchRelatedObjectsSymbol()
+            toggleSearchRelatedObjectsSymbol(results, resultsType, catalogCard, true)
         }
     }
 }
@@ -258,9 +270,20 @@ const executeDeleteSymbolListener = (results, resultsType, operation, resultsCon
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
 
+const executeSearchRelatedObjectsListener = (results, resultsType, catalogCard) => {
+    let table
+    if (resultsType === "b_author") {
+        table = d.querySelector(".results_table.related_bookworks_results_table")
+    } 
+    closeModal(resultsType, "create", catalogCard)
+    showSearchResults(resultsType, table)
+    enableModalActions(results, resultsType, "search", table)
+}
+
 const deleteCreatedObject = (results, resultsType) => {
     switch (resultsType) {
         case "author":
+        case "b_author":
             deleteAuthor(results[findSelectedResult()].idAuthor)
             break;
         case "bookwork":
@@ -275,8 +298,6 @@ const deleteCreatedObject = (results, resultsType) => {
             deleteNewCopy(results[findSelectedResult()].idBookCopy)
             break;
         case "newReader":
-            break;
-        case "b_author":
             break;
         default:
             break;
@@ -425,10 +446,6 @@ const hiddeTable = table => {
         }
 
         table.classList.add("hidden")
-
-        if (table.querySelector("th.select_column")) {
-            table.querySelector("th.select_column").remove()
-        }
 
         table = ""
     }

@@ -129,12 +129,6 @@ const deleteBrowseAuthor = async () => {
 }
 
 const generateBrowseAuthorsTableContent = (base = results) => {
-    if (!table.querySelector("th.select_column")) {
-        let selectColumn = d.createElement("th")
-        selectColumn.textContent = "Select book work"
-        selectColumn.classList.add("select_column")
-        table.querySelector("thead tr").appendChild(selectColumn)
-    }
     for (let i = 0; i < results.length; i++) {
 
         let result = base[i]
@@ -166,15 +160,61 @@ const generateBrowseAuthorsTableContent = (base = results) => {
 
         if (tableBody.firstChild) {
             tableBody.insertBefore(newRow, tableBody.firstChild);
-
-            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
-            if (selectAuthor) {
-                errorMessageTd.setAttribute("colspan", 3)
-            } else {
-                errorMessageTd.setAttribute("colspan", 2)
-            }
+            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
         } else {
             tableBody.appendChild(newRow);
+        }
+    }
+}
+
+const generateRelatedBookWorksTableContent = (base = results) => {
+
+    if (table.querySelector("th.select_column")) {
+        table.querySelector("th.select_column").remove()
+    }
+
+    for (let i = 0; i < results.length; i++) {
+        let result = base[i],
+            author = result.author
+
+        let newRow = d.createElement("tr")
+        newRow.classList.add("results_row")
+
+        let title = d.createElement("td")
+        title.textContent = result.title;
+
+        let bookAuthor = d.createElement("td")
+        bookAuthor.textContent = `${author.firstName} ${author.lastName}`
+
+        let publicationYear = d.createElement("td")
+        publicationYear.textContent = `${result.publicationYear ? result.publicationYear : "Unknown"}`
+
+        let selectBookwork, checkbox
+        if (operation === "search") {
+            selectBookwork = d.createElement("td"),
+                checkbox = d.createElement("input")
+            checkbox.type = "checkbox"
+            checkbox.name = `select-bookwork`
+            checkbox.classList.add('result_option')
+            checkbox.classList.add('bookwork_result_option')
+            checkbox.value = i
+            selectBookwork.appendChild(checkbox)
+        }
+
+        newRow.appendChild(title)
+        newRow.appendChild(bookAuthor)
+        newRow.appendChild(publicationYear)
+        if (selectBookwork) {
+            newRow.appendChild(selectBookwork)
+        }
+
+        let tableBody = table.querySelector(".results_table_body")
+
+        if (tableBody.firstChild) {
+            tableBody.insertBefore(newRow, tableBody.firstChild)
+            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
+        } else {
+            tableBody.appendChild(newRow)
         }
     }
 }
@@ -210,3 +250,5 @@ export { generateBrowseAuthorsTableContent }
 export { generateBrowseAuthorCatalogCard }
 export { getBrowseAuthor }
 export { reasigneBrowseAuthorValue }
+export { generateRelatedBookWorksTableContent }
+export { getAuthorBookWorks }

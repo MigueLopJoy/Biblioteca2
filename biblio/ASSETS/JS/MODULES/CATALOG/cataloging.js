@@ -310,14 +310,6 @@ const getEditNewEditionResults = async editedFields => {
 }
 
 const generateAuthorsTableContent = () => {
-
-    if (!table.querySelector("th.select_column")) {
-        let selectColumn = d.createElement("th")
-        selectColumn.textContent = "Select Autor"
-        selectColumn.classList.add("select_column")
-        table.querySelector("thead tr").appendChild(selectColumn)
-    }
-
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i]
@@ -348,13 +340,7 @@ const generateAuthorsTableContent = () => {
 
         if (tableBody.firstChild) {
             tableBody.insertBefore(newRow, tableBody.firstChild);
-
-            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
-            if (selectAuthor) {
-                errorMessageTd.setAttribute("colspan", 3)
-            } else {
-                errorMessageTd.setAttribute("colspan", 2)
-            }
+            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
         } else {
             tableBody.appendChild(newRow);
         }
@@ -379,15 +365,7 @@ const generateAuthorCatalogCard = async () => {
 }
 
 const generateBookworksTableContent = () => {
-    if (!table.querySelector("th.select_column")) {
-        let selectColumn = d.createElement("th")
-        selectColumn.textContent = "Select author"
-        selectColumn.classList.add("select_column")
-        table.querySelector("thead tr").appendChild(selectColumn)
-    }
-
     for (let i = 0; i < results.length; i++) {
-
         let result = results[i],
             author = result.author
 
@@ -427,13 +405,7 @@ const generateBookworksTableContent = () => {
 
         if (tableBody.firstChild) {
             tableBody.insertBefore(newRow, tableBody.firstChild)
-
-            let errorMessageTd = tableBody.querySelector(".error_message_row > td")
-            if (selectBookwork) {
-                errorMessageTd.setAttribute("colspan", 3)
-            } else {
-                errorMessageTd.setAttribute("colspan", 3)
-            }
+            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
         } else {
             tableBody.appendChild(newRow)
         }

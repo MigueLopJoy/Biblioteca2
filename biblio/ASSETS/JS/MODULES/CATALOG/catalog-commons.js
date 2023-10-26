@@ -3,6 +3,8 @@ import {
     displaySuccessMessage
 } from "./../modules_commons.js"
 
+import { getAuthorBookWorks } from "./BROWSE/authors_catalog.js"
+
 import { showPage } from "./display_pages.js"
 
 import {
@@ -23,7 +25,8 @@ import {
 
 import {
     generateBrowseAuthorCatalogCard,
-    generateBrowseAuthorsTableContent
+    generateBrowseAuthorsTableContent,
+    generateRelatedBookWorksTableContent
 } from "./BROWSE/authors_catalog.js"
 
 
@@ -187,7 +190,7 @@ const renderModal = () => {
     modal.style.alignItems = "center"
 }
 
-const generaTableContent = table => {
+const generaTableContent = (results, table) => {
     if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
@@ -196,6 +199,8 @@ const generaTableContent = table => {
         generateBookeditionsTableContent()
     } else if (table.classList.contains("b_authors_results_table")) {
         generateBrowseAuthorsTableContent()
+    } else if (table.classList.contains("related_bookworks_results_table")) {
+        generateRelatedBookWorksTableContent(getAuthorBookWorks(results[0].idAuthor))
     }
 }
 

@@ -297,7 +297,16 @@
 }
 
 .search_related_objects.active {
-    border: 1px solid #00CC00;
+    cursor: pointer;
+}
+
+.search_related_objects.active:hover {
+    border-color: #888;
+    background-color: #2EA44FAA;
+}
+
+.search_related_objects.active:active {
+    background-color: #2EA44FCC;
 }
 
 /*Buttons styles*/
