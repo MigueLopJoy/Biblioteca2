@@ -74,15 +74,11 @@ const runBookworkProcess = async form => {
     resultsType = "bookwork"
     clearPrintedReults(resultsType)
 
-    if (form.classList.contains("bookwork_form") &&
-        form.classList.contains("search")
-    ) {
+    if (form.classList.contains("search")) {
         operation = "search"
         table = bookworksResultsTable
         await getSearchBookworkResults(form)
-    } else if (form.classList.contains("bookwork_form") &&
-        form.classList.contains("create")
-    ) {
+    } else if (form.classList.contains("create")) {
         operation = "create"
         catalogCard = bookworkCatalogCard
         await getCreatehBookworkResults(form)
@@ -335,15 +331,7 @@ const generateAuthorsTableContent = () => {
         newRow.appendChild(firstName)
         newRow.appendChild(lastName)
         newRow.appendChild(selectAuthor)
-
-        const tableBody = table.querySelector(".results_table_body")
-
-        if (tableBody.firstChild) {
-            tableBody.insertBefore(newRow, tableBody.firstChild);
-            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
-        } else {
-            tableBody.appendChild(newRow);
-        }
+        table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
 
@@ -382,33 +370,20 @@ const generateBookworksTableContent = () => {
         publicationYear.textContent = `${result.publicationYear ? result.publicationYear : "Unknown"}`
 
 
-        let selectBookwork, checkbox
-        if (operation === "search") {
-            selectBookwork = d.createElement("td"),
-                checkbox = d.createElement("input")
-            checkbox.type = "checkbox"
-            checkbox.name = `select-bookwork`
-            checkbox.classList.add('result_option')
-            checkbox.classList.add('bookwork_result_option')
-            checkbox.value = i
-            selectBookwork.appendChild(checkbox)
-        }
+        let selectBookwork = d.createElement("td"),
+            checkbox = d.createElement("input")
+        checkbox.type = "checkbox"
+        checkbox.name = `select-bookwork`
+        checkbox.classList.add('result_option')
+        checkbox.classList.add('bookwork_result_option')
+        checkbox.value = i
+        selectBookwork.appendChild(checkbox)
 
         newRow.appendChild(title)
         newRow.appendChild(bookAuthor)
         newRow.appendChild(publicationYear)
-        if (selectBookwork) {
-            newRow.appendChild(selectBookwork)
-        }
-
-        let tableBody = table.querySelector(".results_table_body")
-
-        if (tableBody.firstChild) {
-            tableBody.insertBefore(newRow, tableBody.firstChild)
-            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
-        } else {
-            tableBody.appendChild(newRow)
-        }
+        newRow.appendChild(selectBookwork)
+        table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
 

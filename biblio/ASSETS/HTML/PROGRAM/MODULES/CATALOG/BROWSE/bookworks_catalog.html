@@ -1,27 +1,27 @@
-<div class="container" id="b_authors_section">
+<div class="container" id="b_bookworks_section">
 
     <div class="current_window">
 
-        <div class="page b_authors_page hidden">
-
-            <div class="page_element_container search_author">
-                <form class="form b_author_form search">
-                    <legend>Search author</legend>
-                    <p class="error_message general_error"></p>
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="submit" id="search_author_btn" class="btn" value="Search">
+        <div class="page b_bookworks_page hidden">
+            <div class="page_element_container search_bookwork">
+                <form class="form bookwork_form search">
+                    <legend>Search Book Work</legend>
+                    <p class="error_message general_error mb-0"></p>
+                    <input type="text" name="title" placeholder="Introduce book work's title">
+                    <input type="text" name="author_name" placeholder="Introduce author's name">
+                    <input type="submit" id="search_bookwork_btn" class="btn" value="Search">
                 </form>
             </div>
 
-            <div class="page_element_container create_author">
-                <form class="form b_author_form create">
-                    <legend>Create new author</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message firstName"></p>
-                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
-                    <p class="error_message lastName"></p>
-                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
-                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+            <div class="page_element_container create_bookwork">
+                <form class="form bookwork_form create">
+                    <legend>Create New Book Work</legend>
+                    <p class="error_message general_error mb-0"></p>
+                    <p class="error_message title mb-0" mb-0></p>
+                    <input type="text" name="title" placeholder="Book work title">
+                    <p class="error_message publicationYear mb-0"></p>
+                    <input type="number" name="publication_year" placeholder="Book work publication year">
+                    <input type="submit" id="create_bookwork_btn" class="btn" value="Create">
                 </form>
             </div>
 
@@ -43,18 +43,7 @@
                 </div>
 
                 <div class="tables_container">
-                    <table class="results_table b_authors_results_table hidden">
-                        <thead>
-                            <tr>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th class="select_column">Select author</th>
-                            </tr>
-                        </thead>
-                        <tbody class="results_table_body"></tbody>
-                    </table>
-
-                    <table class="results_table related_bookworks_results_table hidden">
+                    <table class="results_table b_bookworks_results_table hidden">
                         <thead>
                             <tr>
                                 <th>Title</td>
@@ -66,7 +55,7 @@
                         <tbody class="results_table_body"></tbody>
                     </table>
 
-                    <table class="results_table bookeditions_results_table hidden">
+                    <table class="results_table related_bookeditions_results_table hidden">
                         <thead>
                             <tr>
                                 <th>Title</td>
@@ -85,32 +74,8 @@
                     <div class="catalog_cards_container">
                         <p class="success_message mb-1"></p>
 
-                        <div class="catalog_card author_catalog_card hidden">
-                            <form class="form author_form">
-                                <legend>Author Catalog Card</legend>
-
-                                <p class="error_message general_error mb-0"></p>
-
-                                <p class="error_message firstName mb-0"></p>
-                                <label>First Name:</label>
-                                <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
-
-                                <p class="error_message lastName mb-0"></p>
-                                <label>Last Name:</label>
-                                <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
-
-                                <label for="author_bookworks">Author's Book Works:</label>
-                                <div class="input-group">
-                                    <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
-                                    <span class="input-group-text search_related_objects">
-                                        <i class="bi bi-search"></i>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-
                         <div class="catalog_card bookwork_catalog_card hidden">
-                            <form class="form bookwork_form hidden">
+                            <form class="form bookwork_form">
                                 <legend>Book Work Catalog Card</legend>
     
                                 <p class="error_message general_error mb-0"></p>

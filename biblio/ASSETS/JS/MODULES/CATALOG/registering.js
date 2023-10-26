@@ -157,13 +157,6 @@ const deleteNewCopy = async bookcopyId => {
 }
 
 const generateBookeditionsTableContent = () => {
-    if (!table.querySelector("th.select_column")) {
-        let selectColumn = d.createElement("th")
-        selectColumn.textContent = "Select book edition"
-        selectColumn.classList.add("select_column")
-        table.querySelector("thead tr").appendChild(selectColumn)
-    }
-
     for (let i = 0; i < results.length; i++) {
 
         let result = results[i],

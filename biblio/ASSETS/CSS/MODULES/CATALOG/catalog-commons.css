@@ -301,12 +301,15 @@
 }
 
 .search_related_objects.active:hover {
-    border-color: #888;
-    background-color: #2EA44FAA;
+    background-color: #2EA44FDD;
+}
+
+.search_related_objects.active:hover i {
+    color: #FFF;
 }
 
 .search_related_objects.active:active {
-    background-color: #2EA44FCC;
+    background-color: #2EA44FEE;
 }
 
 /*Buttons styles*/

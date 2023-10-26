@@ -47,9 +47,7 @@ const d = document,
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
     editSymbol = d.querySelector(".icons_container .edit_symbol"),
     deleteSymbol = d.querySelector(".icons_container .delete_symbol"),
-    closeSymbol = d.querySelector(".close_symbol"),
-    searchRelatedObjectsSymbol = d.querySelector(".search_related_objects")
-
+    closeSymbol = d.querySelector(".close_symbol")
 
 const findCurrentPage = () => {
     const pages = d.querySelectorAll(".page")
@@ -150,7 +148,7 @@ const toggleCloseModalSymbol = (resultsType, operation, resultsContainer, enable
     toggleListener(closeSymbol, closeSymbolClickHandler, enable)
 }
 
-const toggleSearchRelatedObjectsSymbol = (results, resultsType, catalogCard, enable = false) => {
+const toggleSearchRelatedObjectsSymbol = (results, resultsType, catalogCard, searchRelatedObjectsSymbol, enable = false) => {
     searchRelatedObjectsClickHandler = function () {
         executeSearchRelatedObjectsListener(results, resultsType, catalogCard)        
     }
@@ -202,8 +200,6 @@ const enableCreateBtn = (results, resultsType, operation, resultsContainer) => {
 
 const executeSelectResultBtnListener = (results, resultsType, operation, table) => {
     results = results[findSelectedResult()]
-    console.log(results)
-    console.log([results])
     saveResult(results, resultsType)
     endProcess(resultsType, operation, table)
     browseObject(results, resultsType)
@@ -211,16 +207,29 @@ const executeSelectResultBtnListener = (results, resultsType, operation, table) 
 
 const browseObject = (results, resultsType) => {
     if (resultsType.substring(0, 2) === "b_") {
-        let catalogCard = d.querySelector(".catalog_card.author_catalog_card"),
+        let catalogCard,
             inputs = d.querySelectorAll(".catalog_card .form input"),
             operation = "create"
+
+        switch (resultsType) {
+            case "b_author":
+                catalogCard = d.querySelector(".catalog_card.author_catalog_card")
+                break;
+            case "b_bookwork":
+                catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
+                break;
+            default:
+                break;
+        }
+
+        const searchRelatedObjectsSymbol = catalogCard.querySelector(".search_related_objects")
 
         showCatalogCard(resultsType, catalogCard, [results])
         enableCreateModalActions(results, resultsType, operation, catalogCard)
         
         if (inputs[inputs.length - 1].value.substring(0, 2) !== "No") {
             searchRelatedObjectsSymbol.classList.add("active")
-            toggleSearchRelatedObjectsSymbol(results, resultsType, catalogCard, true)
+            toggleSearchRelatedObjectsSymbol(results, resultsType, catalogCard, searchRelatedObjectsSymbol, true)
         }
     }
 }
@@ -272,11 +281,18 @@ const executeDeleteSymbolListener = (results, resultsType, operation, resultsCon
 
 const executeSearchRelatedObjectsListener = (results, resultsType, catalogCard) => {
     let table
-    if (resultsType === "b_author") {
-        table = d.querySelector(".results_table.related_bookworks_results_table")
-    } 
+    switch (resultsType) {
+        case "b_author":
+            table = d.querySelector(".results_table.related_bookworks_results_table")
+            break;
+        case "b_bookwork":
+            table = d.querySelector(".results_table.related_bookeditions_results_table")            
+            break;    
+        default:
+            break;
+    }
     closeModal(resultsType, "create", catalogCard)
-    showSearchResults(resultsType, table)
+    showSearchResults(resultsType, table, results)
     enableModalActions(results, resultsType, "search", table)
 }
 
@@ -421,7 +437,7 @@ const closeModal = (resultsType, operation, resultsContainer) => {
 
     if (operation === "search") {
         selectBtnContainer.classList.add("hidden")
-    } else if (operation === "create" || operation === "manage") {
+    } else if (operation === "create") {
         createBtnContainer.classList.add("hidden")
     } else if (operation === "ending") {
         endingBtnContainer.classList.add("hidden")

@@ -27,7 +27,7 @@ d.addEventListener("submit", async e => {
         await runAuthorProcess(e.target)
 
         if (error) {
-            handleErrorMessages(error, form)
+            handleErrorMessages(error, e.target)
             error = null
             toggleNextPageChanging(resultsType)
             clearFormsData()
@@ -151,32 +151,18 @@ const generateBrowseAuthorsTableContent = (base = results) => {
         checkbox.value = i;
         selectAuthor.appendChild(checkbox)
 
-
         newRow.appendChild(firstName)
         newRow.appendChild(lastName)
         newRow.appendChild(selectAuthor)
-
-        const tableBody = table.querySelector(".results_table_body")
-
-        if (tableBody.firstChild) {
-            tableBody.insertBefore(newRow, tableBody.firstChild);
-            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
-        } else {
-            tableBody.appendChild(newRow);
-        }
+        table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
 
-const generateRelatedBookWorksTableContent = (base = results) => {
-
-    if (table.querySelector("th.select_column")) {
-        table.querySelector("th.select_column").remove()
-    }
-
+const generateRelatedBookWorksTableContent = (results, table) => {
     for (let i = 0; i < results.length; i++) {
-        let result = base[i],
+        let result = results[i],
             author = result.author
-
+        
         let newRow = d.createElement("tr")
         newRow.classList.add("results_row")
 
@@ -189,46 +175,34 @@ const generateRelatedBookWorksTableContent = (base = results) => {
         let publicationYear = d.createElement("td")
         publicationYear.textContent = `${result.publicationYear ? result.publicationYear : "Unknown"}`
 
-        let selectBookwork, checkbox
-        if (operation === "search") {
-            selectBookwork = d.createElement("td"),
-                checkbox = d.createElement("input")
-            checkbox.type = "checkbox"
-            checkbox.name = `select-bookwork`
-            checkbox.classList.add('result_option')
-            checkbox.classList.add('bookwork_result_option')
-            checkbox.value = i
-            selectBookwork.appendChild(checkbox)
-        }
+        let selectBookwork = d.createElement("td"),
+            checkbox = d.createElement("input")
+        checkbox.type = "checkbox"
+        checkbox.name = `select-bookwork`
+        checkbox.classList.add('result_option')
+        checkbox.classList.add('bookwork_result_option')
+        checkbox.value = i
+        selectBookwork.appendChild(checkbox)
 
         newRow.appendChild(title)
         newRow.appendChild(bookAuthor)
         newRow.appendChild(publicationYear)
-        if (selectBookwork) {
-            newRow.appendChild(selectBookwork)
-        }
+        newRow.appendChild(selectBookwork)
 
-        let tableBody = table.querySelector(".results_table_body")
-
-        if (tableBody.firstChild) {
-            tableBody.insertBefore(newRow, tableBody.firstChild)
-            tableBody.querySelector(".error_message_row > td").setAttribute("colspan", 3)
-        } else {
-            tableBody.appendChild(newRow)
-        }
+        table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
 
 const generateBrowseAuthorCatalogCard = async (browseResults = results) => {
     let author = browseResults[0],
-        authorBookWorksMessage
+        authorBookWorks, authorBookWorksMessage
 
     authorCatalogCard.classList.remove("hidden")
 
     authorCatalogCard.querySelector(".author_firstName").value = author.firstName
     authorCatalogCard.querySelector(".author_lastName").value = author.lastName
     try {
-        let authorBookWorks = await getAuthorBookWorks(author.idAuthor)
+        authorBookWorks = await getAuthorBookWorks(author.idAuthor)
         authorBookWorksMessage = `Author Book Works: ${authorBookWorks.length}`
     } catch (error) {
         authorBookWorksMessage = error.message

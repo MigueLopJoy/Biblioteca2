@@ -81,6 +81,24 @@ const displayBrowseAuthorsCatalogMainPage = async () => {
     showPageAndEnableLinks("b_authors_page")
 }
 
+const displayBrowseBookWorksCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookworks_catalog.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/BROWSE/bookworks_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("b_bookworks_page")
+}
+
+const displayBrowseBookEditionsCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookeditions_catalog.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/BROWSE/bookeditions_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("b_bookeditions_page")
+}
+
 const showPageAndEnableLinks = page => {
     showPage(page)
     enableWindowNavLinkBtns()
@@ -125,6 +143,8 @@ export { displayCatalogingMainPage }
 export { displayRegisteringMainPage }
 export { displayReadersRegisteringMainPage }
 export { displayBrowseAuthorsCatalogMainPage }
+export { displayBrowseBookWorksCatalogMainPage }
+export { displayBrowseBookEditionsCatalogMainPage }
 export { enableWindowNavLinkBtns }
 export { loadContent }
 export { showPage }
