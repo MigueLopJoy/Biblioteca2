@@ -1,16 +1,19 @@
-import { 
+import {
+    loadContent,
     displayCatalogingMainPage,
     displayRegisteringMainPage,
-    displayReadersRegisteringMainPage } from "./CATALOG/display_pages.js"
+    displayReadersRegisteringMainPage
+} from "./CATALOG/display_pages.js"
 
-import { 
-    printSelectedResult, 
+import {
+    printSelectedResult,
     showCatalogCard,
     showSearchResults,
     toggleNextPageChanging,
-    clearPrintedReults } from "./CATALOG/catalog-commons.js"
+    clearPrintedReults
+} from "./CATALOG/catalog-commons.js"
 
-import { 
+import {
     getEditAuthorResults,
     getEditBookworkResults,
     getEditNewEditionResults,
@@ -19,29 +22,37 @@ import {
     deleteNewBookedition,
     reasigneAuthorValue,
     reasigneBookworkValue,
-    reasigneNewEditionValue } from "./CATALOG/cataloging.js"
+    reasigneNewEditionValue
+} from "./CATALOG/cataloging.js"
 
-import { 
+import {
     getEditNewCopyResults,
     deleteNewCopy,
     reasigneBookeditionValue,
-    reasigneNewBookcopyValue } from "./CATALOG/registering.js"
+    reasigneNewBookcopyValue
+} from "./CATALOG/registering.js"
 
-import { 
+import {
     getEditNewReaderResults,
-    reasigneNewReaderValue} from "./READERS/readers_registering.js"
-import {  } from "./READERS/readers_registering.js"
+    reasigneNewReaderValue
+} from "./READERS/readers_registering.js"
 
-import { 
+import {
+    sendAuthorForm,
+    getAuthorBookWorks,
     getEditBrowseAuthorResults,
-    reasigneBrowseAuthorValue } from "./CATALOG/BROWSE/authors_catalog.js"
+    reasigneBrowseAuthorValue
+} from "./CATALOG/BROWSE/authors_catalog.js"
+
+import {
+    sendBookWorkForm,
+    getEditBrowseBookworkResults,
+    reasigneBrowseBookWorkValue
+} from "./CATALOG/BROWSE/bookworks_catalog.js"
 
 /* Global methods */
 
 const d = document,
-    selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
-    createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
-    endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn"),
     confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
     endingBtn = d.querySelector(".modal_btns_container .ending_btn"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
@@ -69,7 +80,7 @@ const findCurrentPage = () => {
 
 /* Modal actions */
 
-const enableModalActions = (results, resultsType, operation, table) => {
+const enableSearchModalActions = (results, resultsType, operation, table) => {
     enableOptionChangigng()
     toggleCloseModalSymbol(resultsType, operation, table, true)
     toggleBtnState(selectResultBtn, true)
@@ -150,7 +161,7 @@ const toggleCloseModalSymbol = (resultsType, operation, resultsContainer, enable
 
 const toggleSearchRelatedObjectsSymbol = (results, resultsType, catalogCard, searchRelatedObjectsSymbol, enable = false) => {
     searchRelatedObjectsClickHandler = function () {
-        executeSearchRelatedObjectsListener(results, resultsType, catalogCard)        
+        executeSearchRelatedObjectsListener(results, resultsType, catalogCard)
     }
     toggleSymbol(searchRelatedObjectsSymbol, enable)
     toggleListener(searchRelatedObjectsSymbol, searchRelatedObjectsClickHandler, enable)
@@ -222,11 +233,13 @@ const browseObject = (results, resultsType) => {
                 break;
         }
 
-        const searchRelatedObjectsSymbol = catalogCard.querySelector(".search_related_objects")
+        console.log(catalogCard)
+
+        let searchRelatedObjectsSymbol = catalogCard.querySelector(".search_related_objects")
 
         showCatalogCard(resultsType, catalogCard, [results])
         enableCreateModalActions(results, resultsType, operation, catalogCard)
-        
+
         if (inputs[inputs.length - 1].value.substring(0, 2) !== "No") {
             searchRelatedObjectsSymbol.classList.add("active")
             toggleSearchRelatedObjectsSymbol(results, resultsType, catalogCard, searchRelatedObjectsSymbol, true)
@@ -279,21 +292,19 @@ const executeDeleteSymbolListener = (results, resultsType, operation, resultsCon
     confirmBtn.addEventListener("click", confirmBtnClickHandler)
 }
 
-const executeSearchRelatedObjectsListener = (results, resultsType, catalogCard) => {
-    let table
+const executeSearchRelatedObjectsListener = async (results, resultsType, catalogCard) => {
+    closeModal(resultsType, "create", catalogCard)
     switch (resultsType) {
         case "b_author":
-            table = d.querySelector(".results_table.related_bookworks_results_table")
+            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookworks_catalog.html", d.getElementById("main-content"))
+            sendBookWorkForm(results)
             break;
         case "b_bookwork":
-            table = d.querySelector(".results_table.related_bookeditions_results_table")            
-            break;    
+            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookeditions_catalog.html", d.getElementById("main-content"))
+            break;
         default:
             break;
     }
-    closeModal(resultsType, "create", catalogCard)
-    showSearchResults(resultsType, table, results)
-    enableModalActions(results, resultsType, "search", table)
 }
 
 const deleteCreatedObject = (results, resultsType) => {
@@ -343,6 +354,8 @@ const saveResult = (results, resultsType) => {
         case "b_author":
             reasigneBrowseAuthorValue(results[findSelectedResult()])
             break;
+        case "b_bookwork":
+            reasigneBrowseBookWorkValue(results[findSelectedResult()])
         default:
             break;
     }
@@ -404,6 +417,8 @@ const getEditionResults = async (resultsType, editedInputs) => {
         return await getEditNewReaderResults(editedInputs)
     } else if (resultsType === "b_author") {
         return await getEditBrowseAuthorResults(editedInputs)
+    } else if (resultsType === "b_bookwork") {
+        return await getEditBrowseBookworkResults(editedInputs)
     }
 }
 
@@ -428,6 +443,9 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 }
 
 const closeModal = (resultsType, operation, resultsContainer) => {
+    let selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
+        createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
+        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn")
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
@@ -558,6 +576,9 @@ const hiddeSuccessMessage = () => {
 
 let endingBtnClickHandler
 const prepareEndingBtn = (resultsType, operation, catalogCard) => {
+    let createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
+        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn")
+
     createBtnContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
     endingBtnClickHandler = function () {
@@ -664,7 +685,7 @@ const clearFormsData = () => {
 
 
 export { findCurrentPage }
-export { enableModalActions }
+export { enableSearchModalActions }
 export { enableCreateModalActions }
 export { fetchRequest }
 export { joinParamsToURL }

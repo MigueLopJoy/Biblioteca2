@@ -3,7 +3,7 @@ import { fetchRequest } from "./../modules_commons.js"
 import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
-import { enableModalActions } from "./../modules_commons.js"
+import { enableSearchModalActions } from "./../modules_commons.js"
 
 import { showSearchResults } from "./readers_commons.js"
 
@@ -31,7 +31,7 @@ d.addEventListener("submit", async e => {
         } else {
             console.log(operation, table)
             showSearchResults(operation, table)
-            enableModalActions(results, resultsType, operation, table)
+            enableSearchModalActions(results, resultsType, operation, table)
         }
     }
 })

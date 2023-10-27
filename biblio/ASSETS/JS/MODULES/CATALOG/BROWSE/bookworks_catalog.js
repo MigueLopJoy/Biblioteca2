@@ -4,7 +4,7 @@ import {
     handleErrorMessages,
     clearErrorMessages,
     clearFormsData,
-    enableModalActions,
+    enableSearchModalActions,
     enableCreateModalActions,
 } from "../../modules_commons.js"
 
@@ -13,9 +13,7 @@ import {
     showCatalogCard
 } from "../catalog-commons.js"
 
-const d = document,
-    bookWorksResultsTable = d.querySelector(".results_table.b_bookworks_results_table"),
-    bookWorkCatalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
+const d = document
 
 let bookwork, results, error, table, catalogCard, resultsType, operation
 
@@ -23,36 +21,48 @@ d.addEventListener("submit", async e => {
     e.preventDefault();
 
     if (d.getElementById("b_bookworks_section")) {
-        clearErrorMessages()
-        await runBookWorkProcess(e.target)
-
-        if (error) {
-            handleErrorMessages(error, e.target)
-            error = null
-            toggleNextPageChanging(resultsType)
-            clearFormsData()
-        } else {
-            if (operation === "search") {
-                showSearchResults(resultsType, table)
-                enableModalActions(results, resultsType, operation, table)
-            } else if (operation === "create") {
-                showCatalogCard(resultsType, catalogCard)
-                enableCreateModalActions(results, resultsType, operation, catalogCard)
-            }
-        }
+        sendBookWorkForm(undefined, e.target)
     }
 })
+
+const sendBookWorkForm = async (author, form) => {
+    if (!form) form = setFormInputsValues(author)
+
+    clearErrorMessages()
+    await runBookWorkProcess(form)
+
+    if (error) {
+        handleErrorMessages(error, form)
+        error = null
+        toggleNextPageChanging(resultsType)
+        clearFormsData()
+    } else {
+        if (operation === "search") {
+            showSearchResults(resultsType, table)
+            enableSearchModalActions(results, resultsType, operation, table)
+        } else if (operation === "create") {
+            showCatalogCard(resultsType, catalogCard)
+            enableCreateModalActions(results, resultsType, operation, catalogCard)
+        }
+    }
+}
+
+const setFormInputsValues = author => {
+    let searchBookWorkForm = d.querySelector(".form.b_bookwork_form.search")
+    searchBookWorkForm.author_name.value = `${author.firstName} ${author.lastName}`
+    return searchBookWorkForm
+}
 
 const runBookWorkProcess = async form => {
     bookwork = ""
     resultsType = "b_bookwork"
 
     if (form.classList.contains("search")) {
-        table = bookWorksResultsTable
+        table = d.querySelector(".results_table.b_bookworks_results_table")
         operation = "search"
         await getSearchBookworkResults(form)
     } else {
-        catalogCard = bookWorkCatalogCard
+        catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
         operation = "create"
         await getCreatehBookworkResults(form)
     }
@@ -220,6 +230,7 @@ const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
         title = bookwork.title,
         publicationYear = bookwork.publicationYear,
         bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
+
     bookWorkCatalogCard.classList.remove("hidden")
 
     bookWorkCatalogCard.querySelector(".bookwork_title").value = title
@@ -239,15 +250,16 @@ const getBrowseBookWork = () => {
     return author
 }
 
-const reasigneBrowseAuthorValue = newAuthorValue => {
-    author = newAuthorValue
+const reasigneBrowseBookWorkValue = newBookWorkValue => {
+    author = newBookWorkValue
 }
 
+export { sendBookWorkForm }
 export { getEditBrowseBookworkResults }
 export { deleteBrowseBookwork }
 export { generateBrowseBookworksTableContent }
 export { generateBrowseBookWorkCatalogCard }
 export { getBrowseBookWork }
-export { reasigneBrowseAuthorValue }
+export { reasigneBrowseBookWorkValue }
 export { generateRelatedEditionsTableContent }
 export { getBookWorkEditions }

@@ -28,17 +28,15 @@ import {
     getAuthorBookWorks
 } from "./BROWSE/authors_catalog.js"
 
-import { 
+import {
     generateBrowseBookWorkCatalogCard,
     generateBrowseBookworksTableContent,
-    generateRelatedEditionsTableContent ,
+    generateRelatedEditionsTableContent,
     getBookWorkEditions
 } from "./BROWSE/bookworks_catalog.js"
 
 
 const d = document,
-    selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
-    createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
     selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
 
 /* Page's interaction methods*/
@@ -164,28 +162,37 @@ const clearPrintedReults = resultsType => {
 /* Handle results methods */
 
 const showSearchResults = (resultsType, table, results) => {
-    console.log(results)
+    let selectBtnContainer = d.querySelector(".modal_btns_container .select_btn")
+
     renderModal()
+    console.log(table)
     table.classList.remove("hidden")
     generaTableContent(table, results)
     selectBtnContainer.classList.remove("hidden")
+    setSelectResultBtnTextContent(resultsType)
+}
 
+const setSelectResultBtnTextContent = resultsType => {
     switch (resultsType) {
         case "author":
+        case "b_author":
             selectResultBtn.textContent = "Select author"
             break;
         case "bookwork":
+        case "b_bookwork":
             selectResultBtn.textContent = "Select book work"
             break;
         case "newEdition":
             selectResultBtn.textContent = "Select book edition"
-            break;                        
+            break;
         default:
             break;
     }
 }
 
 const showCatalogCard = (resultsType, catalogCard, results) => {
+    let createBtnContainer = d.querySelector(".modal_btns_container .create_btn")
+
     renderModal()
     catalogCard.classList.remove("hidden")
     generateCatalogCard(resultsType, results)

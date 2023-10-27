@@ -4,7 +4,7 @@ import { joinParamsToURL } from "./../modules_commons.js"
 import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
-import { enableModalActions } from "./../modules_commons.js"
+import { enableSearchModalActions } from "./../modules_commons.js"
 import { enableCreateModalActions } from "./../modules_commons.js"
 import { toggleNextPageChanging } from "./catalog-commons.js"
 import { clearPrintedReults } from "./catalog-commons.js"
@@ -44,7 +44,7 @@ d.addEventListener("submit", async e => {
         } else {
             if (operation === "search") {
                 showSearchResults(resultsType, table)
-                enableModalActions(results, resultsType, operation, table)
+                enableSearchModalActions(results, resultsType, operation, table)
             } else if (operation === "create") {
                 showCatalogCard(resultsType, catalogCard)
                 enableCreateModalActions(results, resultsType, operation, catalogCard)

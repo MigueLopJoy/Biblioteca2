@@ -3,7 +3,7 @@ import { fetchRequest } from "./../modules_commons.js"
 import { handleErrorMessages } from "./../modules_commons.js"
 import { clearErrorMessages } from "./../modules_commons.js"
 import { clearFormsData } from "./../modules_commons.js"
-import { enableModalActions } from "./../modules_commons.js"
+import { enableSearchModalActions } from "./../modules_commons.js"
 import { enableCreateModalActions } from "./../modules_commons.js"
 
 import { toggleNextPageChanging } from "./catalog-commons.js"
@@ -41,7 +41,7 @@ d.addEventListener("submit", async e => {
             if (operation === "search") {
                 console.log(table)
                 showSearchResults(resultsType, table)
-                enableModalActions(results, resultsType, operation, table)
+                enableSearchModalActions(results, resultsType, operation, table)
             } else if (operation === "create") {
                 showCatalogCard(resultsType, catalogCard)
                 enableCreateModalActions(results, resultsType, operation, catalogCard)
@@ -118,13 +118,13 @@ const getCreateBookCopyResults = async form => {
 
 const getEditNewCopyResults = async editedFields => {
     try {
-        console.log(            
+        console.log(
             {
-            originalBookCopyId: results[0].idBookCopy,
-            signature: editedFields[0],
-            registrationNumber: editedFields[1],
-            status: newBookcopy.bookCopyStatus,
-            borrowed: newBookcopy.borrowed
+                originalBookCopyId: results[0].idBookCopy,
+                signature: editedFields[0],
+                registrationNumber: editedFields[1],
+                status: newBookcopy.bookCopyStatus,
+                borrowed: newBookcopy.borrowed
             }
         )
         results = [await fetchRequest(
@@ -203,7 +203,7 @@ const generateBookeditionsTableContent = () => {
 
 const generateBookCopyCatalogCard = async () => {
     let bookCopy = results[0],
-        bookEdition = bookCopy.bookEdition, 
+        bookEdition = bookCopy.bookEdition,
         bookWork = bookEdition.bookWork,
         author = bookWork.author,
         authorName = `${author.firstName} ${author.lastName}`

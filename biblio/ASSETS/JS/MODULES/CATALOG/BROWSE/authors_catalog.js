@@ -4,7 +4,7 @@ import {
     handleErrorMessages,
     clearErrorMessages,
     clearFormsData,
-    enableModalActions,
+    enableSearchModalActions,
     enableCreateModalActions,
 } from "../../modules_commons.js"
 
@@ -13,9 +13,7 @@ import {
     showCatalogCard
 } from "../catalog-commons.js"
 
-const d = document,
-    authorsResultsTable = d.querySelector(".results_table.b_authors_results_table"),
-    authorCatalogCard = d.querySelector(".catalog_card.author_catalog_card")
+const d = document
 
 let author, results, error, table, catalogCard, resultsType, operation
 
@@ -23,36 +21,50 @@ d.addEventListener("submit", async e => {
     e.preventDefault();
 
     if (d.getElementById("b_authors_section")) {
-        clearErrorMessages()
-        await runAuthorProcess(e.target)
-
-        if (error) {
-            handleErrorMessages(error, e.target)
-            error = null
-            toggleNextPageChanging(resultsType)
-            clearFormsData()
-        } else {
-            if (operation === "search") {
-                showSearchResults(resultsType, table)
-                enableModalActions(results, resultsType, operation, table)
-            } else if (operation === "create") {
-                showCatalogCard(resultsType, catalogCard)
-                enableCreateModalActions(results, resultsType, operation, catalogCard)
-            }
-        }
+        sendAuthorForm(e.target)
     }
 })
+
+const sendAuthorForm = async (form, author) => {
+
+    if (!form) form = setFormInputsValues(author)
+
+    clearErrorMessages()
+    await runAuthorProcess(form)
+
+    if (error) {
+        handleErrorMessages(error, form)
+        error = null
+        toggleNextPageChanging(resultsType)
+        clearFormsData()
+    } else {
+        if (operation === "search") {
+            showSearchResults(resultsType, table)
+            enableSearchModalActions(results, resultsType, operation, table)
+        } else if (operation === "create") {
+            showCatalogCard(resultsType, catalogCard)
+            enableCreateModalActions(results, resultsType, operation, catalogCard)
+        }
+    }
+}
+
+const setFormInputsValues = author => {
+    let searchAuthorForm = d.querySelector(".form.b_author_form.search")
+    searchAuthorForm.authorName.value = author
+    return searchAuthorForm
+}
 
 const runAuthorProcess = async form => {
     author = ""
     resultsType = "b_author"
 
     if (form.classList.contains("search")) {
-        table = authorsResultsTable
+        table = d.querySelector(".results_table.b_authors_results_table")
         operation = "search"
         await getSearchAuthorResults(form)
     } else {
-        catalogCard = authorCatalogCard
+        catalogCard = d.querySelector(".catalog_card.author_catalog_card")
+
         operation = "create"
         await getCreateAuthorResults(form)
     }
@@ -162,7 +174,7 @@ const generateRelatedBookWorksTableContent = (results, table) => {
     for (let i = 0; i < results.length; i++) {
         let result = results[i],
             author = result.author
-        
+
         let newRow = d.createElement("tr")
         newRow.classList.add("results_row")
 
@@ -195,19 +207,20 @@ const generateRelatedBookWorksTableContent = (results, table) => {
 
 const generateBrowseAuthorCatalogCard = async (browseResults = results) => {
     let author = browseResults[0],
-        authorBookWorks, authorBookWorksMessage
+        authorBookWorks, authorBookWorksMessage,
+        catalogCard = d.querySelector(".catalog_card.author_catalog_card")
 
-    authorCatalogCard.classList.remove("hidden")
+    catalogCard.classList.remove("hidden")
 
-    authorCatalogCard.querySelector(".author_firstName").value = author.firstName
-    authorCatalogCard.querySelector(".author_lastName").value = author.lastName
+    catalogCard.querySelector(".author_firstName").value = author.firstName
+    catalogCard.querySelector(".author_lastName").value = author.lastName
     try {
         authorBookWorks = await getAuthorBookWorks(author.idAuthor)
         authorBookWorksMessage = `Author Book Works: ${authorBookWorks.length}`
     } catch (error) {
         authorBookWorksMessage = error.message
     }
-    authorCatalogCard.querySelector(".author_bookworks").value = authorBookWorksMessage
+    catalogCard.querySelector(".author_bookworks").value = authorBookWorksMessage
 }
 
 const getBrowseAuthor = () => {
@@ -218,6 +231,7 @@ const reasigneBrowseAuthorValue = newAuthorValue => {
     author = newAuthorValue
 }
 
+export { sendAuthorForm }
 export { getEditBrowseAuthorResults }
 export { deleteBrowseAuthor }
 export { generateBrowseAuthorsTableContent }
