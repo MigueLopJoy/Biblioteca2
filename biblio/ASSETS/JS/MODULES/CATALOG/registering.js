@@ -118,15 +118,6 @@ const getCreateBookCopyResults = async form => {
 
 const getEditNewCopyResults = async editedFields => {
     try {
-        console.log(
-            {
-                originalBookCopyId: results[0].idBookCopy,
-                signature: editedFields[0],
-                registrationNumber: editedFields[1],
-                status: newBookcopy.bookCopyStatus,
-                borrowed: newBookcopy.borrowed
-            }
-        )
         results = [await fetchRequest(
             "PUT",
             `http://localhost:8080/bookcopies/edit-bookcopy/${results[0].idBookCopy}`,

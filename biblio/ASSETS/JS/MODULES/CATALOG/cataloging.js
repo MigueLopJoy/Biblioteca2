@@ -1,22 +1,24 @@
-import { findCurrentPage } from "./../modules_commons.js"
-import { fetchRequest } from "./../modules_commons.js"
-import { joinParamsToURL } from "./../modules_commons.js"
-import { handleErrorMessages } from "./../modules_commons.js"
-import { clearErrorMessages } from "./../modules_commons.js"
-import { clearFormsData } from "./../modules_commons.js"
-import { enableSearchModalActions } from "./../modules_commons.js"
-import { enableCreateModalActions } from "./../modules_commons.js"
-import { toggleNextPageChanging } from "./catalog-commons.js"
-import { clearPrintedReults } from "./catalog-commons.js"
-import { showSearchResults } from "./catalog-commons.js"
-import { showCatalogCard } from "./catalog-commons.js"
+import { 
+    findCurrentPage,
+    fetchRequest,
+    joinParamsToURL,
+    handleErrorMessages,
+    clearErrorMessages,
+    clearFormsData,
+    enableSearchModalActions,
+    enableCreateModalActions
+} from "./../modules_commons.js"
+
+import { 
+    toggleNextPageChanging,
+    clearPrintedReults,
+    showSearchResults,
+    showCatalogCard 
+} from "./catalog-commons.js"
 
 const d = document,
     authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
-    bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table"),
-    authorCatalogCard = d.querySelector(".author_catalog_card"),
-    bookworkCatalogCard = d.querySelector(".bookwork_catalog_card"),
-    bookeditionCatalogCard = d.querySelector(".bookedition_catalog_card")
+    bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table")
 
 let author, bookwork, newEdition, results, error, table, catalogCard, resultsType, operation
 
@@ -337,14 +339,14 @@ const generateAuthorsTableContent = () => {
 
 const generateAuthorCatalogCard = async () => {
     let author = results[0],
-        authorBookWorksMessage
-
+        authorBookWorksMessage, authorBookWorks,
+        authorCatalogCard = d.querySelector(".author_catalog_card")
     authorCatalogCard.classList.remove("hidden")
 
     authorCatalogCard.querySelector(".author_firstName").value = author.firstName
     authorCatalogCard.querySelector(".author_lastName").value = author.lastName
     try {
-        let authorBookWorks = await getAuthorBookWorks(author.idAuthor)
+        authorBookWorks = await getAuthorBookWorks(author.idAuthor)
         authorBookWorksMessage = `Author Book Works: ${authorBookWorks.length}`
     } catch (error) {
         authorBookWorksMessage = error.message
@@ -393,8 +395,9 @@ const generateBookWorkCatalogCard = async () => {
         authorName = `${author.firstName} ${author.lastName}`,
         title = bookwork.title,
         publicationYear = bookwork.publicationYear,
-        bookWorkEditionsMessage,
+        bookWorkEditionsMessage, bookWorkEditions,
         bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
+
     bookWorkCatalogCard.classList.remove("hidden")
 
     bookWorkCatalogCard.querySelector(".bookwork_title").value = title
@@ -402,7 +405,7 @@ const generateBookWorkCatalogCard = async () => {
     bookWorkCatalogCard.querySelector(".bookwork_publication_year").value = publicationYear
 
     try {
-        let bookWorkEditions = await getBookWorkEditions(bookwork.idBookWork)
+        bookWorkEditions = await getBookWorkEditions(bookwork.idBookWork)
         bookWorkEditionsMessage = `Book Work Editions: ${bookWorkEditions.length}`
     } catch (error) {
         bookWorkEditionsMessage = error.message
@@ -415,7 +418,8 @@ const generateBookEditionCatalogCard = async () => {
         author = bookwork.author,
         bookWork = bookEdition.bookWork,
         authorName = `${author.firstName} ${author.lastName}`,
-        editionCopiesMessage
+        editionCopiesMessage, bookEditionCopies,
+        bookeditionCatalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
 
     bookeditionCatalogCard.classList.remove("hidden")
 
@@ -426,7 +430,7 @@ const generateBookEditionCatalogCard = async () => {
     bookeditionCatalogCard.querySelector(".bookedition_edition_year").value = bookEdition.editionYear
     bookeditionCatalogCard.querySelector(".bookedition_language").value = bookEdition.language
     try {
-        let bookEditionCopies = await getEditionCopies(bookEdition.idBookEdition)
+        bookEditionCopies = await getEditionCopies(bookEdition.idBookEdition)
         editionCopiesMessage = `Author Book Works: ${bookEditionCopies.length}`
     } catch (error) {
         editionCopiesMessage = error.message

@@ -1,30 +1,21 @@
-<div class="container" id="b_authors_section">
+<div class="container" id="b_bookeditions_section">
 
     <div class="current_window">
 
-        <div class="page b_authors_page hidden">
+        <div class="page b_bookeditions_page hidden">
 
-            <div class="page_element_container search_author">
-                <form class="form b_author_form search">
-                    <legend>Search author</legend>
+            <div class="page_element_container search_bookedition">
+                <form class="form b_bookedition_form search">
+                    <legend>Search book edition</legend>
                     <p class="error_message general_error"></p>
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="submit" id="search_author_btn" class="btn" value="Search">
+                    <input type="text" name="title" placeholder="Tile">
+                    <input type="text" name="author" placeholder="Author">
+                    <input type="text" name="isbn" placeholder="ISBN">
+                    <input type="text" name="editor_name" placeholder="Editor name">
+                    <input type="text" name="edition_language" placeholder="Language">
+                    <input type="submit" id="create_bookedition_btn" class="btn" value="Search">
                 </form>
             </div>
-
-            <div class="page_element_container create_author">
-                <form class="form b_author_form create">
-                    <legend>Create new author</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message firstName"></p>
-                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
-                    <p class="error_message lastName"></p>
-                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
-                    <input type="submit" id="create_author_btn" class="btn" value="Create">
-                </form>
-            </div>
-
         </div>
 
         <div id="modal" class="hidden">
@@ -35,7 +26,6 @@
                     <div class="left_icons_container">
                         <span class="material-symbols-outlined edit_symbol">edit_note</span>
                         <span class="material-symbols-outlined delete_symbol">delete</span>
-                        <span class="material-symbols-outlined inspect_symbol">manage_search</span>
                     </div>
                     <div class="close_symbol_container">
                         <span class="close_symbol">X</span>
@@ -43,30 +33,7 @@
                 </div>
 
                 <div class="tables_container">
-                    <table class="results_table b_authors_results_table hidden">
-                        <thead>
-                            <tr>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th class="select_column">Select author</th>
-                            </tr>
-                        </thead>
-                        <tbody class="results_table_body"></tbody>
-                    </table>
-
-                    <table class="results_table b_bookworks_results_table hidden">
-                        <thead>
-                            <tr>
-                                <th>Title</td>
-                                <th>Author</th>
-                                <th>Publication year</th>
-                                <th class="select_colum">Select Book Work</th>
-                            </tr>
-                        </thead>
-                        <tbody class="results_table_body"></tbody>
-                    </table>
-
-                    <table class="results_table bookeditions_results_table hidden">
+                    <table class="results_table b_bookeditions_results_table hidden">
                         <thead>
                             <tr>
                                 <th>Title</td>
@@ -82,114 +49,67 @@
                 </div>
 
                 <div class="catalog_cards_container">
-                    <div class="catalog_cards_container">
-                        <p class="success_message mb-1"></p>
+                    <p class="success_message mb-1"></p>
 
-                        <div class="catalog_card author_catalog_card hidden">
-                            <form class="form author_form">
-                                <legend>Author Catalog Card</legend>
+                    <div class="catalog_card bookedition_catalog_card hidden">
+                        <form class="form edition_form">
 
-                                <p class="error_message general_error mb-0"></p>
+                            <legend>Book Edition Catalog Card</legend>
 
-                                <p class="error_message firstName mb-0"></p>
-                                <label>First Name:</label>
-                                <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
+                            <p class="error_message general_error mb-0"></p>
 
-                                <p class="error_message lastName mb-0"></p>
-                                <label>Last Name:</label>
-                                <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
-
-                                <label for="author_bookworks">Author's Book Works:</label>
-                                <div class="input-group">
-                                    <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
-                                    <span class="input-group-text search_related_objects">
-                                        <i class="bi bi-search"></i>
-                                    </span>
+                            <div class="d-flex justify-content-between">
+                                <div class="col-6 pe-1">
+                                    <label>Title:</label>
+                                    <input type="text" name="bookwork_title" class="bookwork_title" readonly>
                                 </div>
-                            </form>
-                        </div>
-
-                        <div class="catalog_card bookwork_catalog_card hidden">
-                            <form class="form bookwork_form hidden">
-                                <legend>Book Work Catalog Card</legend>
-
-                                <p class="error_message general_error mb-0"></p>
-
-                                <p class="error_message title mb-0"></p>
-                                <label for="title">Title:</label>
-                                <input type="text" name="title" class="bookwork_title card_info" readonly>
-
-                                <label for="author">Author:</label>
-                                <input type="text" name="author" class="bookwork_author" readonly>
-
-                                <p class="error_message publicationYear mb-0"></p>
-                                <label for="publication_year">Publication Year:</label>
-                                <input type="number" name="publication_year" class="bookwork_publication_year card_info"
-                                    readonly>
-
-                                <label>Book Work Editions</label>
-                                <div class="input-group">
-                                    <input type="text" name="bookwork_editions" class="bookwork_editions mb-0" readonly>
-                                    <span class="input-group-text search_related_objects">
-                                        <i class="bi bi-search"></i>
-                                    </span>
+                                <div class="col-6 ps-1">
+                                    <label>Author:</label>
+                                    <input type="text" name="bookwork_title" class="bookwork_title" readonly>
                                 </div>
-                            </form>
-                        </div>
-
-                        <div class="catalog_card bookedition_catalog_card hidden">
-                            <form class="form edition_form">
-
-                                <legend>Book Edition Catalog Card</legend>
-
-                                <p class="error_message general_error mb-0"></p>
-
-                                <div class="d-flex justify-content-between">
-                                    <div class="col-6 pe-1">
-                                        <label>Title:</label>
-                                        <input type="text" name="bookwork_title" class="bookwork_title" readonly>
-                                    </div>
-                                    <div class="col-6 ps-1">
-                                        <label>Author:</label>
-                                        <input type="text" name="bookwork_title" class="bookwork_title" readonly>
-                                    </div>
-                                </div>
-
-                                <p class="error_message ISBN mb-0"></p>
-                                <label>ISBN:</label>
-                                <input type="text" name="bookedition_isbn" class="bookedition_isbn card_info" readonly>
-
-                                <div class="d-flex justify-content-between">
-                                    <div class="col-6 pe-1">
-                                        <p class="error_message editor mb-0"></p>
-                                        <label>Editor:</label>
-                                        <input type="text" name="bookedition_editor"
-                                            class="bookedition_editor card_info" readonly>
-                                    </div>
-                                    <div class="col-6 ps-1">
-                                        <p class="error_message editionYear mb-0"></p>
-                                        <label>Edition Year:</label>
-                                        <input type="number" name="bookedition_edition_year card_info"
-                                            class="bookedition_edition_year" readonly>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="modal_btns_container">
-                            <div class="select_btn hidden">
-                                <button class="select_result_btn btn" role="button" disabled>Select author</button>
                             </div>
-                            <div class="create_btn hidden">
-                                <button class="btn confirm_btn" role="button">Confirm</button>
+
+                            <p class="error_message ISBN mb-0"></p>
+                            <label>ISBN:</label>
+                            <input type="text" name="bookedition_isbn" class="bookedition_isbn card_info" readonly>
+
+                            <div class="d-flex justify-content-between">
+                                <div class="col-6 pe-1">
+                                    <p class="error_message editor mb-0"></p>
+                                    <label>Editor:</label>
+                                    <input type="text" name="bookedition_editor" class="bookedition_editor card_info"
+                                        readonly>
+                                </div>
+                                <div class="col-6 ps-1">
+                                    <p class="error_message editionYear mb-0"></p>
+                                    <label>Edition Year:</label>
+                                    <input type="number" name="bookedition_edition_year card_info"
+                                        class="bookedition_edition_year" readonly>
+                                </div>
                             </div>
-                            <div class="ending_btn hidden">
-                                <button class="btn ending_btn" role="button">Back To Main Page</button>
+
+                            <label>Book Edition Copies</label>
+                            <div class="input-group">
+                                <input type="text" name="bookedition_copies" class="bookedition_copies mb-0" readonly>
+                                <span class="input-group-text search_related_objects">
+                                    <i class="bi bi-search"></i>
+                                </span>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
 
+                <div class="modal_btns_container">
+                    <div class="select_btn hidden">
+                        <button class="select_result_btn btn" role="button" disabled>Select author</button>
+                    </div>
+                    <div class="create_btn hidden">
+                        <button class="btn confirm_btn" role="button">Confirm</button>
+                    </div>
+                    <div class="ending_btn hidden">
+                        <button class="btn ending_btn" role="button">Back To Main Page</button>
+                    </div>
+                </div>
             </div>
 
         </div>

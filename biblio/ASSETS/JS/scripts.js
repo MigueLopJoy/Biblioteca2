@@ -3,7 +3,8 @@ import {
   displayRegisteringMainPage,
   displayReadersRegisteringMainPage,
   displayBrowseAuthorsCatalogMainPage,
-  displayBrowseBookWorksCatalogMainPage 
+  displayBrowseBookWorksCatalogMainPage,
+  displayBrowseBookEditionsCatalogMainPage
 } from "./MODULES/CATALOG/display_pages.js"
 
 const d = document,
@@ -36,7 +37,7 @@ d.addEventListener("click", async e => {
   } else if (e.target.matches("#b_bookworks_catalog")) {
     displayBrowseBookWorksCatalogMainPage()
   } else if (e.target.matches("#b_bookeditions_catalog")) {
-    displayBrowseBookWorksCatalogMainPage()
+    displayBrowseBookEditionsCatalogMainPage()
   } 
 })
 

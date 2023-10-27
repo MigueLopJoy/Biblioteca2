@@ -1,6 +1,5 @@
 import {
     fetchRequest,
-    joinParamsToURL,
     handleErrorMessages,
     clearErrorMessages,
     clearFormsData,
@@ -26,6 +25,9 @@ d.addEventListener("submit", async e => {
 })
 
 const sendBookWorkForm = async (author, form) => {
+
+    console.log("SENDING BOOK WORK FORM")
+
     if (!form) form = setFormInputsValues(author)
 
     clearErrorMessages()
@@ -34,7 +36,6 @@ const sendBookWorkForm = async (author, form) => {
     if (error) {
         handleErrorMessages(error, form)
         error = null
-        toggleNextPageChanging(resultsType)
         clearFormsData()
     } else {
         if (operation === "search") {
@@ -83,6 +84,18 @@ const getSearchBookworkResults = async form => {
     }
 }
 
+const getBookWorkEditions = async bookWorkId => {
+    try {
+        let bookWorkEditions = await fetchRequest(
+            "GET",
+            `http://localhost:8080/general-catalog/get-bookwork-editions/${bookWorkId}`,
+        )
+        return bookWorkEditions
+    } catch (ex) {
+        throw ex
+    }
+}
+
 const getCreatehBookworkResults = async form => {
     try {
         results = [await fetchRequest(
@@ -118,18 +131,6 @@ const getEditBrowseBookworkResults = async editedFields => {
     }
 }
 
-const getBookWorkEditions = async bookWorkId => {
-    try {
-        let bookWorkEditions = await fetchRequest(
-            "GET",
-            `http://localhost:8080/general-catalog/get-bookwork-editions/${bookWorkId}`,
-        )
-        return bookWorkEditions
-    } catch (ex) {
-        throw ex
-    }
-}
-
 const deleteBrowseBookwork = async bookworkId => {
     try {
         await fetchRequest(
@@ -142,9 +143,9 @@ const deleteBrowseBookwork = async bookworkId => {
     }
 }
 
-const generateBrowseBookworksTableContent = () => {
+const generateBrowseBookworksTableContent = (base = results, table) => {
     for (let i = 0; i < results.length; i++) {
-        let result = results[i],
+        let result = base[i],
             author = result.author
 
         let newRow = d.createElement("tr")
@@ -177,51 +178,6 @@ const generateBrowseBookworksTableContent = () => {
     }
 }
 
-const generateRelatedEditionsTableContent = (results, table) => {
-    for (let i = 0; i < results.length; i++) {
-
-        let result = results[i],
-            bookWork = result.bookWork,
-            author = bookWork.author
-
-        let newRow = d.createElement("tr")
-        newRow.classList.add("results_row")
-
-        let title = d.createElement("td")
-        title.textContent = bookWork.title
-
-        let bookAuthor = d.createElement("td")
-        bookAuthor.textContent = `${author.firstName} ${author.lastName}`
-
-        let isbn = d.createElement("td")
-        isbn.textContent = result.isbn
-
-        let editor = d.createElement("td")
-        editor.textContent = result.editor
-
-        let editionYear = d.createElement("td")
-        editionYear.textContent = result.editionYear
-
-        let selectBookedition = d.createElement("td"),
-            checkbox = d.createElement("input")
-        checkbox.type = "checkbox"
-        checkbox.name = `select_bookedition`
-        checkbox.classList.add('result_option')
-        checkbox.classList.add('bookedition_result_option')
-        checkbox.value = i;
-        selectBookedition.appendChild(checkbox)
-
-        newRow.appendChild(title);
-        newRow.appendChild(bookAuthor);
-        newRow.appendChild(isbn);
-        newRow.appendChild(editor);
-        newRow.appendChild(editionYear);
-        newRow.appendChild(selectBookedition)
-
-        table.querySelector(".results_table_body").appendChild(newRow);
-    }
-}
-
 const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
     let bookwork = browseResults[0],
         bookWorkEditions, bookWorkEditionsMessage,
@@ -229,13 +185,13 @@ const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
         authorName = `${author.firstName} ${author.lastName}`,
         title = bookwork.title,
         publicationYear = bookwork.publicationYear,
-        bookWorkCatalogCard = d.querySelector(".bookwork_catalog_card")
+        catalogCard = d.querySelector(".bookwork_catalog_card")
 
-    bookWorkCatalogCard.classList.remove("hidden")
+    catalogCard.classList.remove("hidden")
 
-    bookWorkCatalogCard.querySelector(".bookwork_title").value = title
-    bookWorkCatalogCard.querySelector(".bookwork_author").value = authorName
-    bookWorkCatalogCard.querySelector(".bookwork_publication_year").value = publicationYear
+    catalogCard.querySelector(".bookwork_title").value = title
+    catalogCard.querySelector(".bookwork_author").value = authorName
+    catalogCard.querySelector(".bookwork_publication_year").value = publicationYear
 
     try {
         bookWorkEditions = await getBookWorkEditions(bookwork.idBookWork)
@@ -243,7 +199,7 @@ const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
     } catch (error) {
         bookWorkEditionsMessage = error.message
     }
-    bookWorkCatalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
+    catalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
 }
 
 const getBrowseBookWork = () => {
@@ -251,7 +207,7 @@ const getBrowseBookWork = () => {
 }
 
 const reasigneBrowseBookWorkValue = newBookWorkValue => {
-    author = newBookWorkValue
+    bookwork = newBookWorkValue
 }
 
 export { sendBookWorkForm }
@@ -261,5 +217,3 @@ export { generateBrowseBookworksTableContent }
 export { generateBrowseBookWorkCatalogCard }
 export { getBrowseBookWork }
 export { reasigneBrowseBookWorkValue }
-export { generateRelatedEditionsTableContent }
-export { getBookWorkEditions }

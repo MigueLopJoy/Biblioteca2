@@ -38,8 +38,6 @@ import {
 } from "./READERS/readers_registering.js"
 
 import {
-    sendAuthorForm,
-    getAuthorBookWorks,
     getEditBrowseAuthorResults,
     reasigneBrowseAuthorValue
 } from "./CATALOG/BROWSE/authors_catalog.js"
@@ -50,15 +48,15 @@ import {
     reasigneBrowseBookWorkValue
 } from "./CATALOG/BROWSE/bookworks_catalog.js"
 
+import {
+    sendBookEditionForm,
+    getEditBrowseBookEditionResults,
+    reasigneBrowseBookeditionValue
+} from "./CATALOG/BROWSE/bookeditions_catalog.js"
+
 /* Global methods */
 
-const d = document,
-    confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
-    endingBtn = d.querySelector(".modal_btns_container .ending_btn"),
-    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
-    editSymbol = d.querySelector(".icons_container .edit_symbol"),
-    deleteSymbol = d.querySelector(".icons_container .delete_symbol"),
-    closeSymbol = d.querySelector(".close_symbol")
+const d = document
 
 const findCurrentPage = () => {
     const pages = d.querySelectorAll(".page")
@@ -81,10 +79,12 @@ const findCurrentPage = () => {
 /* Modal actions */
 
 const enableSearchModalActions = (results, resultsType, operation, table) => {
+    let selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
+
     enableOptionChangigng()
     toggleCloseModalSymbol(resultsType, operation, table, true)
     toggleBtnState(selectResultBtn, true)
-    enableSelectResultBtn(results, resultsType, operation, table)
+    enableSelectResultBtn(selectResultBtn, results, resultsType, operation, table)
 }
 
 const enableCreateModalActions = (results, resultsType, operation, catalogCard) => {
@@ -136,6 +136,8 @@ const toggleBtnState = (btn, enable) => {
 let editSymbolClickHandler, deleteSymbolClickHandler, closeSymbolClickHandler, searchRelatedObjectsClickHandler
 
 const toggleEditSymbol = (results, resultsType, operation, catalogCard, enable = false) => {
+    let editSymbol = d.querySelector(".icons_container .edit_symbol")
+
     editSymbolClickHandler = function () {
         executeEditSymbolListener(results, resultsType, operation, catalogCard)
     }
@@ -144,6 +146,8 @@ const toggleEditSymbol = (results, resultsType, operation, catalogCard, enable =
 }
 
 const toggleDeletetSymbol = (results, resultsType, operation, resultsContainer, enable = false) => {
+    let deleteSymbol = d.querySelector(".icons_container .delete_symbol")
+
     deleteSymbolClickHandler = function () {
         executeDeleteSymbolListener(results, resultsType, operation, resultsContainer)
     }
@@ -152,6 +156,8 @@ const toggleDeletetSymbol = (results, resultsType, operation, resultsContainer, 
 }
 
 const toggleCloseModalSymbol = (resultsType, operation, resultsContainer, enable = false) => {
+    let closeSymbol = d.querySelector(".close_symbol")
+
     closeSymbolClickHandler = function () {
         closeModal(resultsType, operation, resultsContainer)
     }
@@ -187,7 +193,7 @@ const toggleSymbol = (symbol, enable) => {
 
 let selectResultBtnClickHandler, confirmBtnClickHandler
 
-const enableSelectResultBtn = (results, resultsType, operation, table) => {
+const enableSelectResultBtn = (selectResultBtn, results, resultsType, operation, table) => {
     selectResultBtnClickHandler = function () {
         toggleBtnState(false)
         executeSelectResultBtnListener(results, resultsType, operation, table)
@@ -196,6 +202,8 @@ const enableSelectResultBtn = (results, resultsType, operation, table) => {
 }
 
 const enableCreateBtn = (results, resultsType, operation, resultsContainer) => {
+    let confirmBtn = d.querySelector(".modal_btns_container .confirm_btn")
+
     if (confirmBtn) {
         confirmBtnClickHandler = function () {
             if (resultsType === "newEdition" || resultsType === "newBookcopy" || resultsType === "newReader") {
@@ -229,11 +237,13 @@ const browseObject = (results, resultsType) => {
             case "b_bookwork":
                 catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
                 break;
+            case "b_bookedition":
+                console.log("AAAAA")
+                catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
+                console.log(catalogCard)
             default:
                 break;
         }
-
-        console.log(catalogCard)
 
         let searchRelatedObjectsSymbol = catalogCard.querySelector(".search_related_objects")
 
@@ -254,6 +264,8 @@ const executeConfirmBtnListener = (results, resultsType, operation, table, crud)
 }
 
 const executeConfirmCrudOperationBtn = (results, resultsType, operation, resultsContainer, crud) => {
+    let confirmBtn = d.querySelector(".modal_btns_container .confirm_btn")
+
     saveResult(results, resultsType)
     displaySuccessMessage(resultsType, crud)
     confirmBtn.setAttribute("disabled", true)
@@ -267,6 +279,8 @@ const executeConfirmCrudOperationBtn = (results, resultsType, operation, results
 }
 
 const executeEditSymbolListener = (results, resultsType, operation, catalogCard) => {
+    let confirmBtn = d.querySelector(".modal_btns_container .confirm_btn")
+
     if (operation !== "manage") saveResult(results, resultsType)
     hiddeSuccessMessage()
     confirmBtn.removeAttribute("disabled")
@@ -276,12 +290,14 @@ const executeEditSymbolListener = (results, resultsType, operation, catalogCard)
 }
 
 const executeDeleteSymbolListener = (results, resultsType, operation, resultsContainer) => {
+    let confirmBtn = d.querySelector(".modal_btns_container .confirm_btn")
+
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)
     toggleDeletetSymbol(false)
     toggleEditSymbol(false)
     hiddeSuccessMessage()
 
-    confirmBtn.textContent = "Click to confirm deletion"
+    confirmBtn.textContent = "Click To Confirm Deletion"
     confirmBtnClickHandler = function () {
         clearPrintedReults(resultsType)
         deleteCreatedObject(results, resultsType)
@@ -301,7 +317,12 @@ const executeSearchRelatedObjectsListener = async (results, resultsType, catalog
             break;
         case "b_bookwork":
             await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookeditions_catalog.html", d.getElementById("main-content"))
+            sendBookEditionForm(results)
             break;
+        case "b_bookedition":
+            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookcopies_catalog.html", d.getElementById("main-content"))
+            sendBookEditionForm(results)
+                break;        
         default:
             break;
     }
@@ -335,34 +356,40 @@ const saveResult = (results, resultsType) => {
     switch (resultsType) {
         case "author":
             reasigneAuthorValue(results[findSelectedResult()])
-            break;
+            break
         case "bookwork":
             reasigneBookworkValue(results[findSelectedResult()])
-            break;
+            break
         case "newEdition":
             reasigneNewEditionValue(results[findSelectedResult()])
-            break;
+            break
         case "bookedition":
             reasigneBookeditionValue(results[findSelectedResult()])
-            break;
+            break
         case "newBookcopy":
             reasigneNewBookcopyValue(results[findSelectedResult()])
-            break;
+            break
         case "newReader":
             reasigneNewReaderValue(results[findSelectedResult()])
-            break;
+            break
         case "b_author":
             reasigneBrowseAuthorValue(results[findSelectedResult()])
-            break;
+            break
         case "b_bookwork":
             reasigneBrowseBookWorkValue(results[findSelectedResult()])
+            break
+        case "b_bookedition":
+            reasigneBrowseBookeditionValue(results[findSelectedResult()])
+            break
         default:
             break;
     }
 }
 
 const prepareEditonProcess = (results, resultsType, operation, catalogCard) => {
-    const inputs = catalogCard.querySelectorAll(".form input.card_info")
+    const inputs = catalogCard.querySelectorAll(".form input.card_info"),
+        confirmBtn = d.querySelector(".modal_btns_container .confirm_btn")
+
     for (const input of inputs) {
         input.removeAttribute("readonly")
         input.classList.add("editing")
@@ -405,20 +432,25 @@ const confirmEdition = async (results, resultsType, operation, catalogCard) => {
 }
 
 const getEditionResults = async (resultsType, editedInputs) => {
-    if (resultsType === "author") {
-        return await getEditAuthorResults(editedInputs)
-    } else if (resultsType === "bookwork") {
-        return await getEditBookworkResults(editedInputs)
-    } else if (resultsType === "newEdition") {
-        return await getEditNewEditionResults(editedInputs)
-    } else if (resultsType === "newBookcopy") {
-        return await getEditNewCopyResults(editedInputs)
-    } else if (resultsType === "newReader") {
-        return await getEditNewReaderResults(editedInputs)
-    } else if (resultsType === "b_author") {
-        return await getEditBrowseAuthorResults(editedInputs)
-    } else if (resultsType === "b_bookwork") {
-        return await getEditBrowseBookworkResults(editedInputs)
+    switch (resultsType) {
+        case "author":
+            return await getEditAuthorResults(editedInputs)
+        case "bookwork":
+            return await getEditBookworkResults(editedInputs)            
+        case "newEdition":
+            return await getEditNewEditionResults(editedInputs)            
+        case "newBookCopy":
+            return await getEditNewCopyResults(editedInputs)            
+        case "b_author":
+            return await getEditBrowseAuthorResults(editedInputs)            
+        case "b_bookwork":
+            return await getEditBrowseBookworkResults(editedInputs)            
+        case "b_bookedition":
+            return await getEditBrowseBookEditionResults(editedInputs)            
+        case "newReader":
+            return await getEditNewReaderResults(editedInputs)            
+        default:
+            break;
     }
 }
 
@@ -445,7 +477,8 @@ const endProcess = (resultsType, operation, resultsContainer) => {
 const closeModal = (resultsType, operation, resultsContainer) => {
     let selectBtnContainer = d.querySelector(".modal_btns_container .select_btn"),
         createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
-        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn")
+        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn"),
+        selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
 
     if (resultsContainer.classList.contains("results_table")) hiddeTable(resultsContainer)
     else if (resultsContainer.classList.contains("catalog_card")) hiddeCatalogCard(resultsContainer)
@@ -577,7 +610,8 @@ const hiddeSuccessMessage = () => {
 let endingBtnClickHandler
 const prepareEndingBtn = (resultsType, operation, catalogCard) => {
     let createBtnContainer = d.querySelector(".modal_btns_container .create_btn"),
-        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn")
+        endingBtnContainer = d.querySelector(".modal_btns_container .ending_btn"),
+        endingBtn = d.querySelector(".modal_btns_container .ending_btn")
 
     createBtnContainer.classList.add("hidden")
     endingBtnContainer.classList.remove("hidden")
@@ -596,6 +630,12 @@ const prepareEndingBtn = (resultsType, operation, catalogCard) => {
 }
 
 const removeModalElementsListeners = () => {
+    let selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn"),
+        closeSymbol = d.querySelector(".close_symbol"),
+        editSymbol = d.querySelector(".icons_container .edit_symbol"),
+        confirmBtn = d.querySelector(".modal_btns_container .confirm_btn"),
+        endingBtn = d.querySelector(".modal_btns_container .ending_btn")
+
     closeSymbol.removeEventListener("click", closeSymbolClickHandler)
     selectResultBtn.removeEventListener("click", selectResultBtnClickHandler)
     confirmBtn.removeEventListener("click", confirmBtnClickHandler)

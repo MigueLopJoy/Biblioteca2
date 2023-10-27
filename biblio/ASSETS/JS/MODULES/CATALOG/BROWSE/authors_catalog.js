@@ -35,7 +35,6 @@ const sendAuthorForm = async (form, author) => {
     if (error) {
         handleErrorMessages(error, form)
         error = null
-        toggleNextPageChanging(resultsType)
         clearFormsData()
     } else {
         if (operation === "search") {
@@ -140,9 +139,8 @@ const deleteBrowseAuthor = async () => {
     }
 }
 
-const generateBrowseAuthorsTableContent = (base = results) => {
+const generateBrowseAuthorsTableContent = (base = results, table) => {
     for (let i = 0; i < results.length; i++) {
-
         let result = base[i]
 
         let newRow = d.createElement("tr")
@@ -239,4 +237,3 @@ export { generateBrowseAuthorCatalogCard }
 export { getBrowseAuthor }
 export { reasigneBrowseAuthorValue }
 export { generateRelatedBookWorksTableContent }
-export { getAuthorBookWorks }

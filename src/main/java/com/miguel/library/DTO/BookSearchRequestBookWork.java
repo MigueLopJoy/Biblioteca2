@@ -8,7 +8,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-public class BookSearchRequestBookWork {
+public class
+
+BookSearchRequestBookWork {
     private String title;
 
     private String author;

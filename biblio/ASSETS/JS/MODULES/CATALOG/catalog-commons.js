@@ -24,20 +24,20 @@ import {
 import {
     generateBrowseAuthorCatalogCard,
     generateBrowseAuthorsTableContent,
-    generateRelatedBookWorksTableContent,
-    getAuthorBookWorks
 } from "./BROWSE/authors_catalog.js"
 
 import {
     generateBrowseBookWorkCatalogCard,
     generateBrowseBookworksTableContent,
-    generateRelatedEditionsTableContent,
-    getBookWorkEditions
 } from "./BROWSE/bookworks_catalog.js"
 
+import { 
+    generateBrowseBookEditionCatalogCard,
+    generateBrowseBookEditionsTableContent,
+} from "./BROWSE/bookeditions_catalog.js"
 
-const d = document,
-    selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
+
+const d = document
 
 /* Page's interaction methods*/
 
@@ -167,12 +167,14 @@ const showSearchResults = (resultsType, table, results) => {
     renderModal()
     console.log(table)
     table.classList.remove("hidden")
-    generaTableContent(table, results)
+    generaTableContent(results, table)
     selectBtnContainer.classList.remove("hidden")
     setSelectResultBtnTextContent(resultsType)
 }
 
 const setSelectResultBtnTextContent = resultsType => {
+    let selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
+
     switch (resultsType) {
         case "author":
         case "b_author":
@@ -210,7 +212,7 @@ const renderModal = () => {
     modal.style.alignItems = "center"
 }
 
-const generaTableContent = async (table, results) => {
+const generaTableContent = async (results, table) => {
     if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
@@ -218,29 +220,39 @@ const generaTableContent = async (table, results) => {
     } else if (table.classList.contains("bookeditions_results_table")) {
         generateBookeditionsTableContent()
     } else if (table.classList.contains("b_authors_results_table")) {
-        generateBrowseAuthorsTableContent()
-    } else if (table.classList.contains("related_bookworks_results_table")) {
-        generateRelatedBookWorksTableContent(await getAuthorBookWorks(results.idAuthor), table)
+        generateBrowseAuthorsTableContent(results, table)
     } else if (table.classList.contains("b_bookworks_results_table")) {
-        generateBrowseBookworksTableContent()
-    } else if (table.classList.contains("related_bookeditions_results_table")) {
-        generateRelatedEditionsTableContent(await getBookWorkEditions(results.idBookWork), table)
+        generateBrowseBookworksTableContent(results, table)
+    } else if (table.classList.contains("b_bookeditions_results_table")) {
+        generateBrowseBookEditionsTableContent(results, table)
     }
 }
 
 const generateCatalogCard = (resultsType, results) => {
-    if (resultsType === "author") {
-        generateAuthorCatalogCard()
-    } else if (resultsType === "bookwork") {
-        generateBookWorkCatalogCard()
-    } else if (resultsType === "newEdition") {
-        generateBookEditionCatalogCard()
-    } else if (resultsType === "newBookcopy") {
-        generateBookCopyCatalogCard()
-    } else if (resultsType === "b_author") {
-        generateBrowseAuthorCatalogCard(results)
-    } else if (resultsType === "b_bookwork") {
-        generateBrowseBookWorkCatalogCard(results)
+    switch (resultsType) {
+        case "author":
+            generateAuthorCatalogCard()
+            break;
+        case "bookwork":
+            generateBookWorkCatalogCard()
+            break;
+        case "newEdition":
+            generateBookEditionCatalogCard()
+            break;
+        case "newBookCopy":
+            generateBookCopyCatalogCard()
+            break;
+        case "b_author":
+            generateBrowseAuthorCatalogCard(results)
+            break;
+        case "b_bookwork":
+            generateBrowseBookWorkCatalogCard(results)
+            break;
+        case "b_bookedition":
+            generateBrowseBookEditionCatalogCard(results)
+            break;
+        default:
+            break;
     }
 }
 
