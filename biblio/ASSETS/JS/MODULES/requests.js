@@ -11,8 +11,6 @@ const fetchRequest = async (method, url, bodyContent) => {
 
         if (!res.ok) throw res
 
-        if (method.toUpperCase() === "DELETE") return await res.text()
-
         return await res.json()
 
     } catch (ex) {

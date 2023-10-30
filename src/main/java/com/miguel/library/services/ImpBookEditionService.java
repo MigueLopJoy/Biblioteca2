@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.BookResponseDTOBookEdition;
 import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
@@ -135,14 +136,14 @@ public class ImpBookEditionService implements IBookEditionService{
     }
 
     @Override
-    public String deleteBookEdition(Integer bookEditionId) {
+    public SuccessfulObjectDeletionDTO deleteBookEdition(Integer bookEditionId) {
         Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
 
         if (!optionalBookEdition.isPresent()) {
             throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
         bookEditionRepository.deleteById(bookEditionId);
-        return "Book Edition Deleted Successfully";
+        return new SuccessfulObjectDeletionDTO("Book Edition Deleted SuccessFully");
     }
 
     @Override

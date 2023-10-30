@@ -160,11 +160,10 @@ const showSearchResults = table => {
 }
 
 const showCatalogCard = (results, resultsType, catalogCard) => {
-    console.log(results)
     renderModal()
-    if (results.author) generateCatalogCard(results.author, resultsType)
-    else generateCatalogCard(results, resultsType)
     displaySuccessMessage(results)
+    if (results.author) results = results.author
+    generateCatalogCard(results, resultsType)
     catalogCard.classList.remove("hidden")
     d.querySelector(".confirm_creation_container").classList.remove("hidden")
 }

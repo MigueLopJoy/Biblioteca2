@@ -1,9 +1,6 @@
     package com.miguel.library.controller;
 
-import com.miguel.library.DTO.BookResponseDTOBookCopy;
-import com.miguel.library.DTO.BooksSaveDTOBookCopy;
-import com.miguel.library.DTO.BooksEditDTOBookCopy;
-import com.miguel.library.DTO.BookSearchRequestBookCopy;
+import com.miguel.library.DTO.*;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.repository.IBookCopyRepository;
@@ -73,10 +70,9 @@ public class BookCopyController {
     }
 
     @DeleteMapping("/delete-bookcopy/{bookCopyId}")
-    public ResponseEntity<String> deleteBookCopy(
+    public ResponseEntity<SuccessfulObjectDeletionDTO> deleteBookCopy(
             @PathVariable Integer bookCopyId
     ) {
-        bookCopyService.deleteBookCopy(bookCopyId);
-        return ResponseEntity.ok("Book Copy Deleted Successfully");
+        return ResponseEntity.ok(bookCopyService.deleteBookCopy(bookCopyId));
     }
 }

@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.BookResponseDTOBookCopy;
 import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookCopy;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
@@ -131,14 +132,14 @@ public class ImpBookCopyService implements IBookCopyService {
     }
 
     @Override
-    public String deleteBookCopy(Integer bookCopyId) {
+    public SuccessfulObjectDeletionDTO deleteBookCopy(Integer bookCopyId) {
         Optional<BookCopy> optionalBookCopy = bookCopyRepository.findById(bookCopyId);
 
         if (!optionalBookCopy.isPresent()) {
             throw new ExceptionObjectNotFound("Book Copy Not Found");
         }
         bookCopyRepository.deleteById(bookCopyId);
-        return "Book Copy Deleted Successfully";
+        return new SuccessfulObjectDeletionDTO("Book Copy Deleted Successfully");
     }
 
     @Override

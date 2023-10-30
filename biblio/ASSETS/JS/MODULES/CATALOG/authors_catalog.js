@@ -32,7 +32,6 @@ d.addEventListener("submit", async e => {
 })
 
 const sendAuthorForm = async (author, form) => {
-
     if (!form) form = setFormInputsValues(author)
 
     clearErrorMessages()
@@ -48,14 +47,16 @@ const sendAuthorForm = async (author, form) => {
             setSearchValues(results, resultsType, table)
         } else if (operation === "create") {
             showCatalogCard(results, resultsType, catalogCard)
-            setCreationValues(results, resultsType, catalogCard)
+            setCreationValues(results.author, resultsType, catalogCard)
         }
     }
 }
 
 const setFormInputsValues = author => {
     let searchAuthorForm = d.querySelector(".form.author_form.search")
-    searchAuthorForm.author_name.value = `${author.firstName} ${author.lastName}`
+    if (author.firstName && author.lastName) {
+        searchAuthorForm.author_name.value = `${author.firstName} ${author.lastName}`
+    } else searchAuthorForm.author_name.value = author
     return searchAuthorForm
 }
 

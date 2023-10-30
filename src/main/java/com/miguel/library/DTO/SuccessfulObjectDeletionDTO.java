@@ -5,11 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
-public class BookSearchRequestBookWork {
-    private String title;
-
-    private String author;
+public class SuccessfulObjectDeletionDTO {
+    private String successMessage;
 }

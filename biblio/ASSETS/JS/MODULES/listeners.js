@@ -8,6 +8,8 @@ import {
     confirmEdition,
 } from "./modules_commons.js"
 
+import { bookWorkAuthorSelection } from "./CATALOG/bookworks_catalog.js"
+
 const d = document
 
 d.addEventListener("click", e => {
@@ -46,6 +48,11 @@ d.addEventListener("click", e => {
 
     if (e.target.matches(".search_related_objects")) {
         executeSearchRelatedObjectsListener()
+    }
+
+    if (e.target.matches(".search_bookwork_author")) {
+        console.log(e.target)
+        bookWorkAuthorSelection()
     }
 })
 

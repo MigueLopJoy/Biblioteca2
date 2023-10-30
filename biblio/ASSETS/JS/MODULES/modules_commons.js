@@ -145,9 +145,9 @@ const executeCrudSymbolsListeners = () => {
     disableAllSymbols()
 }
 
-const executeConfirmCrudOperationBtn = (btn, crud) => {
+const executeConfirmCrudOperationBtn = btn => {
     saveResult()
-    displaySuccessMessage(resultsType, crud)
+    displaySuccessMessage(results)
     btn.setAttribute("disabled", true)
     toggleCloseModalSymbol(true)
 
@@ -178,22 +178,22 @@ const executeSearchRelatedObjectsListener = async () => {
     }
 }
 
-const deleteObject = () => {
+const deleteObject = async () => {
     switch (resultsType) {
         case "author":
-            deleteAuthor(results.idAuthor)
+            results = await deleteAuthor(results.idAuthor)
             break
         case "bookwork":
-            deleteBookwork(results.idBookWork)
+            results = await deleteBookwork(results.idBookWork)
             break
         case "bookedition":
-            deleteBookedition(results.idBookEdition)
+            results = await deleteBookedition(results.idBookEdition)
             break
         case "bookcopy":
-            deleteBookCopy(results.idBookCopy)
+            results = await deleteBookCopy(results.idBookCopy)
             break
         default:
-            break;
+            break
     }
 }
 
@@ -246,13 +246,13 @@ const confirmEdition = async btn => {
             }
         })
         switch (resultsType) {
-            case "newBookedition":
-            case "newBookcopy":
+            // case "newBookedition":
+            // case "newBookcopy":
             // displaySuccessMessage(resultsType, "edit")
             // prepareEndingBtn(resultsType, operation, catalogCard)
             // break;
             default:
-                executeConfirmCrudOperationBtn(btn, "edit")
+                executeConfirmCrudOperationBtn(btn)
                 break;
         }
     } catch (ex) {
@@ -260,10 +260,10 @@ const confirmEdition = async btn => {
     }
 }
 
-const confirmDeletion = btn => {
+const confirmDeletion = async btn => {
     clearPrintedReults(resultsType)
-    deleteObject()
-    executeConfirmCrudOperationBtn(btn, "delete")
+    await deleteObject()
+    executeConfirmCrudOperationBtn(btn)
 }
 
 const getEditionResults = async editedInputs => {

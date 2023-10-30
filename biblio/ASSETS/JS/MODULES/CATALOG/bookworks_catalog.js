@@ -18,6 +18,8 @@ import {
     clearErrorMessages
 } from "../api_messages_handler.js"
 
+import { sendAuthorForm, generateAuthorsTableContent } from "./authors_catalog.js"
+
 const d = document
 
 let bookwork, results, error, table, catalogCard, resultsType, operation
@@ -70,6 +72,12 @@ const runBookWorkProcess = async form => {
         operation = "create"
         results = await createBookwork(form)
     }
+}
+
+const bookWorkAuthorSelection = () => {
+    let authorName = d.querySelector(".bookwork_form.create .author_name").value
+    console.log(authorName)
+    sendAuthorForm(authorName)
 }
 
 const getBookworks = async form => {
@@ -218,5 +226,6 @@ export {
     generateBookworksTableContent,
     generateBookWorkCatalogCard,
     getBookWork,
-    setBookworkValue
+    setBookworkValue,
+    bookWorkAuthorSelection
 }

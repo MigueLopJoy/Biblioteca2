@@ -1,9 +1,6 @@
 package com.miguel.library.controller;
 
-import com.miguel.library.DTO.BookResponseDTOBookEdition;
-import com.miguel.library.DTO.BooksEditDTOBookEdition;
-import com.miguel.library.DTO.BooksSaveDTOBookEdition;
-import com.miguel.library.DTO.BookSearchRequestBookEdition;
+import com.miguel.library.DTO.*;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -69,10 +66,9 @@ public class BookEditionController {
         return ResponseEntity.ok(bookEditionService.editBookEdition(bookEditionId, bookEdit));
     }
     @DeleteMapping("/delete-bookedition/{bookEditionId}")
-    public ResponseEntity<String> deleteBookEdition(
+    public ResponseEntity<SuccessfulObjectDeletionDTO> deleteBookEdition(
             @PathVariable Integer bookEditionId
     ) {
-        bookEditionService.deleteBookEdition(bookEditionId);
-        return ResponseEntity.ok("Book Edition Deleted Successfully");
+        return ResponseEntity.ok(bookEditionService.deleteBookEdition(bookEditionId));
     }
 }

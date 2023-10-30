@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.AuthorResponseDTO;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.model.Author;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface IAuthorService {
 
     public AuthorResponseDTO editAuthor(Integer authorId, AuthorsDTOEditAuthor authorEdit);
 
-    public String deleteAuthor(Integer authorId);
+    public SuccessfulObjectDeletionDTO deleteAuthor(Integer authorId);
 
     public Author createAuthorFromDTO(AuthorsDTOSaveNewAuthor author);
 

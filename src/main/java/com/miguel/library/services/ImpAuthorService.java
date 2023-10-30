@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.AuthorResponseDTO;
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.Author;
 import com.miguel.library.repository.IAuthorRepository;
@@ -108,14 +109,15 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     @Override
-    public String deleteAuthor(Integer authorId) {
+    public SuccessfulObjectDeletionDTO deleteAuthor(Integer authorId) {
         Author fetchedAuthor = this.searchById(authorId);
 
         if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Author not found");
         }
         authorRepository.deleteById(authorId);
-        return "Author Deleted Successfully";
+
+        return new SuccessfulObjectDeletionDTO("Author Deleted Successfully");
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookResponseDTOBookWork;
-import com.miguel.library.DTO.BookSearchRequestBookWork;
-import com.miguel.library.DTO.BooksEditDTOBookWork;
-import com.miguel.library.DTO.BooksSaveDTOBookWork;
+import com.miguel.library.DTO.*;
 import com.miguel.library.model.Author;
 import com.miguel.library.model.BookWork;
 
@@ -22,7 +19,7 @@ public interface IBookWorkService {
 
     public BookResponseDTOBookWork editBookWork(Integer idBookWork, BooksEditDTOBookWork bookEdit);
 
-    public String deleteBookWork(Integer idBookWork);
+    public SuccessfulObjectDeletionDTO deleteBookWork(Integer idBookWork);
 
     public BookWork createBookWorkFromDTO(BooksSaveDTOBookWork bookWork);
 }

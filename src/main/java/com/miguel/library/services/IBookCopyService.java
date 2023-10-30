@@ -3,6 +3,7 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.BookResponseDTOBookCopy;
 import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookCopy;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 
@@ -21,7 +22,7 @@ public interface IBookCopyService {
 
     public BookResponseDTOBookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit);
 
-    public String deleteBookCopy(Integer bookCopyId);
+    public SuccessfulObjectDeletionDTO deleteBookCopy(Integer bookCopyId);
 
     public BookCopy createBookCopyFromBookSaveDTO(BooksSaveDTOBookCopy bookCopy);
 

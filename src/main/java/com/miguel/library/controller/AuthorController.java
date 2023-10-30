@@ -3,12 +3,11 @@ package com.miguel.library.controller;
 import com.miguel.library.DTO.AuthorResponseDTO;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.model.Author;
-import com.miguel.library.repository.IAuthorRepository;
 import com.miguel.library.services.IAuthorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,10 +51,9 @@ public class AuthorController {
     }
 
     @DeleteMapping("/delete-author/{authorId}")
-    public ResponseEntity<String> deleteAuthor(
+    public ResponseEntity<SuccessfulObjectDeletionDTO> deleteAuthor(
             @PathVariable Integer authorId
     ) {
-        authorService.deleteAuthor(authorId);
-        return ResponseEntity.ok("Author deleted successfully");
+        return ResponseEntity.ok(authorService.deleteAuthor(authorId));
     }
 }
