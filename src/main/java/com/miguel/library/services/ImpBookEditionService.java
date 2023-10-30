@@ -1,5 +1,6 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.BookResponseDTOBookEdition;
 import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.Exceptions.*;
@@ -25,7 +26,7 @@ public class ImpBookEditionService implements IBookEditionService{
     private IBookWorkService bookWorkService;
 
     @Override
-    public BookEdition saveNewBookEdition(BookEdition bookEdition) {
+    public BookResponseDTOBookEdition saveNewBookEdition(BookEdition bookEdition) {
         if (Objects.isNull(bookEdition)) {
             throw new ExceptionNullObject("Book edition should not be null");
         }
@@ -51,7 +52,10 @@ public class ImpBookEditionService implements IBookEditionService{
 
         bookEdition.setBookWork(savedBookWork);
 
-        return bookEditionRepository.save(bookEdition);
+        return new BookResponseDTOBookEdition(
+                "New Edition Created Successfully",
+                bookEditionRepository.save(bookEdition)
+        );
     }
 
     @Override
@@ -92,7 +96,7 @@ public class ImpBookEditionService implements IBookEditionService{
     }
 
     @Override
-    public BookEdition editBookEdition(Integer bookEditionId, BooksEditDTOBookEdition bookEdit) {
+    public BookResponseDTOBookEdition editBookEdition(Integer bookEditionId, BooksEditDTOBookEdition bookEdit) {
         String isbn = bookEdit.getISBN();
         String editor = bookEdit.getEditor();
         Integer editionYear = bookEdit.getEditionYear();
@@ -124,7 +128,10 @@ public class ImpBookEditionService implements IBookEditionService{
 
         Optional<BookEdition> bookEditionWithISBN = bookEditionRepository.findByISBN(savedBookEdition.getISBN());
 
-        return bookEditionRepository.save(savedBookEdition);
+        return new BookResponseDTOBookEdition(
+                "Book Edition Edited Successfully",
+                bookEditionRepository.save(savedBookEdition)
+        );
     }
 
     @Override
@@ -132,10 +139,10 @@ public class ImpBookEditionService implements IBookEditionService{
         Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
 
         if (!optionalBookEdition.isPresent()) {
-            throw new ExceptionObjectNotFound("Book edition not found");
+            throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
         bookEditionRepository.deleteById(bookEditionId);
-        return "Book edition deleted successfully";
+        return "Book Edition Deleted Successfully";
     }
 
     @Override

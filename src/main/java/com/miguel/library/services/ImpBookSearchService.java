@@ -93,6 +93,11 @@ public class ImpBookSearchService implements IBookSearchService {
         LocalDate maxRegistrationDate = bookSearchRequest.getMaxRegistrationDate();
         Character status = bookSearchRequest.getStatus();
         Boolean borrowed = bookSearchRequest.getBorrowed();
+        String ISBN = bookSearchRequest.getISBN();
+        String editor = bookSearchRequest.getEditor();
+        String language = bookSearchRequest.getLanguage();
+        String author = bookSearchRequest.getAuthor();
+        String title = bookSearchRequest.getTitle();
 
         if (isValidString(barCode)) {
             predicates.add(criteriaBuilder.equal(root.get("barCode"), barCode));
@@ -145,15 +150,38 @@ public class ImpBookSearchService implements IBookSearchService {
         if (Objects.nonNull(borrowed)) {
             predicates.add(criteriaBuilder.equal(root.get("borrowed"), borrowed));
         }
+        if (isValidString(ISBN)) {
+            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("ISBN"), ISBN));
+        }
 
-        this.addBookEditionPredicates(
-                criteriaBuilder,
-                criteriaBuilder.createQuery(BookEdition.class).from(BookEdition.class),
-                bookEditionToBookWorkJoin,
-                bookWorkAuthorJoin,
-                bookSearchRequest,
-                predicates
-        );
+        if (isValidString(editor)) {
+            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("editor"), editor));
+        }
+
+
+        if (isValidString(language)) {
+            predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("language"), language));
+        }
+
+        if (isValidString(author)) {
+            Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);
+
+            predicates.add(
+                    criteriaBuilder.like(
+                            authorName,
+                            "%" + author + "%"
+                    )
+            );
+        }
+
+        if (isValidString(title)) {
+            predicates.add(
+                    criteriaBuilder.like(
+                            bookEditionToBookWorkJoin.get("title"),
+                            "%" + title + "%"
+                    )
+            );
+        }
     }
 
     private List<BookEdition> searchBookEditions(BookSearchRequestBookEdition bookSearchRequest) {
@@ -197,6 +225,8 @@ public class ImpBookSearchService implements IBookSearchService {
         String ISBN = bookSearchRequest.getISBN();
         String editor = bookSearchRequest.getEditor();
         String language = bookSearchRequest.getLanguage();
+        String author = bookSearchRequest.getAuthor();
+        String title = bookSearchRequest.getTitle();
 
         if (isValidString(ISBN)) {
             predicates.add(criteriaBuilder.equal(root.get("ISBN"), ISBN));
@@ -210,9 +240,6 @@ public class ImpBookSearchService implements IBookSearchService {
         if (isValidString(language)) {
             predicates.add(criteriaBuilder.equal(root.get("language"), language));
         }
-
-        String author = bookSearchRequest.getAuthor();
-        String title = bookSearchRequest.getTitle();
 
         if (isValidString(author)) {
             Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);

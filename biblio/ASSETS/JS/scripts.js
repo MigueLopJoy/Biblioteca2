@@ -1,11 +1,10 @@
-import { 
+import {
   displayCatalogingMainPage,
   displayRegisteringMainPage,
-  displayReadersRegisteringMainPage,
-  displayBrowseAuthorsCatalogMainPage,
-  displayBrowseBookWorksCatalogMainPage,
-  displayBrowseBookEditionsCatalogMainPage
-} from "./MODULES/CATALOG/display_pages.js"
+  displayAuthorsCatalogMainPage,
+  displayBookWorksCatalogMainPage,
+  displayBookEditionsCatalogMainPage
+} from "./display_pages.js"
 
 const d = document,
   dropdownBTNs = d.getElementsByClassName("dropdown-btn")
@@ -32,13 +31,15 @@ d.addEventListener("click", async e => {
     displaySearchReadersMainPage()
   } else if (e.target.matches("#readers_registering")) {
     displayReadersRegisteringMainPage()
-  } else if (e.target.matches("#b_authors_catalog")) {
-    displayBrowseAuthorsCatalogMainPage()
-  } else if (e.target.matches("#b_bookworks_catalog")) {
-    displayBrowseBookWorksCatalogMainPage()
-  } else if (e.target.matches("#b_bookeditions_catalog")) {
-    displayBrowseBookEditionsCatalogMainPage()
-  } 
+  } else if (e.target.matches("#authors_catalog")) {
+    displayAuthorsCatalogMainPage()
+  } else if (e.target.matches("#bookworks_catalog")) {
+    displayBookWorksCatalogMainPage()
+  } else if (e.target.matches("#bookeditions_catalog")) {
+    displayBookEditionsCatalogMainPage()
+  } else if (e.target.matches("#bookcopies")) {
+    displayBookCopiesCatalogMainPage()
+  }
 })
 
 

@@ -10,7 +10,8 @@ const loadJsFiles = async (...sources) => {
 
     removeScriptsExcept(
         'http://localhost/biblio/ASSETS/JS/scripts.js',
-        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        'http://localhost/biblio/ASSETS/JS/listeners.js',
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
     )
 
     for (let src of sources) {
@@ -63,40 +64,40 @@ const displayRegisteringMainPage = async () => {
     showPageAndEnableLinks("bookedition_page")
 }
 
-const displayReadersRegisteringMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/READERS/readers_registering.html", d.getElementById("main-content"))
+const displayAuthorsCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/authors_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/READERS/readers_registering.js",
-        "./ASSETS/JS/MODULES/READERS/readers_commons.js",
-        "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("readers_registering_page")
-}
-
-const displayBrowseAuthorsCatalogMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/authors_catalog.html", d.getElementById("main-content"))
-    await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/BROWSE/authors_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/authors_catalog.js",
         "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("b_authors_page")
+    showPageAndEnableLinks("authors_page")
 }
 
-const displayBrowseBookWorksCatalogMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookworks_catalog.html", d.getElementById("main-content"))
+const displayBookWorksCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/BROWSE/bookworks_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/bookworks_catalog.js",
         "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("b_bookworks_page")
+    showPageAndEnableLinks("bookworks_page")
 }
 
-const displayBrowseBookEditionsCatalogMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/BROWSE/bookeditions_catalog.html", d.getElementById("main-content"))
+const displayBookEditionsCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/BROWSE/bookeditions_catalog.js",
+        "./ASSETS/JS/MODULES/CATALOG/bookeditions_catalog.js",
         "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("b_bookeditions_page")
+    showPageAndEnableLinks("bookeditions_page")
+}
+
+const displayBookcopiesCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/CATALOG/bookcopies.js",
+        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("bookcopies_page")
 }
 
 const showPageAndEnableLinks = page => {
@@ -139,12 +140,13 @@ const showPage = pageOption => {
     }
 }
 
-export { displayCatalogingMainPage }
-export { displayRegisteringMainPage }
-export { displayReadersRegisteringMainPage }
-export { displayBrowseAuthorsCatalogMainPage }
-export { displayBrowseBookWorksCatalogMainPage }
-export { displayBrowseBookEditionsCatalogMainPage }
-export { enableWindowNavLinkBtns }
-export { loadContent }
-export { showPage }
+export {
+    displayCatalogingMainPage,
+    displayRegisteringMainPage,
+    displayAuthorsCatalogMainPage,
+    displayBookWorksCatalogMainPage,
+    displayBookEditionsCatalogMainPage,
+    enableWindowNavLinkBtns,
+    loadContent,
+    showPage
+}

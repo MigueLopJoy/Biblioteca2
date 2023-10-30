@@ -1,5 +1,6 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.BookResponseDTOBookCopy;
 import com.miguel.library.DTO.BooksEditDTOBookCopy;
 import com.miguel.library.DTO.BooksSaveDTOBookCopy;
 import com.miguel.library.Exceptions.*;
@@ -26,7 +27,7 @@ public class ImpBookCopyService implements IBookCopyService {
     private IBookEditionService bookEditionService;
 
     @Override
-    public BookCopy saveNewBookCopy(BookCopy bookCopy) {
+    public BookResponseDTOBookCopy saveNewBookCopy(BookCopy bookCopy) {
         BookCopy savedBookCopy;
 
         if (Objects.isNull(bookCopy)) {
@@ -50,7 +51,10 @@ public class ImpBookCopyService implements IBookCopyService {
 
         savedBookCopy = bookCopyRepository.save(bookCopy);
 
-        return savedBookCopy;
+        return new BookResponseDTOBookCopy(
+                "Book Copy Edited Successfully",
+                bookCopyRepository.save(savedBookCopy)
+        );
     }
 
     @Override
@@ -95,7 +99,7 @@ public class ImpBookCopyService implements IBookCopyService {
     }
 
     @Override
-    public BookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
+    public BookResponseDTOBookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
         String signature = bookEdit.getSignature();
         Long registrationNumber = bookEdit.getRegistrationNumber();
         Character status = bookEdit.getStatus();
@@ -120,7 +124,10 @@ public class ImpBookCopyService implements IBookCopyService {
             savedBookCopy.setBookCopyStatus(status);
         }
 
-        return bookCopyRepository.save(savedBookCopy);
+        return new BookResponseDTOBookCopy(
+                "Book Copy Edited Successfully",
+                bookCopyRepository.save(savedBookCopy)
+        );
     }
 
     @Override
@@ -128,10 +135,10 @@ public class ImpBookCopyService implements IBookCopyService {
         Optional<BookCopy> optionalBookCopy = bookCopyRepository.findById(bookCopyId);
 
         if (!optionalBookCopy.isPresent()) {
-            throw new ExceptionObjectNotFound("Book copy not found");
+            throw new ExceptionObjectNotFound("Book Copy Not Found");
         }
         bookCopyRepository.deleteById(bookCopyId);
-        return "Book copy deleted successfully";
+        return "Book Copy Deleted Successfully";
     }
 
     @Override

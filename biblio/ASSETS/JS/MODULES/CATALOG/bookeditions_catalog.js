@@ -1,31 +1,36 @@
 import {
-    fetchRequest,
-    handleErrorMessages,
-    clearErrorMessages,
-    clearFormsData,
-    enableSearchModalActions,
-} from "../../modules_commons.js"
+    clearForms,
+    setCreationValues,
+    setSearchValues,
+} from "./../modules_commons.js"
 
 import {
     showSearchResults,
-} from "../catalog-commons.js"
+    showCatalogCard
+} from "./catalog-commons.js"
+
+import {
+    fetchRequest,
+} from "./../requests.js"
+
+import {
+    handleErrorMessages,
+    clearErrorMessages
+} from "../api_messages_handler.js"
 
 const d = document
 
-let bookedition, results, error, table, resultsType, operation
+let bookedition, results, error, resultsType, operation, table, catalogCard
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (d.getElementById("b_bookeditions_section")) {
+    if (d.getElementById("bookeditions_section")) {
         sendBookEditionForm(undefined, e.target)
     }
 })
 
 const sendBookEditionForm = async (bookwork, form) => {
-
-    console.log(form)
-
     if (!form) form = setFormInputsValues(bookwork)
 
     clearErrorMessages()
@@ -34,11 +39,14 @@ const sendBookEditionForm = async (bookwork, form) => {
     if (error) {
         handleErrorMessages(error, form)
         error = null
-        clearFormsData()
+        clearForms()
     } else {
         if (operation === "search") {
             showSearchResults(resultsType, table)
-            enableSearchModalActions(results, resultsType, operation, table)
+            setSearchValues(results, resultsType, operation, table)
+        } else if (operation === "edit") {
+            showCatalogCard(results, resultsType, catalogCard)
+            setCreationValues()
         }
     }
 }
@@ -50,8 +58,6 @@ const setFormInputsValues = bookwork => {
     searchBookEditionForm.title.value = bookwork.title
     searchBookEditionForm.author.value = `${author.firstName} ${author.lastName}`
 
-    console.log(searchBookEditionForm)
-
     return searchBookEditionForm
 }
 
@@ -60,23 +66,13 @@ const runBookEditionProcess = async form => {
     resultsType = "b_bookedition"
 
     table = d.querySelector(".results_table.b_bookeditions_results_table")
-    console.log(table)
     operation = "search"
-    await getSearchBookeditionResults(form)
+    results = await getBookeditions(form)
 }
 
-const getSearchBookeditionResults = async form => {
+const getBookeditions = async form => {
     try {
-        console.log(
-            {
-                title: form.title.value,
-                author: form.author.value,
-                isbn: form.isbn.value,
-                editor: form.editor_name.value,
-                language: form.edition_language.value,
-            }
-        )
-        results = await fetchRequest(
+        return await fetchRequest(
             "POST",
             "http://localhost:8080/general-catalog/search-bookeditions",
             {
@@ -85,6 +81,31 @@ const getSearchBookeditionResults = async form => {
                 isbn: form.isbn.value,
                 editor: form.editor_name.value,
                 language: form.edition_language.value,
+            }
+        )
+    } catch (ex) {
+        error = ex
+    }
+}
+
+const createBookEdition = async form => {
+    try {
+        return await fetchRequest(
+            "POST",
+            "http://localhost:8080/general-catalog/save-bookedition",
+            {
+                isbn: form.isbn.value,
+                editor: form.editor_name.value,
+                editionYear: form.edition_year.value,
+                language: form.edition_language.value,
+                bookWork: {
+                    title: bookwork.title,
+                    author: {
+                        firstName: bookwork.author.firstName,
+                        lastName: bookwork.author.lastName
+                    },
+                    publicationYear: bookwork.publicationYear
+                }
             }
         )
     } catch (ex) {
@@ -103,23 +124,22 @@ const getEditionCopies = async bookEditionId => {
     }
 }
 
-const deleteBrowseBookedition = async bookeditionId => {
+const deleteBookedition = async bookeditionId => {
     try {
-        await fetchRequest(
+        return await fetchRequest(
             "DELETE",
             `http://localhost:8080/general-catalog/delete-bookedition/${bookeditionId}`,
         )
-        results = ""
     } catch (ex) {
         error = ex
     }
 }
 
-const getEditBrowseBookEditionResults = async editedFields => {
+const editBookEdition = async (idBookEdition, editedFields) => {
     try {
-        results = [await fetchRequest(
+        return await fetchRequest(
             "PUT",
-            `http://localhost:8080/general-catalog/edit-bookedition/${results[0].idBookEdition}`,
+            `http://localhost:8080/general-catalog/edit-bookedition/${idBookEdition}`,
             {
                 idOriginalBookEdition: results[0].idBookEdition,
                 isbn: editedFields[0],
@@ -127,19 +147,16 @@ const getEditBrowseBookEditionResults = async editedFields => {
                 editionYear: editedFields[2],
                 language: editedFields[3],
             }
-        )]
-        return results
+        )
     } catch (ex) {
         throw ex
     }
 }
 
 
-const generateBrowseBookEditionsTableContent = (base = results, tab) => {
-    console.log(tab)
-    console.log(table)
+const generateBookEditionsTableContent = () => {
     for (let i = 0; i < results.length; i++) {
-        let result = base[i],
+        let result = results[i],
             bookWork = result.bookWork,
             author = bookWork.author
 
@@ -181,14 +198,14 @@ const generateBrowseBookEditionsTableContent = (base = results, tab) => {
     }
 }
 
-const generateBrowseBookEditionCatalogCard = async () => {
-    let bookEdition = results[0],
-        bookwork = bookEdition.bookwork,
+const generateBookEditionCatalogCard = async () => {
+    let bookEdition = results.bookEdition,
+        bookwork = bookEdition.bookWork,
         author = bookwork.author,
         authorName = `${author.firstName} ${author.lastName}`,
         editionCopiesMessage, bookEditionCopies,
         catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
-    
+
     catalogCard.classList.remove("hidden")
 
     catalogCard.querySelector(".bookwork_title").value = bookwork.title
@@ -200,7 +217,7 @@ const generateBrowseBookEditionCatalogCard = async () => {
 
     try {
         bookEditionCopies = await getEditionCopies(bookEdition.idBookEdition)
-        editionCopiesMessage = `Author Book Works: ${bookEditionCopies.length}`
+        editionCopiesMessage = `Book Edition Copies: ${bookEditionCopies.length}`
     } catch (error) {
         editionCopiesMessage = error.message
     }
@@ -211,14 +228,16 @@ const getBrowseBookWork = () => {
     return author
 }
 
-const reasigneBrowseBookeditionValue = newBookEditionValue => {
+const setBookeditionValue = newBookEditionValue => {
     bookedition = newBookEditionValue
 }
 
-export { sendBookEditionForm }
-export { getEditBrowseBookEditionResults }
-export { deleteBrowseBookedition }
-export { generateBrowseBookEditionsTableContent }
-export { generateBrowseBookEditionCatalogCard }
-export { getBrowseBookWork }
-export { reasigneBrowseBookeditionValue }
+export {
+    sendBookEditionForm,
+    editBookEdition,
+    deleteBookedition,
+    generateBookEditionCatalogCard,
+    generateBookEditionsTableContent,
+    getBrowseBookWork,
+    setBookeditionValue
+}

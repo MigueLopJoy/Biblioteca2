@@ -206,7 +206,7 @@
     position: relative;
 }
 
-#modal .tables_container {
+#modal .table_container {
     flex: 1;
     overflow-y: auto;
 }
@@ -218,7 +218,8 @@
 }
 
 .modal_btns_container .btn {
-    width: 12rem;
+    min-width: 12rem;
+    width: auto;
 }
 
 /*Tables styles*/

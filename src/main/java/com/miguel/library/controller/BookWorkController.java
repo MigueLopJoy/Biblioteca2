@@ -1,6 +1,7 @@
 package com.miguel.library.controller;
 
 
+import com.miguel.library.DTO.BookResponseDTOBookWork;
 import com.miguel.library.DTO.BooksEditDTOBookWork;
 import com.miguel.library.DTO.BooksSaveDTOBookWork;
 import com.miguel.library.DTO.BookSearchRequestBookWork;
@@ -29,7 +30,7 @@ public class BookWorkController {
     private IBookSearchService bookSearchService;
 
     @PostMapping("/save-bookwork")
-    public ResponseEntity<BookWork> saveNewBookWork(
+    public ResponseEntity<BookResponseDTOBookWork> saveNewBookWork(
             @Valid @RequestBody BooksSaveDTOBookWork bookWork
     ) {
         return ResponseEntity.ok(
@@ -59,7 +60,7 @@ public class BookWorkController {
 
     }
     @PutMapping("/edit-bookwork/{bookWorkId}")
-    public ResponseEntity<BookWork> editBookWork(
+    public ResponseEntity<BookResponseDTOBookWork> editBookWork(
             @PathVariable Integer bookWorkId,
             @Valid @RequestBody BooksEditDTOBookWork bookEdit
             ) {

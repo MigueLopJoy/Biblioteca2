@@ -1,5 +1,6 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.AuthorResponseDTO;
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
 import com.miguel.library.Exceptions.*;
@@ -20,7 +21,7 @@ public class ImpAuthorService implements IAuthorService {
     private IAuthorRepository authorRepository;
 
     @Override
-    public Author saveNewAuthor(Author author) {
+    public AuthorResponseDTO saveNewAuthor(Author author) {
         if (Objects.isNull(author)) {
             throw new ExceptionNullObject("Author should not be null");
         }
@@ -31,7 +32,11 @@ public class ImpAuthorService implements IAuthorService {
             throw new ExceptionObjectAlreadyExists("Author already exists");
         }
 
-        return authorRepository.save(author);
+
+        return new AuthorResponseDTO(
+                "New Author Created Successfully",
+                authorRepository.save(author)
+        );
     }
 
     @Override
@@ -69,7 +74,7 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     @Override
-    public Author editAuthor(Integer authorId, AuthorsDTOEditAuthor authorEdit) {
+    public AuthorResponseDTO editAuthor(Integer authorId, AuthorsDTOEditAuthor authorEdit) {
         String firstName = authorEdit.getFirstName();
         String lastName = authorEdit.getLastName();
 
@@ -96,7 +101,10 @@ public class ImpAuthorService implements IAuthorService {
             }
         }
 
-        return authorRepository.save(fetchedAuthor);
+        return new AuthorResponseDTO(
+                "Author Edited Successfully",
+                authorRepository.save(fetchedAuthor)
+        );
     }
 
     @Override
@@ -107,7 +115,7 @@ public class ImpAuthorService implements IAuthorService {
             throw new ExceptionObjectNotFound("Author not found");
         }
         authorRepository.deleteById(authorId);
-        return "Author deleted successfully";
+        return "Author Deleted Successfully";
     }
 
     @Override

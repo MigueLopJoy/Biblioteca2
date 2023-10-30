@@ -1,16 +1,22 @@
 import {
-    fetchRequest,
-    handleErrorMessages,
-    clearErrorMessages,
-    clearFormsData,
-    enableSearchModalActions,
-    enableCreateModalActions,
-} from "../../modules_commons.js"
+    clearForms,
+    setCreationValues,
+    setSearchValues,
+} from "./../modules_commons.js"
 
 import {
     showSearchResults,
     showCatalogCard
-} from "../catalog-commons.js"
+} from "./catalog-commons.js"
+
+import {
+    fetchRequest,
+} from "./../requests.js"
+
+import {
+    handleErrorMessages,
+    clearErrorMessages
+} from "../api_messages_handler.js"
 
 const d = document
 
@@ -19,15 +25,12 @@ let bookwork, results, error, table, catalogCard, resultsType, operation
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (d.getElementById("b_bookworks_section")) {
+    if (d.getElementById("bookworks_section")) {
         sendBookWorkForm(undefined, e.target)
     }
 })
 
 const sendBookWorkForm = async (author, form) => {
-
-    console.log("SENDING BOOK WORK FORM")
-
     if (!form) form = setFormInputsValues(author)
 
     clearErrorMessages()
@@ -36,42 +39,42 @@ const sendBookWorkForm = async (author, form) => {
     if (error) {
         handleErrorMessages(error, form)
         error = null
-        clearFormsData()
+        clearForms()
     } else {
         if (operation === "search") {
             showSearchResults(resultsType, table)
-            enableSearchModalActions(results, resultsType, operation, table)
+            setSearchValues(results, resultsType, operation, table)
         } else if (operation === "create") {
-            showCatalogCard(resultsType, catalogCard)
-            enableCreateModalActions(results, resultsType, operation, catalogCard)
+            showCatalogCard(results, resultsType, catalogCard)
+            setCreationValues(results, resultsType, operation, catalogCard)
         }
     }
 }
 
 const setFormInputsValues = author => {
-    let searchBookWorkForm = d.querySelector(".form.b_bookwork_form.search")
+    let searchBookWorkForm = d.querySelector(".form.bookwork_form.search")
     searchBookWorkForm.author_name.value = `${author.firstName} ${author.lastName}`
     return searchBookWorkForm
 }
 
 const runBookWorkProcess = async form => {
     bookwork = ""
-    resultsType = "b_bookwork"
+    resultsType = "bookwork"
 
     if (form.classList.contains("search")) {
-        table = d.querySelector(".results_table.b_bookworks_results_table")
+        table = d.querySelector(".results_table.bookworks_results_table")
         operation = "search"
-        await getSearchBookworkResults(form)
+        results = await getBookworks(form)
     } else {
         catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
         operation = "create"
-        await getCreatehBookworkResults(form)
+        results = await createBookwork(form)
     }
 }
 
-const getSearchBookworkResults = async form => {
+const getBookworks = async form => {
     try {
-        results = await fetchRequest(
+        return await fetchRequest(
             "POST",
             "http://localhost:8080/bookworks-catalog/search-bookwork",
             {
@@ -96,9 +99,9 @@ const getBookWorkEditions = async bookWorkId => {
     }
 }
 
-const getCreatehBookworkResults = async form => {
+const createBookwork = async form => {
     try {
-        results = [await fetchRequest(
+        return await fetchRequest(
             "POST",
             "http://localhost:8080/bookworks-catalog/save-bookwork",
             {
@@ -109,43 +112,41 @@ const getCreatehBookworkResults = async form => {
                 },
                 publicationYear: form.publication_year.value
             }
-        )]
+        )
     } catch (ex) {
         error = ex
     }
 }
 
-const getEditBrowseBookworkResults = async editedFields => {
+const editBookwork = async (idBookWork, editedFields) => {
     try {
-        results = [await fetchRequest(
+        return await fetchRequest(
             "PUT",
-            `http://localhost:8080/bookworks-catalog/edit-bookwork/${results[0].idBookWork}`,
+            `http://localhost:8080/bookworks-catalog/edit-bookwork/${idBookWork}`,
             {
                 title: editedFields[0],
                 publicationYear: editedFields[1]
             }
-        )]
-        return results
+        )
     } catch (ex) {
         throw ex
     }
 }
 
-const deleteBrowseBookwork = async bookworkId => {
+const deleteBookwork = async bookworkId => {
     try {
-        await fetchRequest(
+        return await fetchRequest(
             "DELETE",
             `http://localhost:8080/bookworks-catalog/delete-bookwork/${bookworkId}`,
         )
-        results = ""
     } catch (ex) {
         error = ex
     }
 }
 
-const generateBrowseBookworksTableContent = (base = results, table) => {
+const generateBookworksTableContent = () => {
     for (let i = 0; i < results.length; i++) {
-        let result = base[i],
+        let result = results[i],
             author = result.author
 
         let newRow = d.createElement("tr")
@@ -178,8 +179,8 @@ const generateBrowseBookworksTableContent = (base = results, table) => {
     }
 }
 
-const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
-    let bookwork = browseResults[0],
+const generateBookWorkCatalogCard = async (results) => {
+    let bookwork = results.bookWork,
         bookWorkEditions, bookWorkEditionsMessage,
         author = bookwork.author,
         authorName = `${author.firstName} ${author.lastName}`,
@@ -202,18 +203,20 @@ const generateBrowseBookWorkCatalogCard = async (browseResults = results) => {
     catalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
 }
 
-const getBrowseBookWork = () => {
+const getBookWork = () => {
     return author
 }
 
-const reasigneBrowseBookWorkValue = newBookWorkValue => {
+const setBookworkValue = newBookWorkValue => {
     bookwork = newBookWorkValue
 }
 
-export { sendBookWorkForm }
-export { getEditBrowseBookworkResults }
-export { deleteBrowseBookwork }
-export { generateBrowseBookworksTableContent }
-export { generateBrowseBookWorkCatalogCard }
-export { getBrowseBookWork }
-export { reasigneBrowseBookWorkValue }
+export {
+    sendBookWorkForm,
+    editBookwork,
+    deleteBookwork,
+    generateBookworksTableContent,
+    generateBookWorkCatalogCard,
+    getBookWork,
+    setBookworkValue
+}

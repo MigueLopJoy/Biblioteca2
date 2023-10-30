@@ -1,5 +1,6 @@
 package com.miguel.library.controller;
 
+import com.miguel.library.DTO.AuthorResponseDTO;
 import com.miguel.library.DTO.AuthorsDTOEditAuthor;
 import com.miguel.library.DTO.AuthorsDTOSaveNewAuthor;
 import com.miguel.library.model.Author;
@@ -21,7 +22,7 @@ public class AuthorController {
     @Autowired
     private IAuthorService authorService;
     @PostMapping("/save-author")
-    public ResponseEntity<Author> saveNewAuthor(
+    public ResponseEntity<AuthorResponseDTO> saveNewAuthor(
             @Valid @RequestBody AuthorsDTOSaveNewAuthor author
     ) {
         return ResponseEntity.ok(
@@ -43,7 +44,7 @@ public class AuthorController {
     }
 
     @PutMapping("/edit-author/{authorId}")
-    public ResponseEntity<Author> editAuthor(
+    public ResponseEntity<AuthorResponseDTO> editAuthor(
             @PathVariable Integer authorId,
             @Valid @RequestBody AuthorsDTOEditAuthor authorEdit
     ) {

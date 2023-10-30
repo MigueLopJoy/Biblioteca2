@@ -1,5 +1,6 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.BookResponseDTOBookWork;
 import com.miguel.library.DTO.BooksEditDTOBookWork;
 import com.miguel.library.DTO.BooksSaveDTOBookWork;
 import com.miguel.library.Exceptions.*;
@@ -25,7 +26,7 @@ public class ImpBookWorkService implements IBookWorkService{
     private IAuthorService authorService;
 
     @Override
-    public BookWork saveNewBookWork(BookWork bookWork) {
+    public BookResponseDTOBookWork saveNewBookWork(BookWork bookWork) {
 
         if (Objects.isNull(bookWork)) {
             throw new ExceptionNullObject("Book work should not be null");
@@ -44,7 +45,10 @@ public class ImpBookWorkService implements IBookWorkService{
 
             bookWork.setAuthor(fetchedAuthor);
 
-            return bookWorkRepository.save(bookWork);
+            return new BookResponseDTOBookWork(
+                    "New Book Copy Created Successfully",
+                    bookWorkRepository.save(bookWork)
+            );
         }
     }
 
@@ -110,7 +114,7 @@ public class ImpBookWorkService implements IBookWorkService{
     }
 
     @Override
-    public BookWork editBookWork(Integer bookWorkId, BooksEditDTOBookWork bookEdit) {
+    public BookResponseDTOBookWork editBookWork(Integer bookWorkId, BooksEditDTOBookWork bookEdit) {
         String title = bookEdit.getTitle();
         Integer publicationYear = bookEdit.getPublicationYear();
         Integer counter = 0;
@@ -145,7 +149,10 @@ public class ImpBookWorkService implements IBookWorkService{
                 }
             } while (counter < bookWorksWithTitle.size());
         }
-        return bookWorkRepository.save(savedBookWork);
+        return new BookResponseDTOBookWork(
+                "Book Work Edited Successfully",
+                bookWorkRepository.save(savedBookWork)
+        );
     }
 
     @Override

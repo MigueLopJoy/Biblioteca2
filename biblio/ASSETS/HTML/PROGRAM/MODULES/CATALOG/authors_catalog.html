@@ -1,0 +1,106 @@
+<div class="container" id="authors_section">
+
+    <div class="current_window">
+
+        <div class="page authors_page hidden">
+
+            <div class="page_element_container search_author">
+                <form class="form author_form search">
+                    <legend>Search author</legend>
+                    <p class="error_message general_error"></p>
+                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
+                    <input type="submit" id="search_author_btn" class="btn" value="Search">
+                </form>
+            </div>
+
+            <div class="page_element_container create_author">
+                <form class="form author_form create">
+                    <legend>Create new author</legend>
+                    <p class="error_message general_error"></p>
+                    <p class="error_message firstName"></p>
+                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
+                    <p class="error_message lastName"></p>
+                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
+                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+                </form>
+            </div>
+
+        </div>
+
+        <div id="modal" class="hidden">
+
+            <div class="modal_content">
+
+                <div class="icons_container">
+                    <div class="left_icons_container">
+                        <span class="material-symbols-outlined edit_symbol">edit_note</span>
+                        <span class="material-symbols-outlined delete_symbol">delete</span>
+                        <span class="material-symbols-outlined inspect_symbol">manage_search</span>
+                    </div>
+                    <div class="close_symbol_container">
+                        <span class="close_symbol">X</span>
+                    </div>
+                </div>
+
+                <div class="table_container">
+                    <table class="results_table authors_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th class="select_column">Select author</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body"></tbody>
+                    </table>
+                </div>
+
+                <div class="catalog_card_container">
+                    <p class="success_message mb-1"></p>
+
+                    <div class="catalog_card author_catalog_card hidden">
+                        <form class="form author_form">
+                            <legend>Author Catalog Card</legend>
+
+                            <p class="error_message general_error mb-0"></p>
+
+                            <p class="error_message firstName mb-0"></p>
+                            <label>First Name:</label>
+                            <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
+
+                            <p class="error_message lastName mb-0"></p>
+                            <label>Last Name:</label>
+                            <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
+
+                            <label for="author_bookworks">Author's Book Works:</label>
+                            <div class="input-group">
+                                <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
+                                <span class="input-group-text search_related_objects">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal_btns_container">
+                    <div class="select_results_container hidden">
+                        <button class="select_results_btn btn" role="button" disabled>Select Author</button>
+                    </div>
+                    <div class="confirm_creation_container hidden">
+                        <button class="btn confirm_creation_btn" role="button">Confirm</button>
+                    </div>
+                    <div class="confirm_edition_container hidden">
+                        <button class="btn confirm_edition_btn" role="button">Confirm Edition</button>
+                    </div>
+                    <div class="confirm_deletion_container hidden">
+                        <button class="btn confirm_deletion_btn" role="button">Confirm Deletion</button>
+                    </div>
+                    <div class="ending_btn_container hidden">
+                        <button class="btn ending_btn" role="button">Back To Main Page</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>

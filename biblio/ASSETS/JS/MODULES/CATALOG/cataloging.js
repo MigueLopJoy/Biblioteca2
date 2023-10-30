@@ -1,4 +1,4 @@
-import { 
+import {
     findCurrentPage,
     fetchRequest,
     joinParamsToURL,
@@ -9,16 +9,14 @@ import {
     enableCreateModalActions
 } from "./../modules_commons.js"
 
-import { 
+import {
     toggleNextPageChanging,
     clearPrintedReults,
     showSearchResults,
-    showCatalogCard 
+    showCatalogCard
 } from "./catalog-commons.js"
 
-const d = document,
-    authorsResultsTable = d.querySelector(".results_table.authors_results_table"),
-    bookworksResultsTable = d.querySelector(".results_table.bookworks_results_table")
+const d = document
 
 let author, bookwork, newEdition, results, error, table, catalogCard, resultsType, operation
 
@@ -46,6 +44,8 @@ d.addEventListener("submit", async e => {
         } else {
             if (operation === "search") {
                 showSearchResults(resultsType, table)
+                console.log(results)
+
                 enableSearchModalActions(results, resultsType, operation, table)
             } else if (operation === "create") {
                 showCatalogCard(resultsType, catalogCard)
@@ -61,11 +61,11 @@ const runAuthorProcess = async form => {
     clearPrintedReults(resultsType)
 
     if (form.classList.contains("search")) {
-        table = authorsResultsTable
+        table = d.querySelector(".results_table.authors_results_table")
         operation = "search"
         await getSearchAuthorResults(form)
     } else if (form.classList.contains("create")) {
-        catalogCard = authorCatalogCard
+        catalogCard = d.querySelector(".catalog_card.author_catalog_card")
         operation = "create"
         await getCreateAuthorResults(form)
     }
@@ -78,11 +78,11 @@ const runBookworkProcess = async form => {
 
     if (form.classList.contains("search")) {
         operation = "search"
-        table = bookworksResultsTable
+        table = d.querySelector(".results_table.bookworks_results_table")
         await getSearchBookworkResults(form)
     } else if (form.classList.contains("create")) {
         operation = "create"
-        catalogCard = bookworkCatalogCard
+        catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
         await getCreatehBookworkResults(form)
     }
 }
@@ -90,7 +90,7 @@ const runBookworkProcess = async form => {
 const runNewEditionProcess = async form => {
     newEdition = ""
     resultsType = "newEdition"
-    catalogCard = bookeditionCatalogCard
+    catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
     operation = "create"
     await getCreateBookeditionResults(form)
 }
@@ -240,30 +240,7 @@ const deleteBookwork = async bookworkId => {
     }
 }
 
-const getCreateBookeditionResults = async form => {
-    try {
-        results = [await fetchRequest(
-            "POST",
-            "http://localhost:8080/general-catalog/save-bookedition",
-            {
-                isbn: form.isbn.value,
-                editor: form.editor_name.value,
-                editionYear: form.edition_year.value,
-                language: form.edition_language.value,
-                bookWork: {
-                    title: bookwork.title,
-                    author: {
-                        firstName: bookwork.author.firstName,
-                        lastName: bookwork.author.lastName
-                    },
-                    publicationYear: bookwork.publicationYear
-                }
-            }
-        )]
-    } catch (ex) {
-        error = ex
-    }
-}
+
 
 const getEditionCopies = async bookEditionId => {
     try {

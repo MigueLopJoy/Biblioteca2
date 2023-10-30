@@ -87,34 +87,7 @@ const getSearchBookeditionResults = async form => {
     }
 }
 
-const getCreateBookCopyResults = async form => {
-    try {
-        results = [await fetchRequest(
-            "POST",
-            "http://localhost:8080/bookcopies/save-bookcopy",
-            {
-                registrationNumber: form.registration_number.value,
-                signature: form.signature.value,
-                bookEdition: {
-                    isbn: bookedition.isbn,
-                    editor: bookedition.editor,
-                    editionYear: bookedition.editionYear,
-                    language: bookedition.language,
-                    bookWork: {
-                        title: bookedition.bookWork.title,
-                        author: {
-                            firstName: bookedition.bookWork.author.firstName,
-                            lastName: bookedition.bookWork.author.lastName
-                        },
-                        publicationYear: bookedition.bookWork.publicationYear
-                    }
-                }
-            }
-        )]
-    } catch (ex) {
-        error = ex
-    }
-}
+
 
 const getEditNewCopyResults = async editedFields => {
     try {
@@ -192,7 +165,7 @@ const generateBookeditionsTableContent = () => {
     }
 }
 
-const generateBookCopyCatalogCard = async () => {
+const generateBookCopyCatalogCard = async results => {
     let bookCopy = results[0],
         bookEdition = bookCopy.bookEdition,
         bookWork = bookEdition.bookWork,

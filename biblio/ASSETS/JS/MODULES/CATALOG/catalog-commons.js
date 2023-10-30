@@ -1,40 +1,29 @@
 import {
     findCurrentPage,
-    displaySuccessMessage
+    toggleSymbol
 } from "./../modules_commons.js"
 
-import { showPage } from "./display_pages.js"
+import { displaySuccessMessage } from "../api_messages_handler.js"
+
+import { showPage } from "../../display_pages.js"
 
 import {
-    generateAuthorsTableContent,
-    generateBookworksTableContent,
-    generateAuthorCatalogCard,
-    generateBookWorkCatalogCard,
-    generateBookEditionCatalogCard,
     getAuthor,
-    getBookwork
-} from "./cataloging.js"
+    generateAuthorCatalogCard,
+    generateAuthorsTableContent
+} from "./authors_catalog.js"
 
 import {
-    generateBookeditionsTableContent,
-    generateBookCopyCatalogCard,
-    getBookedition
-} from "./registering.js"
+    generateBookWorkCatalogCard,
+    generateBookworksTableContent,
+} from "./bookworks_catalog.js"
 
 import {
-    generateBrowseAuthorCatalogCard,
-    generateBrowseAuthorsTableContent,
-} from "./BROWSE/authors_catalog.js"
+    generateBookEditionsTableContent,
+    generateBookEditionCatalogCard,
+} from "./bookeditions_catalog.js"
 
-import {
-    generateBrowseBookWorkCatalogCard,
-    generateBrowseBookworksTableContent,
-} from "./BROWSE/bookworks_catalog.js"
-
-import { 
-    generateBrowseBookEditionCatalogCard,
-    generateBrowseBookEditionsTableContent,
-} from "./BROWSE/bookeditions_catalog.js"
+import { generateBookCopyCatalogCard } from "./bookcopies_catalog.js"
 
 
 const d = document
@@ -100,6 +89,7 @@ const togglePageLinks = (pageLinks, object) => {
     }
 }
 
+/* 
 const toggleNextPageChanging = resultsType => {
     const nextPageBtn = findCurrentPage().querySelector(".change_page_container .next_page"),
         pageLinks = d.querySelectorAll(".page_link")
@@ -120,6 +110,7 @@ const toggleNextPageChanging = resultsType => {
         togglePageLinks([pageLinks[1]], getBookedition())
     }
 }
+*/
 
 const clearPrintedReults = resultsType => {
     switch (resultsType) {
@@ -161,47 +152,21 @@ const clearPrintedReults = resultsType => {
 
 /* Handle results methods */
 
-const showSearchResults = (resultsType, table, results) => {
-    let selectBtnContainer = d.querySelector(".modal_btns_container .select_btn")
-
+const showSearchResults = table => {
     renderModal()
-    console.log(table)
+    generaTableContent(table)
     table.classList.remove("hidden")
-    generaTableContent(results, table)
-    selectBtnContainer.classList.remove("hidden")
-    setSelectResultBtnTextContent(resultsType)
+    d.querySelector(".select_results_container").classList.remove("hidden")
 }
 
-const setSelectResultBtnTextContent = resultsType => {
-    let selectResultBtn = d.querySelector(".modal_btns_container .select_result_btn")
-
-    switch (resultsType) {
-        case "author":
-        case "b_author":
-            selectResultBtn.textContent = "Select author"
-            break;
-        case "bookwork":
-        case "b_bookwork":
-            selectResultBtn.textContent = "Select book work"
-            break;
-        case "newEdition":
-            selectResultBtn.textContent = "Select book edition"
-            break;
-        default:
-            break;
-    }
-}
-
-const showCatalogCard = (resultsType, catalogCard, results) => {
-    let createBtnContainer = d.querySelector(".modal_btns_container .create_btn")
-
+const showCatalogCard = (results, resultsType, catalogCard) => {
+    console.log(results)
     renderModal()
+    if (results.author) generateCatalogCard(results.author, resultsType)
+    else generateCatalogCard(results, resultsType)
+    displaySuccessMessage(results)
     catalogCard.classList.remove("hidden")
-    generateCatalogCard(resultsType, results)
-    if (resultsType.substring(0, 2) !== "b_") {
-        displaySuccessMessage(resultsType)
-    }
-    createBtnContainer.classList.remove("hidden")
+    d.querySelector(".confirm_creation_container").classList.remove("hidden")
 }
 
 const renderModal = () => {
@@ -212,47 +177,42 @@ const renderModal = () => {
     modal.style.alignItems = "center"
 }
 
-const generaTableContent = async (results, table) => {
+const generaTableContent = async table => {
     if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
         generateBookworksTableContent()
     } else if (table.classList.contains("bookeditions_results_table")) {
-        generateBookeditionsTableContent()
-    } else if (table.classList.contains("b_authors_results_table")) {
-        generateBrowseAuthorsTableContent(results, table)
-    } else if (table.classList.contains("b_bookworks_results_table")) {
-        generateBrowseBookworksTableContent(results, table)
-    } else if (table.classList.contains("b_bookeditions_results_table")) {
-        generateBrowseBookEditionsTableContent(results, table)
+        generateBookEditionsTableContent()
     }
 }
 
-const generateCatalogCard = (resultsType, results) => {
+const generateCatalogCard = (results, resultsType) => {
     switch (resultsType) {
         case "author":
-            generateAuthorCatalogCard()
-            break;
+            generateAuthorCatalogCard(results)
+            break
         case "bookwork":
-            generateBookWorkCatalogCard()
-            break;
-        case "newEdition":
-            generateBookEditionCatalogCard()
-            break;
-        case "newBookCopy":
-            generateBookCopyCatalogCard()
-            break;
-        case "b_author":
-            generateBrowseAuthorCatalogCard(results)
-            break;
-        case "b_bookwork":
-            generateBrowseBookWorkCatalogCard(results)
-            break;
-        case "b_bookedition":
-            generateBrowseBookEditionCatalogCard(results)
-            break;
+            generateBookWorkCatalogCard(results)
+            break
+        case "bookedition":
+            generateBookEditionCatalogCard(results)
+            break
+        case "bookcopy":
+            generateBookCopyCatalogCard(results)
+            break
         default:
-            break;
+            break
+    }
+    toggleSearchRelatedObjectsSymbolActivation()
+}
+
+const toggleSearchRelatedObjectsSymbolActivation = () => {
+    const searchRelatedObjectsSymbol = d.querySelector(".search_related_objects"),
+        inputs = d.querySelectorAll(".catalog_card .form input")
+
+    if (inputs[inputs.length - 1].value.substring(0, 2) !== "No") {
+        toggleSymbol(searchRelatedObjectsSymbol, true)
     }
 }
 
@@ -289,7 +249,7 @@ const printSelectedResult = resultsType => {
 
 
 export { enablePreviousPageBtn }
-export { toggleNextPageChanging }
+// export { toggleNextPageChanging }
 export { clearPrintedReults }
 export { printSelectedResult }
 export { showSearchResults }
