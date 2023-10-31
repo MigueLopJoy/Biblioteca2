@@ -37,6 +37,7 @@ const sendAuthorForm = async (author, form) => {
     clearErrorMessages()
 
     await runAuthorProcess(form)
+
     if (error) {
         handleErrorMessages(error, form)
         error = null
@@ -195,6 +196,10 @@ const getAuthor = () => {
     return author
 }
 
+const getAuthorResults = () => {
+    return results
+}
+
 const setAuthorValue = newAuthorValue => {
     author = newAuthorValue
 }
@@ -206,5 +211,6 @@ export {
     generateAuthorsTableContent,
     generateAuthorCatalogCard,
     getAuthor,
-    setAuthorValue
+    setAuthorValue,
+    getAuthorResults
 }

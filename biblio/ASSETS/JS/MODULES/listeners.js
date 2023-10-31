@@ -8,7 +8,10 @@ import {
     confirmEdition,
 } from "./modules_commons.js"
 
-import { bookWorkAuthorSelection } from "./CATALOG/bookworks_catalog.js"
+import {
+    displayAuthorSelectionTable,
+    selectBookWorkAuthor
+} from "./CATALOG/bookworks_catalog.js"
 
 const d = document
 
@@ -30,7 +33,16 @@ d.addEventListener("click", e => {
 
     if (e.target.matches(".select_results_btn")) {
         if (!e.target.hasAttribute("disabled")) {
-            executeSelectResultBtnListener()
+            let flux = e.target.classList[2]
+
+            switch (flux) {
+                case "select_bookwork_author":
+                    selectBookWorkAuthor()
+                    break
+                default:
+                    executeSelectResultBtnListener()
+                    break
+            }
         }
     }
 
@@ -51,14 +63,17 @@ d.addEventListener("click", e => {
     }
 
     if (e.target.matches(".search_bookwork_author")) {
-        console.log(e.target)
-        bookWorkAuthorSelection()
+        displayAuthorSelectionTable()
+    }
+
+    if (e.target.matches(".select_author_btn")) {
+        selectBookWorkAuthor()
     }
 })
 
 d.addEventListener("change", e => {
     if (e.target.matches("input.result_option")) {
-        const checkboxes = document.querySelectorAll('input.result_option');
+        const checkboxes = document.querySelectorAll('input.result_option')
 
         changeCheckBoxOption(checkboxes, e.target)
         toggleSelectResultBtnState(checkboxes)

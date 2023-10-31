@@ -24,8 +24,6 @@ const clearErrorMessages = () => {
 }
 
 const displaySuccessMessage = results => {
-    console.log(results)
-    console.log(results.successMessage)
     const successMessage = d.querySelector(".success_message")
     successMessage.classList.add("active")
     if (results.successMessage) {

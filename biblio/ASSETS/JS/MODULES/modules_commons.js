@@ -116,6 +116,7 @@ const toggleSymbol = (symbol, enable) => {
 
 const executeSelectResultBtnListener = () => {
     results = results[findSelectedResult()]
+    console.log(results)
     saveResult()
     closeModal()
     browseObject()
@@ -218,6 +219,7 @@ const saveResult = () => {
 
 const browseObject = () => {
     resultsContainer = d.querySelector(".catalog_card")
+    console.log(results)
     showCatalogCard(results, resultsType, resultsContainer)
     setCreationValues(results, resultsType, resultsContainer)
     toggleCloseModalSymbol(true)
@@ -311,6 +313,9 @@ const disableSelectResultBtn = () => {
     if (!selectResultBtn.hasAttribute("disabled")) {
         selectResultBtn.setAttribute("disabled", true)
     }
+    if (selectResultBtn.classList.length > 2) {
+        selectResultBtn.classList.remove(selectResultBtn.classList[2])
+    }
 }
 
 const hiddeModalBtns = () => {
@@ -324,12 +329,12 @@ const hiddeModalBtns = () => {
 }
 
 const hiddeResultsContainers = () => {
-    hiddeTable(d.querySelector(".results_table"))
+    hiddeTable(d.querySelectorAll(".results_table"))
     hiddeCatalogCard(d.querySelector(".catalog_card"))
 }
 
-const hiddeTable = table => {
-    if (table) {
+const hiddeTable = tables => {
+    for (const table of tables) {
         const tableBody = table.querySelector(".results_table_body"),
             errorMessageRow = tableBody.querySelector(".error_message_row")
 
@@ -396,6 +401,7 @@ const clearForms = () => {
 
 export {
     findCurrentPage,
+    findSelectedResult,
     setSearchValues,
     setCreationValues,
     closeModal,
