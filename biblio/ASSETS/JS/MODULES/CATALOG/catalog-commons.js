@@ -1,6 +1,7 @@
 import {
     findCurrentPage,
-    toggleSymbol
+    toggleSymbol,
+    selectResultObject
 } from "./../modules_commons.js"
 
 import { displaySuccessMessage } from "../api_messages_handler.js"
@@ -160,10 +161,9 @@ const showSearchResults = table => {
 }
 
 const showCatalogCard = (results, resultsType, catalogCard) => {
-    console.log(results)
     renderModal()
     displaySuccessMessage(results)
-    if (results.successMessage) results = selectResultObject()
+    results = selectResultObject(results)
     generateCatalogCard(results, resultsType)
     catalogCard.classList.remove("hidden")
     d.querySelector(".confirm_creation_container").classList.remove("hidden")
@@ -175,13 +175,6 @@ const renderModal = () => {
     modal.style.display = "flex"
     modal.style.justifyContent = "center"
     modal.style.alignItems = "center"
-}
-
-const selectResultObject = () => {
-    if (results.author) return results.author
-    else if (results.bookWork) return results.bookWork
-    else if (results.bookEdition) return results.bookEdition
-    else if (results.bookCopy) return results.bookCopy
 }
 
 const generaTableContent = async table => {
@@ -200,7 +193,6 @@ const generateCatalogCard = (results, resultsType) => {
             generateAuthorCatalogCard(results)
             break
         case "bookwork":
-            console.log(results)
             generateBookWorkCatalogCard(results)
             break
         case "bookedition":

@@ -91,8 +91,8 @@ const displayBookEditionsCatalogMainPage = async () => {
     showPageAndEnableLinks("bookeditions_page")
 }
 
-const displayBookcopiesCatalogMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
+const displayBookCopiesCatalogMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookcopies.js",
         "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
@@ -146,6 +146,7 @@ export {
     displayAuthorsCatalogMainPage,
     displayBookWorksCatalogMainPage,
     displayBookEditionsCatalogMainPage,
+    displayBookCopiesCatalogMainPage,
     enableWindowNavLinkBtns,
     loadContent,
     showPage

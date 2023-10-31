@@ -13,6 +13,11 @@ import {
     selectBookWorkAuthor
 } from "./CATALOG/bookworks_catalog.js"
 
+import { 
+    displayRangeRegistrationDate,
+    displayRangeRegistrationNumber 
+} from "./CATALOG/bookcopies_catalog.js"
+
 const d = document
 
 d.addEventListener("click", e => {
@@ -68,6 +73,14 @@ d.addEventListener("click", e => {
 
     if (e.target.matches(".select_author_btn")) {
         selectBookWorkAuthor()
+    }
+
+    if (e.target.matches(".input-group-text.registration_number")) {
+        displayRangeRegistrationNumber()
+    }
+
+    if (e.target.matches(".input-group-text.registration_date")) {
+        displayRangeRegistrationDate()
     }
 })
 

@@ -34,13 +34,13 @@ d.addEventListener("submit", async e => {
 const sendAuthorForm = async (author, form) => {
     if (!form) form = setFormInputsValues(author)
 
+    error = undefined
     clearErrorMessages()
 
     await runAuthorProcess(form)
 
     if (error) {
         handleErrorMessages(error, form)
-        error = null
         clearForms()
     } else {
         if (operation === "search") {
@@ -197,6 +197,7 @@ const getAuthor = () => {
 }
 
 const getAuthorResults = () => {
+    if (error) throw error
     return results
 }
 

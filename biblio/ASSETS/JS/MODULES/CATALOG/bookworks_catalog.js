@@ -72,7 +72,7 @@ const runBookWorkProcess = async form => {
         table = d.querySelector(".results_table.bookworks_results_table")
         operation = "search"
         results = await getBookworks(form)
-    } else {
+    } else if (form.classList.contains("create")) {
         catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
         operation = "create"
         results = await createBookwork(form)
@@ -80,9 +80,17 @@ const runBookWorkProcess = async form => {
 }
 
 const displayAuthorSelectionTable = async () => {
+    const authorForm = d.querySelector(".form.author_form.search")
     let authorName = d.querySelector(".bookwork_form.create .author_name").value
-    await sendAuthorForm(authorName)
-    changeSelectBtn()
+    authorForm.author_name.value = authorName
+    await sendAuthorForm(authorName, authorForm)
+    try {
+        getAuthorResults()
+        changeSelectBtn()
+    } catch (ex) {
+        error = ex
+        handleErrorMessages(error, d.querySelector(".form.bookwork_form.create"))
+    }
 }
 
 const selectBookWorkAuthor = () => {

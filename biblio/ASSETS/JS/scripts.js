@@ -3,7 +3,8 @@ import {
   displayRegisteringMainPage,
   displayAuthorsCatalogMainPage,
   displayBookWorksCatalogMainPage,
-  displayBookEditionsCatalogMainPage
+  displayBookEditionsCatalogMainPage,
+  displayBookCopiesCatalogMainPage
 } from "./display_pages.js"
 
 const d = document,

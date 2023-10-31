@@ -71,7 +71,7 @@ const findCurrentPage = () => {
 /* Modal actions */
 
 const setSearchValues = (oResults, oResultsType, table) => {
-    results = oResults
+    results = selectResultObject(oResults)
     resultsType = oResultsType
     operation = "search"
     resultsContainer = table
@@ -80,13 +80,22 @@ const setSearchValues = (oResults, oResultsType, table) => {
 }
 
 const setCreationValues = (oResults, oResultsType, catalogCard) => {
-    results = oResults
+    results = selectResultObject(oResults)
     resultsType = oResultsType
     operation = "create"
     resultsContainer = catalogCard
 
     toggleDeletetSymbol(true)
     toggleEditSymbol(true)
+}
+
+const selectResultObject = results => {
+    if (results.successMessage) {
+        if (results.author) return results.author
+        else if (results.bookWork) return results.bookWork
+        else if (results.bookEdition) return results.bookEdition
+        else if (results.bookCopy) return results.bookCopy
+    } else return results
 }
 
 const toggleEditSymbol = (enable = false) => {
@@ -116,7 +125,6 @@ const toggleSymbol = (symbol, enable) => {
 
 const executeSelectResultBtnListener = () => {
     results = results[findSelectedResult()]
-    console.log(results)
     saveResult()
     closeModal()
     browseObject()
@@ -219,7 +227,6 @@ const saveResult = () => {
 
 const browseObject = () => {
     resultsContainer = d.querySelector(".catalog_card")
-    console.log(results)
     showCatalogCard(results, resultsType, resultsContainer)
     setCreationValues(results, resultsType, resultsContainer)
     toggleCloseModalSymbol(true)
@@ -240,6 +247,7 @@ const confirmEdition = async btn => {
 
     clearErrorMessages()
     try {
+
         results = await getEditionResults(editedInputs)
 
         d.querySelectorAll(".form input.card_info").forEach(input => {
@@ -402,6 +410,7 @@ const clearForms = () => {
 export {
     findCurrentPage,
     findSelectedResult,
+    selectResultObject,
     setSearchValues,
     setCreationValues,
     closeModal,

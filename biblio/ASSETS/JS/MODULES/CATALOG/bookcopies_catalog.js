@@ -66,6 +66,18 @@ const runBookCopyProcess = async form => {
     results = await getBookCopies(form)
 }
 
+const displayRangeRegistrationNumber = () => {
+    d.querySelector(".form > .registration_number").classList.add("hidden")
+    d.querySelector(".form > .registration_number_range").classList.remove("d-none")
+    d.querySelector(".form > .registration_number_range").classList.add("d-flex")
+}
+
+const displayRangeRegistrationDate = () => {
+    d.querySelector(".form > .registration_date").classList.add("hidden")
+    d.querySelector(".form > .registration_date_range").classList.remove("d-none")
+    d.querySelector(".form > .registration_date_range").classList.add("d-flex")
+}
+
 const getBookCopies = async form => {
     const rangeRegNumContainer = form.querySelector(".registration_number_range"),
         rangeRegDateContainer = form.querySelector(".registration_date_range")
@@ -257,6 +269,8 @@ const setBookCopyValue = newBookCopyValue => {
 
 export {
     sendBookCopyForm,
+    displayRangeRegistrationNumber,
+    displayRangeRegistrationDate,
     editBookcopy,
     deleteBookCopy,
     generateBookCopyCatalogCard,
