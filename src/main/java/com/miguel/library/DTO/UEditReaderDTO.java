@@ -3,10 +3,8 @@ package com.miguel.library.DTO;
 import com.miguel.library.Validations.UniqueEmail;
 import com.miguel.library.Validations.UniquePhoneNumber;
 import com.miguel.library.Validations.UniqueReaderNumber;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import com.miguel.library.Validations.YearNotGreaterThanCurrent;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,8 +38,10 @@ public class UEditReaderDTO {
     @Pattern(regexp = "^L\\d{8}$", message = "Must provide a valid reader number")
     private String readerNumber;
 
-    @Past(message = "Dade of birth should not be earlier than current date")
-    private LocalDate dateOfBirth;
+    @NotNull(message = "Date of birth required")
+    @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
+    @Min(value = 1900, message = "Edition year should not be under 1900")
+    private Integer yearOfBirth;
 
     private Character gender;
 }

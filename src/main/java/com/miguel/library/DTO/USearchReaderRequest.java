@@ -20,9 +20,9 @@ public class USearchReaderRequest {
 
     private String readerNumber;
 
-    private LocalDate minDateOfBirth;
+    private Integer minYearOfBirth;
 
-    private LocalDate maxDateOfBirth;
+    private Integer maxYearOfBirth;
 
     private Character gender;
 }

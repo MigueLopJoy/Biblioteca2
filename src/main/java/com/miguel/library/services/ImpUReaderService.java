@@ -63,7 +63,7 @@ public class ImpUReaderService implements IUReaderService{
         String email = readerEdit.getEmail();
         String phoneNumber = readerEdit.getPhoneNumber();
         String readerNumber = readerEdit.getReaderNumber();
-        LocalDate dateOfBirth = readerEdit.getDateOfBirth();
+        Integer yearOfBirth = readerEdit.getYearOfBirth();
         Character gender = readerEdit.getGender();
 
         UReader fetchedReader = this.searchById(readerId);
@@ -91,8 +91,8 @@ public class ImpUReaderService implements IUReaderService{
             fetchedReader.setReaderNumber(readerNumber);
         }
 
-        if (Objects.nonNull(dateOfBirth)) {
-            fetchedReader.setDateOfBirth(dateOfBirth);
+        if (Objects.nonNull(yearOfBirth)) {
+            fetchedReader.setYearOfBirth(yearOfBirth);
         }
 
         if (Objects.nonNull(gender)) {
@@ -121,7 +121,7 @@ public class ImpUReaderService implements IUReaderService{
                 readerDTO.getEmail(),
                 readerDTO.getPhoneNumber(),
                 generateReaderNumber(),
-                readerDTO.getDateOfBirth(),
+                readerDTO.getYearOfBirth(),
                 readerDTO.getGender()
         );
     }

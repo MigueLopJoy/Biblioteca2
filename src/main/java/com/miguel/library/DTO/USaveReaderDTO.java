@@ -2,6 +2,7 @@ package com.miguel.library.DTO;
 
 import com.miguel.library.Validations.UniqueEmail;
 import com.miguel.library.Validations.UniquePhoneNumber;
+import com.miguel.library.Validations.YearNotGreaterThanCurrent;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +23,9 @@ public class USaveReaderDTO {
     private String lastName;
 
     @NotNull(message = "Date of birth required")
-    @Past(message = "Dade of birth should not be earlier than current date")
-    private LocalDate dateOfBirth;
+    @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
+    @Min(value = 1900, message = "Edition year should not be under 1900")
+    private Integer yearOfBirth;
 
     @NotNull(message = "Must select a gender")
     private Character gender;

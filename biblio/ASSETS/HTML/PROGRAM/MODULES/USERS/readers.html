@@ -8,18 +8,60 @@
                 <form class="form author_form search">
                     <legend>Search Reader</legend>
                     <p class="error_message general_error"></p>
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
-                    <input type="text" name="author_name" id="author_fullName" placeholder="Introduce author's name">
+                    <input type="text" name="reader_number" id="author_fullName" placeholder="Reader Number">
+                    <input type="text" name="reader_name" id="author_fullName" placeholder="Reader's Name">
+
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-6 pe-1">
+                                <input type="text" name="reader_email" id="author_fullName" placeholder="Reader's Email">
+                            </div>
+                            <div class="col-6 ps-1">
+                                <input type="text" name="reader_phone_number" id="author_fullName"
+                                    placeholder="Reader's Phone Number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-6 pe-1">
+                                <div class="input-group year_of_birth mb-3">
+                                    <input type="date" name="year_of_birth" class="year_of_birth mb-0"
+                                        placeholder="Year Of Birth">
+                                    <span class="input-group-text year_of_birth">
+                                        <i class="bi bi-arrows-expand-vertical"></i>
+                                    </span>
+                                </div>
+                                <div class="d-none justify-content-between year_of_birth_range">
+                                    <div class="col-6 pe-1">
+                                        <input type="date" name="min_year_of_birth" class="min_year_of_birth"
+                                            placeholder="Min Year Of Birth">
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <input type="date" name="max_year_of_birth" class="max_year_of_birth"
+                                            placeholder="Max Year Of Birth">
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-6 ps-1">
+                                <select name="author_gender" id="auhtor_gender" class="author_gender">
+                                    <option>Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="submit" id="search_author_btn" class="btn" value="Search">
                 </form>
             </div>
 
             <div class="page_element_container create_reader">
                 <form class="form reader_form create">
-                    <legend>Create new reader</legend>
+                    <legend>Create New Reader</legend>
                     <p class="error_message general_error"></p>
                     <p class="error_message firstName"></p>
                     <input type="text" name="firstName" id="author_firstName" placeholder="Name">

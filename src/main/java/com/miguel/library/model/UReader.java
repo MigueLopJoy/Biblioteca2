@@ -25,19 +25,19 @@ public class UReader extends User{
     private Character gender;
 
     @Column(nullable = false)
-    private LocalDate dateOfBirth;
+    private Integer yearOfBirth;
 
     public UReader(String firstName,
                    String lastName,
                    String email,
                    String phoneNumber,
                    String readerNumber,
-                   LocalDate dateOfBirth,
+                   Integer yearOfBirth,
                    Character gender
     ) {
         super(firstName, lastName, email, phoneNumber);
         this.readerNumber = readerNumber;
         this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
+        this.yearOfBirth = yearOfBirth;
     }
 }

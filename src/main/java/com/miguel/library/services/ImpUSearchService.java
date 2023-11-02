@@ -68,8 +68,8 @@ public class ImpUSearchService implements IUSearchService {
         String email = searchRequest.getEmail();
         String phoneNumber = searchRequest.getPhoneNumber();
         String readerNumber = searchRequest.getReaderNumber();
-        LocalDate minDateOfBirth = searchRequest.getMinDateOfBirth();
-        LocalDate maxDateOfBirth = searchRequest.getMinDateOfBirth();
+        Integer minYearOfBirth = searchRequest.getMinYearOfBirth();
+        Integer maxYearOfBirth = searchRequest.getMaxYearOfBirth();
         Character gender = searchRequest.getGender();
 
 
@@ -95,26 +95,26 @@ public class ImpUSearchService implements IUSearchService {
             predicates.add(criteriaBuilder.equal(root.get("readerNumber"), readerNumber));
         }
 
-        if (Objects.nonNull(minDateOfBirth)
-                && Objects.nonNull(maxDateOfBirth)) {
-
+        if (Objects.nonNull(minYearOfBirth)) {
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("dateOfBirth"),
-                            minDateOfBirth
+                            root.get("yearOfBirth"),
+                            minYearOfBirth
                     )
             );
+        }
 
+        if (Objects.nonNull(maxYearOfBirth)) {
             predicates.add(
                     criteriaBuilder.lessThanOrEqualTo(
-                            root.get("dateOfBirth"),
-                            maxDateOfBirth
+                            root.get("yearOfBirth"),
+                            maxYearOfBirth
                     )
             );
+        }
 
-            if (Objects.nonNull(gender)) {
+        if (Objects.nonNull(gender)) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), gender));
-            }
         }
     }
 

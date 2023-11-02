@@ -18,6 +18,10 @@ import {
     displayRegistrationDateRange
 } from "./CATALOG/bookcopies_catalog.js"
 
+import {
+    displayYearOfBirthRange
+} from "./USERS/readers.js"
+
 const d = document
 
 d.addEventListener("click", e => {
@@ -81,6 +85,10 @@ d.addEventListener("click", e => {
 
     if (e.target.matches(".input-group-text.registration_date")) {
         displayRegistrationDateRange()
+    }
+
+    if (e.target.matches(".input-group-text.year_of_birth")) {
+        displayYearOfBirthRange()
     }
 })
 
