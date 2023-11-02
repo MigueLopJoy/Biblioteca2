@@ -2,12 +2,10 @@ import {
     clearForms,
     setCreationValues,
     setSearchValues,
-} from "./../modules_commons.js"
-
-import {
     showSearchResults,
     showCatalogCard
-} from "./catalog-commons.js"
+} from "./../modules_commons.js"
+
 
 import {
     fetchRequest,
@@ -42,7 +40,7 @@ const sendBookEditionForm = async (bookwork, form) => {
         clearForms()
     } else {
         if (operation === "search") {
-            showSearchResults(resultsType, table)
+            showSearchResults(table)
             setSearchValues(results, resultsType, operation, table)
         } else if (operation === "edit") {
             showCatalogCard(results, resultsType, catalogCard)
@@ -52,7 +50,7 @@ const sendBookEditionForm = async (bookwork, form) => {
 }
 
 const setFormInputsValues = bookwork => {
-    let searchBookEditionForm = d.querySelector(".form.b_bookedition_form.search"),
+    let searchBookEditionForm = d.querySelector(".form.bookedition_form.search"),
         author = bookwork.author
 
     searchBookEditionForm.title.value = bookwork.title
@@ -63,9 +61,9 @@ const setFormInputsValues = bookwork => {
 
 const runBookEditionProcess = async form => {
     bookedition = ""
-    resultsType = "b_bookedition"
+    resultsType = "bookedition"
 
-    table = d.querySelector(".results_table.b_bookeditions_results_table")
+    table = d.querySelector(".results_table.bookeditions_results_table")
     operation = "search"
     results = await getBookeditions(form)
 }
@@ -131,7 +129,7 @@ const deleteBookedition = async bookeditionId => {
             `http://localhost:8080/general-catalog/delete-bookedition/${bookeditionId}`,
         )
     } catch (ex) {
-        error = ex
+        throw ex
     }
 }
 
@@ -141,7 +139,7 @@ const editBookEdition = async (idBookEdition, editedFields) => {
             "PUT",
             `http://localhost:8080/general-catalog/edit-bookedition/${idBookEdition}`,
             {
-                idOriginalBookEdition: results[0].idBookEdition,
+                originalBookEditionId: idBookEdition,
                 isbn: editedFields[0],
                 editor: editedFields[1],
                 editionYear: editedFields[2],
@@ -184,24 +182,25 @@ const generateBookEditionsTableContent = () => {
         checkbox.name = `select_bookedition`
         checkbox.classList.add('result_option')
         checkbox.classList.add('bookedition_result_option')
-        checkbox.value = i;
+        checkbox.value = i
         selectBookedition.appendChild(checkbox)
 
-        newRow.appendChild(title);
-        newRow.appendChild(bookAuthor);
-        newRow.appendChild(isbn);
-        newRow.appendChild(editor);
-        newRow.appendChild(editionYear);
+        newRow.appendChild(title)
+        newRow.appendChild(bookAuthor)
+        newRow.appendChild(isbn)
+        newRow.appendChild(editor)
+        newRow.appendChild(editionYear)
         newRow.appendChild(selectBookedition)
 
         table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
 
-const generateBookEditionCatalogCard = async () => {
-    let bookEdition = results.bookEdition,
-        bookwork = bookEdition.bookWork,
-        author = bookwork.author,
+const generateBookEditionCatalogCard = async results => {
+    let bookEdition = results,
+        bookwork = bookEdition.bookWork
+
+    let author = bookwork.author,
         authorName = `${author.firstName} ${author.lastName}`,
         editionCopiesMessage, bookEditionCopies,
         catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")

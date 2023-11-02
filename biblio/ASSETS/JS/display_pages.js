@@ -50,7 +50,6 @@ const displayCatalogingMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/cataloging.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/cataloging.js",
-        "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("author_page")
 }
@@ -59,7 +58,6 @@ const displayRegisteringMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/registering.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/registering.js",
-        "./ASSETS/JS/MODULES/CATALOG/catalog-commons.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("bookedition_page")
 }
@@ -68,7 +66,6 @@ const displayAuthorsCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/authors_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/authors_catalog.js",
-        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("authors_page")
 }
@@ -77,7 +74,6 @@ const displayBookWorksCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookworks_catalog.js",
-        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("bookworks_page")
 }
@@ -86,7 +82,6 @@ const displayBookEditionsCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookeditions_catalog.js",
-        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("bookeditions_page")
 }
@@ -95,9 +90,25 @@ const displayBookCopiesCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookcopies.js",
-        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("bookcopies_page")
+}
+
+const displayReadersMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/READERS/readers.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("readers_page")
+}
+
+const displayLibrariansMainPage = async () => {
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
+    await loadJsFiles(
+        "./ASSETS/JS/MODULES/READERS/librarians.js",
+        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
+        "./ASSETS/JS/MODULES/modules_commons.js")
+    showPageAndEnableLinks("librarians_page")
 }
 
 const showPageAndEnableLinks = page => {
@@ -147,6 +158,8 @@ export {
     displayBookWorksCatalogMainPage,
     displayBookEditionsCatalogMainPage,
     displayBookCopiesCatalogMainPage,
+    displayReadersMainPage,
+    displayLibrariansMainPage,
     enableWindowNavLinkBtns,
     loadContent,
     showPage

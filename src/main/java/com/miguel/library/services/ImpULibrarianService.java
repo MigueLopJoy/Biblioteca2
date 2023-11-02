@@ -1,4 +1,7 @@
 package com.miguel.library.services;
 
-public class ImpULibrarianService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class ImpULibrarianService implements  IULibrarianService {
 }

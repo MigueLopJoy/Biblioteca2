@@ -2,12 +2,9 @@ import {
     clearForms,
     setCreationValues,
     setSearchValues,
-} from "./../modules_commons.js"
-
-import {
     showSearchResults,
     showCatalogCard
-} from "./catalog-commons.js"
+} from "./../modules_commons.js"
 
 import {
     fetchRequest,
@@ -32,11 +29,10 @@ d.addEventListener("submit", async e => {
 })
 
 const sendAuthorForm = async (author, form) => {
-    if (!form) form = setFormInputsValues(author)
-
     error = undefined
     clearErrorMessages()
 
+    if (!form) form = setFormInputsValues(author)
     await runAuthorProcess(form)
 
     if (error) {

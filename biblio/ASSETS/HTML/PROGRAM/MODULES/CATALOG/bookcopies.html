@@ -16,8 +16,8 @@
                     <div class="input-group registration_number mb-3">
                         <input type="number" name="registration_number" class="registration_number mb-0"
                             placeholder="Registration Number">
-                        <span class="input-group-text registration_number" onclick="enableRegistrationNumberRange()">
-                            <i class="bi bi-arrows-expand-vertical"></i>
+                        <span class="input-group-text registration_number">
+                            <i class=" bi bi-arrows-expand-vertical"></i>
                         </span>
                     </div>
                     <div class="d-none justify-content-between registration_number_range">
@@ -26,30 +26,30 @@
                                 placeholder="Min Registration Number">
                         </div>
                         <div class="col-6 ps-1">
-                            <input type="text" name="max_Registration_number" class="max_Registration_number"
-                                placeholder="Max Registration Number" >
+                            <input type="number" name="max_registration_number" class="max_registration_number"
+                                placeholder="Max Registration Number">
                         </div>
                     </div>
 
                     <div class="input-group registration_date mb-3">
-                        <input type="text" name="registration_date" class="registration_date mb-0"
+                        <input type="date" name="registration_date" class="registration_date mb-0"
                             placeholder="Registration Date">
-                        <span class="input-group-text registration_date" onclick="enableRegistrationDateRange()">
+                        <span class="input-group-text registration_date">
                             <i class="bi bi-arrows-expand-vertical"></i>
                         </span>
                     </div>
                     <div class="d-none justify-content-between registration_date_range">
                         <div class="col-6 pe-1">
-                            <input type="text" name="min_registration_date" class="min_registration_date"
+                            <input type="date" name="min_registration_date" class="min_registration_date"
                                 placeholder="Min Registration Date">
                         </div>
                         <div class="col-6 ps-1">
-                            <input type="text" name="max_Registration_number" class="max_registration_date"
+                            <input type="date" name="max_registration_date" class="max_registration_date"
                                 placeholder="Max Registration Date">
                         </div>
                     </div>
 
-                    <input type="text" name="signature" class="signature" placeholder="ISBN">
+                    <input type="text" name="signature" class="signature" placeholder="Signature">
                     <input type="submit" id="create_bookcopy_btn" class="btn" value="Search">
                 </form>
             </div>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="table_container">
-                    <table class="results_table b_bookcopies_results_table hidden">
+                    <table class="results_table bookcopies_results_table hidden">
                         <thead>
                             <tr>
                                 <th>Title</td>
@@ -94,57 +94,73 @@
                             <legend>Book Copy Catalog Card</legend>
 
                             <p class="error_message general_error mb-0"></p>
-
+                            <p class="error_message title mb-0"></p>
                             <div class="col-12 pe-1">
                                 <label>Title:</label>
                                 <input type="text" name="bookwork_title" class="bookwork_title" readonly>
                             </div>
 
-                            <div class="col-6 ps-1">
+                            <p class="error_message author mb-0"></p>
+                            <div class="col-12 ps-1">
                                 <label>Author:</label>
                                 <input type="text" name="bookwork_author" class="bookwork_author" readonly>
                             </div>
 
-                            <div class="d-flex justify-content-between">
-                                <div class="col-6 pe-1">
-                                    <label>ISBN:</label>
-                                    <input type="text" name="bookedition_isbn" class="bookedition_isbn" readonly>
-                                </div>
-                                <div class="col-6 ps-1">
-                                    <label>Editor:</label>
-                                    <input type="text" name="bookedition_editor" class="bookedition_editor" readonly>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <div class="col-6 pe-1">
-                                    <label>Edition Year:</label>
-                                    <input type="number" name="bookedition_edition_year"
-                                        class="bookedition_edition_year" readonly>
-                                </div>
-                                <div class="col-6 ps-1">
-                                    <label>Language:</label>
-                                    <input type="text" name="bookedition_language" class="bookedition_language"
-                                        readonly>
-                                </div>
-                            </div>
-
-                            <div>
-                                <p class="error_message signature mb-0"></p>
+                            <div class="col-12">
+                                <p class="error_message isbn mb-0"></p>
+                                <p class="error_message editor mb-0"></p>
                                 <div class="d-flex justify-content-between">
                                     <div class="col-6 pe-1">
-                                        <label>Bar Code:</label>
-                                        <input type="text" name="bookCopy_barCode" class="bookCopy_barCode" readonly>
+                                        <label>ISBN:</label>
+                                        <input type="text" name="bookedition_isbn" class="bookedition_isbn" readonly>
                                     </div>
                                     <div class="col-6 ps-1">
-                                        <label>Signature:</label>
-                                        <input type="text" name="bookCopy_signature"
-                                            class="bookCopy_signature card_info" readonly>
+                                        <label>Editor:</label>
+                                        <input type="text" name="bookedition_editor" class="bookedition_editor"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="error_message editionYear mb-0"></p>
+                                <p class="error_message language mb-0"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <label>Edition Year:</label>
+                                        <input type="number" name="bookedition_edition_year"
+                                            class="bookedition_edition_year" readonly>
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <label>Language:</label>
+                                        <input type="text" name="bookedition_language" class="bookedition_language"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="error_message barCode mb-0"></p>
+                                <p class="error_message signature mb-0"></p>
+                                <div>
+                                    <p class="error_message signature mb-0"></p>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="col-6 pe-1">
+                                            <label>Bar Code:</label>
+                                            <input type="text" name="bookCopy_barCode" class="bookCopy_barCode"
+                                                readonly>
+                                        </div>
+                                        <div class="col-6 ps-1">
+                                            <label>Signature:</label>
+                                            <input type="text" name="bookCopy_signature"
+                                                class="bookCopy_signature card_info" readonly>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
+                                <p class="error_message registrationDate mb-0"></p>
                                 <p class="error_message registrationNumber mb-0"></p>
                                 <div class="d-flex justify-content-between">
                                     <div class="col-6 pe-1">
@@ -167,7 +183,7 @@
 
                 <div class="modal_btns_container">
                     <div class="select_results_container hidden">
-                        <button class="select_results_btn btn" role="button" disabled>Select Author</button>
+                        <button class="select_results_btn btn" role="button" disabled>Select Book Copy</button>
                     </div>
                     <div class="confirm_creation_container hidden">
                         <button class="btn confirm_creation_btn" role="button">Confirm</button>

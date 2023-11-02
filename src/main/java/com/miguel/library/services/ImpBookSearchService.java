@@ -39,7 +39,6 @@ public class ImpBookSearchService implements IBookSearchService {
         } else if (bookSearchRequest instanceof BookSearchRequestBookWork) {
             searchResults.addAll(searchBookWorks(bookSearchRequest));
         }
-
         return searchResults;
     }
 
@@ -107,34 +106,34 @@ public class ImpBookSearchService implements IBookSearchService {
             predicates.add(criteriaBuilder.equal(root.get("signature"), signature));
         }
 
-        if (Objects.nonNull(maxRegistrationNumber)
-                && Objects.nonNull(minRegistrationNumber)) {
-
+        if (Objects.nonNull(minRegistrationNumber)) {
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
-                            root.get("registrationNumber"),
-                            maxRegistrationNumber
-                    )
-            );
-
-            predicates.add(
-                    criteriaBuilder.lessThanOrEqualTo(
                             root.get("registrationNumber"),
                             minRegistrationNumber
                     )
             );
         }
 
-        if (Objects.nonNull(minRegistrationDate)
-                && Objects.nonNull(maxRegistrationDate)) {
+        if (Objects.nonNull(maxRegistrationNumber)) {
+            predicates.add(
+                    criteriaBuilder.lessThanOrEqualTo(
+                            root.get("registrationNumber"),
+                            maxRegistrationNumber
+                    )
+            );
+        }
 
+        if (Objects.nonNull(minRegistrationDate)) {
             predicates.add(
                     criteriaBuilder.greaterThanOrEqualTo(
                             root.get("registrationDate"),
                             minRegistrationDate
                     )
             );
+        }
 
+        if (Objects.nonNull(maxRegistrationDate)) {
             predicates.add(
                     criteriaBuilder.lessThanOrEqualTo(
                             root.get("registrationDate"),
@@ -336,6 +335,4 @@ public class ImpBookSearchService implements IBookSearchService {
     private Boolean isValidString (String value) {
         return !StringUtils.isEmpty(value) && !value.trim().isEmpty();
     }
-
-
 }

@@ -4,7 +4,9 @@ import {
   displayAuthorsCatalogMainPage,
   displayBookWorksCatalogMainPage,
   displayBookEditionsCatalogMainPage,
-  displayBookCopiesCatalogMainPage
+  displayBookCopiesCatalogMainPage,
+  displayReadersMainPage,
+  displayLibrariansMainPage
 } from "./display_pages.js"
 
 const d = document,
@@ -30,8 +32,6 @@ d.addEventListener("click", async e => {
     displayRegisteringMainPage()
   } else if (e.target.matches("#search_readers")) {
     displaySearchReadersMainPage()
-  } else if (e.target.matches("#readers_registering")) {
-    displayReadersRegisteringMainPage()
   } else if (e.target.matches("#authors_catalog")) {
     displayAuthorsCatalogMainPage()
   } else if (e.target.matches("#bookworks_catalog")) {
@@ -40,6 +40,10 @@ d.addEventListener("click", async e => {
     displayBookEditionsCatalogMainPage()
   } else if (e.target.matches("#bookcopies")) {
     displayBookCopiesCatalogMainPage()
+  } else if (e.target.matches("#readers")) {
+    displayReadersMainPage()
+  } else if (e.target.matches("#librarians")) {
+    displayLibrariansMainPage()
   }
 })
 

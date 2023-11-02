@@ -6,7 +6,9 @@ import com.miguel.library.DTO.BooksSaveDTOBookWork;
 import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.Author;
+import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
+import com.miguel.library.repository.IBookEditionRepository;
 import com.miguel.library.repository.IBookWorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class ImpBookWorkService implements IBookWorkService{
 
     @Autowired
     private IAuthorService authorService;
+
+    @Autowired
+    private IBookEditionRepository bookEditionService;
 
     @Override
     public BookResponseDTOBookWork saveNewBookWork(BookWork bookWork) {
@@ -158,14 +163,19 @@ public class ImpBookWorkService implements IBookWorkService{
 
     @Override
     public SuccessfulObjectDeletionDTO deleteBookWork(Integer bookWorkId) {
-        Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
 
+        Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
         if (!optionalBookWork.isPresent()) {
             throw new ExceptionObjectNotFound("Book Work Not Found");
         }
 
-        bookWorkRepository.deleteById(bookWorkId);
-        return new SuccessfulObjectDeletionDTO("Book Work Deleted Successfully");
+        try{
+            bookEditionService.findByBookWork(optionalBookWork.get());
+            throw new ExceptionHasRelatedObjects("Cannot Delete Book Work While Associated Editions Exist");
+        } catch (ExceptionNoSearchResultsFound ex) {
+            bookWorkRepository.deleteById(bookWorkId);
+            return new SuccessfulObjectDeletionDTO("Book Work Deleted Successfully");
+        }
     }
 
     @Override

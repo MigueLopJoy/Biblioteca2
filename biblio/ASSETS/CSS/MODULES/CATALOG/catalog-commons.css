@@ -120,7 +120,8 @@
 }
 
 .form input[type="text"],
-.form input[type="number"] {
+.form input[type="number"],
+.form input[type="date"] {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;

@@ -68,33 +68,37 @@
                                 <input type="text" name="bookwork_author" class="bookwork_author" readonly>
                             </div>
 
-                            <div class="d-flex justify-content-between">
+                            <div class="col-12">
                                 <p class="error_message ISBN mb-0"></p>
-                                <div class="col-6 pe-1">
-                                    <label>ISBN:</label>
-                                    <input type="text" name="bookedition_isbn" class="bookedition_isbn card_info"
-                                        readonly>
-                                </div>
                                 <p class="error_message editor mb-0"></p>
-                                <div class="col-6 ps-1">
-                                    <label>Editor:</label>
-                                    <input type="text" name="bookedition_editor" class="bookedition_editor card_info"
-                                        readonly>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <label>ISBN:</label>
+                                        <input type="text" name="bookedition_isbn" class="bookedition_isbn card_info"
+                                            readonly>
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <label>Editor:</label>
+                                        <input type="text" name="bookedition_editor"
+                                            class="bookedition_editor card_info" readonly>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="d-flex justify-content-between">
+                            <div class="col-12">
                                 <p class="error_message editionYear mb-0"></p>
-                                <div class="col-6 pe-1">
-                                    <label>Edition Year:</label>
-                                    <input type="number" name="bookedition_edition_year card_info"
-                                        class="bookedition_edition_year" readonly>
-                                </div>
                                 <p class="error_message language mb-0"></p>
-                                <div class="col-6 ps-1">
-                                    <label>Language:</label>
-                                    <input type="text" name="bookedition_language"
-                                        class="bookedition_language card_info" readonly>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <label>Edition Year:</label>
+                                        <input type="number" name="bookedition_edition_year"
+                                            class="bookedition_edition_year card_info" readonly>
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <label>Language:</label>
+                                        <input type="text" name="bookedition_language"
+                                            class="bookedition_language card_info" readonly>
+                                    </div>
                                 </div>
                             </div>
 
@@ -111,7 +115,7 @@
 
                 <div class="modal_btns_container">
                     <div class="select_results_container hidden">
-                        <button class="select_results_btn btn" role="button" disabled>Select Author</button>
+                        <button class="select_results_btn btn" role="button" disabled>Select Edition</button>
                     </div>
                     <div class="confirm_creation_container hidden">
                         <button class="btn confirm_creation_btn" role="button">Confirm</button>

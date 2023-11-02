@@ -6,6 +6,7 @@ import com.miguel.library.DTO.AuthorsDTOEditAuthor;
 import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.Author;
+import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IAuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class ImpAuthorService implements IAuthorService {
 
     @Autowired
     private IAuthorRepository authorRepository;
+
+    @Autowired
+    private IBookWorkService bookWorkService;
 
     @Override
     public AuthorResponseDTO saveNewAuthor(Author author) {
@@ -110,14 +113,19 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public SuccessfulObjectDeletionDTO deleteAuthor(Integer authorId) {
-        Author fetchedAuthor = this.searchById(authorId);
 
+        Author fetchedAuthor = this.searchById(authorId);
         if (Objects.isNull(fetchedAuthor)) {
             throw new ExceptionObjectNotFound("Author not found");
         }
-        authorRepository.deleteById(authorId);
 
-        return new SuccessfulObjectDeletionDTO("Author Deleted Successfully");
+        try{
+            bookWorkService.searchAuthorBookWorks(authorId);
+            throw new ExceptionHasRelatedObjects("Cannot Delete Author While Associated Books Exist");
+        } catch (ExceptionNoSearchResultsFound ex) {
+            authorRepository.deleteById(authorId);
+            return new SuccessfulObjectDeletionDTO("Author Deleted Successfully");
+        }
     }
 
     @Override

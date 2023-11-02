@@ -15,8 +15,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @UniqueRegistrationNumber
 public class BooksEditDTOBookCopy {
+
     @NotNull
     private Integer originalBookCopyId;
+
     @Min(value = 1, message = "Registration number should not be greater than 1")
     private Long registrationNumber;
 

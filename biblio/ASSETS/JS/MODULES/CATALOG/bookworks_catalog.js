@@ -1,15 +1,12 @@
 import {
+    showSearchResults,
+    showCatalogCard,
     findSelectedResult,
     clearForms,
     setCreationValues,
     setSearchValues,
     closeModal
 } from "./../modules_commons.js"
-
-import {
-    showSearchResults,
-    showCatalogCard
-} from "./catalog-commons.js"
 
 import {
     fetchRequest,
@@ -38,14 +35,14 @@ d.addEventListener("submit", async e => {
 })
 
 const sendBookWorkForm = async (author, form) => {
-    if (!form) form = setFormInputsValues(author)
-
+    error = undefined
     clearErrorMessages()
+
+    if (!form) form = setFormInputsValues(author)
     await runBookWorkProcess(form)
 
     if (error) {
         handleErrorMessages(error, form)
-        error = null
         clearForms()
     } else {
         if (operation === "search") {
@@ -96,7 +93,7 @@ const displayAuthorSelectionTable = async () => {
 const selectBookWorkAuthor = () => {
     changeSelectBtn()
     author = getAuthorResults()[findSelectedResult()]
-    closeModal()
+    closeModal(d.querySelector(".bookwork_form.create"))
     manageAuthorNameInput(author)
 }
 
@@ -187,7 +184,7 @@ const deleteBookwork = async bookworkId => {
             `http://localhost:8080/bookworks-catalog/delete-bookwork/${bookworkId}`,
         )
     } catch (ex) {
-        error = ex
+        throw ex
     }
 }
 

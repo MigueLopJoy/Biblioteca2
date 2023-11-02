@@ -21,7 +21,10 @@ public class UniqueISBNValidator implements ConstraintValidator<UniqueISBN , Obj
     }
 
     @Override
-    public boolean isValid(Object bookEdition, ConstraintValidatorContext context) {
+    public boolean isValid(
+            Object bookEdition,
+            ConstraintValidatorContext context
+    ) {
         Boolean isValidISBN = true;
         String ISBN = null;
         BooksSaveDTOBookEdition saveDTO = null;

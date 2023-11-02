@@ -10,11 +10,9 @@ import java.time.LocalDate;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class USearchReaderDTO {
+public class USearchReaderRequest {
 
-    private String firstName;
-
-    private String lastName;
+    private String readerName;
 
     private String email;
 

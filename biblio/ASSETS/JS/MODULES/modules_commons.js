@@ -5,13 +5,6 @@ import {
 } from "../display_pages.js"
 
 import {
-    printSelectedResult,
-    showCatalogCard,
-    // toggleNextPageChanging,
-    clearPrintedReults
-} from "./CATALOG/catalog-commons.js"
-
-import {
     handleErrorMessages,
     clearErrorMessages,
     displaySuccessMessage,
@@ -21,52 +14,42 @@ import {
 import {
     editAuthor,
     deleteAuthor,
-    setAuthorValue
+    setAuthorValue,
+    generateAuthorCatalogCard,
+    generateAuthorsTableContent
 } from "./CATALOG/authors_catalog.js"
 
 import {
     sendBookWorkForm,
     editBookwork,
     deleteBookwork,
-    setBookworkValue
+    setBookworkValue,
+    generateBookWorkCatalogCard,
+    generateBookworksTableContent,
 } from "./CATALOG/bookworks_catalog.js"
 
 import {
     sendBookEditionForm,
     editBookEdition,
     deleteBookedition,
-    setBookeditionValue
+    setBookeditionValue,
+    generateBookEditionsTableContent,
+    generateBookEditionCatalogCard
 } from "./CATALOG/bookeditions_catalog.js"
 
 import {
     sendBookCopyForm,
     editBookcopy,
     deleteBookCopy,
-    setBookCopyValue
+    setBookCopyValue,
+    generateBookCopyCatalogCard,
+    generateBookCopiesTableContent
 } from "./CATALOG/bookcopies_catalog.js"
 
 
 const d = document
 
 let results, resultsType, operation, resultsContainer
-
-const findCurrentPage = () => {
-    const pages = d.querySelectorAll(".page")
-
-    let currentPage,
-        i = 0, found = false;
-
-    do {
-        if (!pages[i].classList.contains("hidden")) {
-            currentPage = pages[i]
-            found = true
-        } else {
-            i++
-        }
-    } while (!found && i < pages.length)
-
-    return currentPage
-}
 
 /* Modal actions */
 
@@ -87,6 +70,75 @@ const setCreationValues = (oResults, oResultsType, catalogCard) => {
 
     toggleDeletetSymbol(true)
     toggleEditSymbol(true)
+}
+
+const showSearchResults = table => {
+    renderModal()
+    generaTableContent(table)
+    table.classList.remove("hidden")
+    d.querySelector(".select_results_container").classList.remove("hidden")
+}
+
+const showCatalogCard = (results, resultsType, catalogCard) => {
+    renderModal()
+    displaySuccessMessage(results)
+    results = selectResultObject(results)
+    generateCatalogCard(results, resultsType)
+    catalogCard.classList.remove("hidden")
+    d.querySelector(".confirm_creation_container").classList.remove("hidden")
+}
+
+const renderModal = () => {
+    const modal = d.getElementById("modal")
+    modal.classList.remove("hidden")
+    modal.style.display = "flex"
+    modal.style.justifyContent = "center"
+    modal.style.alignItems = "center"
+}
+
+const generaTableContent = async table => {
+    console.log(table)
+    if (table.classList.contains("authors_results_table")) {
+        generateAuthorsTableContent()
+    } else if (table.classList.contains("bookworks_results_table")) {
+        generateBookworksTableContent()
+    } else if (table.classList.contains("bookeditions_results_table")) {
+        console.log(table)
+        generateBookEditionsTableContent()
+    } else if (table.classList.contains("bookcopies_results_table")) {
+        generateBookCopiesTableContent()
+    }
+}
+
+const generateCatalogCard = (results, resultsType) => {
+    switch (resultsType) {
+        case "author":
+            generateAuthorCatalogCard(results)
+            break
+        case "bookwork":
+            generateBookWorkCatalogCard(results)
+            break
+        case "bookedition":
+            generateBookEditionCatalogCard(results)
+            break
+        case "bookcopy":
+            generateBookCopyCatalogCard(results)
+            break
+        default:
+            break
+    }
+    toggleSearchRelatedObjectsSymbolActivation()
+}
+
+const toggleSearchRelatedObjectsSymbolActivation = () => {
+    const searchRelatedObjectsSymbol = d.querySelector(".search_related_objects"),
+        inputs = d.querySelectorAll(".catalog_card .form input")
+
+    if (searchRelatedObjectsSymbol) {
+        if (inputs[inputs.length - 1].value.substring(0, 2) !== "No") {
+            toggleSymbol(searchRelatedObjectsSymbol, true)
+        }
+    }
 }
 
 const selectResultObject = results => {
@@ -149,6 +201,7 @@ const executeDeleteSymbolListener = () => {
 }
 
 const executeCrudSymbolsListeners = () => {
+    clearErrorMessages()
     hiddeModalBtns()
     hiddeSuccessMessage()
     disableAllSymbols()
@@ -170,15 +223,15 @@ const executeConfirmCrudOperationBtn = btn => {
 const executeSearchRelatedObjectsListener = async () => {
     closeModal()
     switch (resultsType) {
-        case "b_author":
+        case "author":
             await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
             sendBookWorkForm(results)
             break;
-        case "b_bookwork":
+        case "bookwork":
             await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
             sendBookEditionForm(results)
             break;
-        case "b_bookedition":
+        case "bookedition":
             await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies_catalog.html", d.getElementById("main-content"))
             sendBookCopyForm(results)
             break;
@@ -188,21 +241,21 @@ const executeSearchRelatedObjectsListener = async () => {
 }
 
 const deleteObject = async () => {
-    switch (resultsType) {
-        case "author":
-            results = await deleteAuthor(results.idAuthor)
-            break
-        case "bookwork":
-            results = await deleteBookwork(results.idBookWork)
-            break
-        case "bookedition":
-            results = await deleteBookedition(results.idBookEdition)
-            break
-        case "bookcopy":
-            results = await deleteBookCopy(results.idBookCopy)
-            break
-        default:
-            break
+    try {
+        switch (resultsType) {
+            case "author":
+                return await deleteAuthor(results.idAuthor)
+            case "bookwork":
+                return await deleteBookwork(results.idBookWork)
+            case "bookedition":
+                return await deleteBookedition(results.idBookEdition)
+            case "bookcopy":
+                return await deleteBookCopy(results.idBookCopy)
+            default:
+                break
+        }
+    } catch (error) {
+        throw error
     }
 }
 
@@ -221,7 +274,7 @@ const saveResult = () => {
             setBookCopyValue(results)
             break
         default:
-            break;
+            break
     }
 }
 
@@ -230,6 +283,7 @@ const browseObject = () => {
     showCatalogCard(results, resultsType, resultsContainer)
     setCreationValues(results, resultsType, resultsContainer)
     toggleCloseModalSymbol(true)
+    d.querySelector(".confirm_creation_container").classList.add("hidden")
 }
 
 const prepareEditonProcess = () => {
@@ -239,7 +293,6 @@ const prepareEditonProcess = () => {
         input.removeAttribute("readonly")
         input.classList.add("editing")
     }
-    clearPrintedReults(resultsType)
 }
 
 const confirmEdition = async btn => {
@@ -255,25 +308,25 @@ const confirmEdition = async btn => {
                 input.classList.remove("editing")
             }
         })
-        switch (resultsType) {
-            // case "newBookedition":
-            // case "newBookcopy":
-            // displaySuccessMessage(resultsType, "edit")
-            // prepareEndingBtn(resultsType, operation, catalogCard)
-            // break;
-            default:
-                executeConfirmCrudOperationBtn(btn)
-                break;
-        }
+        executeConfirmCrudOperationBtn(btn)
     } catch (ex) {
         handleErrorMessages(ex, resultsContainer)
     }
 }
 
 const confirmDeletion = async btn => {
-    clearPrintedReults(resultsType)
-    await deleteObject()
-    executeConfirmCrudOperationBtn(btn)
+    clearErrorMessages()
+    try {
+        results = await deleteObject()
+        executeConfirmCrudOperationBtn(btn)
+    } catch (error) {
+        handleErrorMessages(error, resultsContainer)
+        toggleCloseModalSymbol(true)
+        toggleEditSymbol(true)
+        toggleDeletetSymbol(true)
+        d.querySelector(".confirm_deletion_container").classList.add("hidden")
+        d.querySelector(".confirm_creation_container").classList.remove("hideen")
+    }
 }
 
 const getEditionResults = async editedInputs => {
@@ -306,13 +359,13 @@ const findSelectedResult = () => {
     }
 }
 
-const closeModal = () => {
+const closeModal = (form) => {
     disableSelectResultBtn()
     hiddeModalBtns()
     hiddeResultsContainers()
     disableAllSymbols()
+    clearForms(form)
     // toggleNextPageChanging(resultsType)
-    clearForms()
     modal.classList.add("hidden")
 }
 
@@ -387,15 +440,14 @@ const prepareEndingBtn = (resultsType, operation, catalogCard) => {
             displayCatalogingMainPage()
         } else if (resultsType === "newBookcopy") {
             displayRegisteringMainPage()
-        } else if (resultsType === "newReader") {
-            displayReadersRegisteringMainPage()
         }
     }
     endingBtn.addEventListener("click", endingBtnClickHandler)
 }
 
-const clearForms = () => {
-    findCurrentPage().querySelectorAll(".form").forEach(form => {
+const clearForms = form => {
+
+    const clearForm = form => {
         form.querySelectorAll("input").forEach(input => {
             if (input.type !== "submit" &&
                 !input.hasAttribute("readonly")
@@ -403,12 +455,19 @@ const clearForms = () => {
                 input.value = ""
             }
         })
+    }
+
+    d.querySelectorAll(".page_element_container .form").forEach(pageForm => {
+        if (!form || (form && form !== pageForm)) {
+            clearForm(pageForm)
+        }
     })
 }
 
 
 export {
-    findCurrentPage,
+    showSearchResults,
+    showCatalogCard,
     findSelectedResult,
     selectResultObject,
     setSearchValues,

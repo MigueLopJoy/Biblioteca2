@@ -5,6 +5,7 @@ import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.Exceptions.*;
+import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;
@@ -25,6 +26,9 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Autowired
     private IBookWorkService bookWorkService;
+
+    @Autowired
+    private IBookCopyService bookCopyService;
 
     @Override
     public BookResponseDTOBookEdition saveNewBookEdition(BookEdition bookEdition) {
@@ -127,8 +131,6 @@ public class ImpBookEditionService implements IBookEditionService{
             savedBookEdition.setLanguage(language);
         }
 
-        Optional<BookEdition> bookEditionWithISBN = bookEditionRepository.findByISBN(savedBookEdition.getISBN());
-
         return new BookResponseDTOBookEdition(
                 "Book Edition Edited Successfully",
                 bookEditionRepository.save(savedBookEdition)
@@ -137,13 +139,21 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Override
     public SuccessfulObjectDeletionDTO deleteBookEdition(Integer bookEditionId) {
-        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
 
+        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
         if (!optionalBookEdition.isPresent()) {
             throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
-        bookEditionRepository.deleteById(bookEditionId);
-        return new SuccessfulObjectDeletionDTO("Book Edition Deleted SuccessFully");
+
+        try{
+            bookCopyService.searchBookEditionCopies(
+                    optionalBookEdition.get().getIdBookEdition()
+            );
+            throw new ExceptionHasRelatedObjects("Cannot Delete Book Edition While Associated Copies Exist");
+        } catch (ExceptionNoSearchResultsFound ex) {
+            bookEditionRepository.deleteById(bookEditionId);
+            return new SuccessfulObjectDeletionDTO("Book Edition Deleted SuccessFully");
+        }
     }
 
     @Override

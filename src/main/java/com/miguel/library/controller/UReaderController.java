@@ -3,7 +3,7 @@ package com.miguel.library.controller;
 import com.miguel.library.DTO.*;
 import com.miguel.library.model.UReader;
 import com.miguel.library.services.IUReaderService;
-import com.miguel.library.services.IReaderSearchService;
+import com.miguel.library.services.IUSearchService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class UReaderController {
     private IUReaderService readerService;
 
     @Autowired
-    private IReaderSearchService userSearchService;
+    private IUSearchService userSearchService;
 
     @PostMapping("/save-reader")
     public ResponseEntity<UReader> saveNewReader(
@@ -38,7 +38,7 @@ public class UReaderController {
 
     @PostMapping("/search-reader")
     public ResponseEntity<List<UReader>> searchReader(
-            @Valid @RequestBody USearchReaderDTO readerSearch
+            @Valid @RequestBody USearchReaderRequest searchRequest
             ) {
         return ResponseEntity.ok(null);
     }

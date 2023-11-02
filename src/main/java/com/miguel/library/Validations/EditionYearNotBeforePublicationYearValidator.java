@@ -51,7 +51,7 @@ public class EditionYearNotBeforePublicationYearValidator implements ConstraintV
         }
 
         if (Objects.nonNull(editionYear) && Objects.nonNull(publicationYear)) {
-            if (editionYear <= publicationYear) {
+            if (editionYear < publicationYear) {
                 isValidYear = false;
             }
         }

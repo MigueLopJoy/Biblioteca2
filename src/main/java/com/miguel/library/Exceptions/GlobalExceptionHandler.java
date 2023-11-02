@@ -53,6 +53,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, httpStatus);
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = ExceptionHasRelatedObjects.class)
+    public ResponseEntity<Object> handleExcetionHasRelatedObjects(ExceptionHasRelatedObjects ex) {
+
+        HttpStatus httpStatus = HttpStatus.CONFLICT;
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                ex.getMessage(),
+                httpStatus
+        );
+        return new ResponseEntity<>(errorResponse, httpStatus);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = ExceptionNoSearchResultsFound.class)
     public ResponseEntity<Object> handleExceptionNoSearchResultsFound(ExceptionNoSearchResultsFound ex) {

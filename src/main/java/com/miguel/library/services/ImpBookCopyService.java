@@ -93,7 +93,7 @@ public class ImpBookCopyService implements IBookCopyService {
         List<BookCopy> bookEditionCopies = bookCopyRepository.findByBookEdition(fetchedBookEdition);
 
         if (bookEditionCopies.isEmpty()) {
-            throw new ExceptionNoSearchResultsFound("No Editions were found");
+            throw new ExceptionNoSearchResultsFound("No Copies were found");
         }
 
         return bookEditionCopies;

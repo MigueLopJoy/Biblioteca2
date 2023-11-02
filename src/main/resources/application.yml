@@ -10,4 +10,5 @@ spring:
     show-sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
-    
+  main:
+    allow-circular-references: true
