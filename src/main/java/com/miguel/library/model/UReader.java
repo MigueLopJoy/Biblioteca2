@@ -4,10 +4,7 @@ import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -25,19 +22,19 @@ public class UReader extends User{
     private Character gender;
 
     @Column(nullable = false)
-    private Integer yearOfBirth;
+    private Integer birthYear;
 
     public UReader(String firstName,
                    String lastName,
                    String email,
                    String phoneNumber,
                    String readerNumber,
-                   Integer yearOfBirth,
+                   Integer birthYear,
                    Character gender
     ) {
         super(firstName, lastName, email, phoneNumber);
         this.readerNumber = readerNumber;
         this.gender = gender;
-        this.yearOfBirth = yearOfBirth;
+        this.birthYear = birthYear;
     }
 }

@@ -154,9 +154,8 @@ const createBookCopy = async form => {
     }
 }
 
-const containerContainsClass = inputContainer => {
-    return inputContainer.classList.contains("d-none")
-}
+const containerContainsClass = inputContainer =>
+    inputContainer.classList.contains("d-none")
 
 const editBookcopy = async (idBookCopy, editedFields) => {
     try {

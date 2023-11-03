@@ -19,7 +19,7 @@ public class UReaderController {
     private IUReaderService readerService;
 
     @Autowired
-    private IUSearchService userSearchService;
+    private IUSearchService searchService;
 
     @PostMapping("/save-reader")
     public ResponseEntity<UReader> saveNewReader(
@@ -40,7 +40,7 @@ public class UReaderController {
     public ResponseEntity<List<UReader>> searchReader(
             @Valid @RequestBody USearchReaderRequest searchRequest
             ) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(searchService.searchReaders(searchRequest));
     }
 
     @PutMapping("/edit-reader/{readerId}")

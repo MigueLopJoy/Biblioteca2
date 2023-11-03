@@ -20,6 +20,14 @@ import {
 } from "./CATALOG/authors_catalog.js"
 
 import {
+    editReader,
+    deleteReader,
+    setReaderValue,
+    generateReadersCatalogCard,
+    generateReadersTableContent
+} from "./USERS/readers.js"
+
+import {
     sendBookWorkForm,
     editBookwork,
     deleteBookwork,
@@ -107,6 +115,8 @@ const generaTableContent = async table => {
         generateBookEditionsTableContent()
     } else if (table.classList.contains("bookcopies_results_table")) {
         generateBookCopiesTableContent()
+    } else if (table.classList.contains("readers_results_table")) {
+        generateReadersTableContent()
     }
 }
 
@@ -124,6 +134,8 @@ const generateCatalogCard = (results, resultsType) => {
         case "bookcopy":
             generateBookCopyCatalogCard(results)
             break
+        case "reader":
+            generateReadersCatalogCard(results)
         default:
             break
     }
@@ -251,6 +263,8 @@ const deleteObject = async () => {
                 return await deleteBookedition(results.idBookEdition)
             case "bookcopy":
                 return await deleteBookCopy(results.idBookCopy)
+            case "reader":
+                return await deleteReader(results.idReader)
             default:
                 break
         }
@@ -273,6 +287,8 @@ const saveResult = () => {
         case "bookcopy":
             setBookCopyValue(results)
             break
+        case "reader":
+            setReaderValue(results)
         default:
             break
     }
@@ -339,6 +355,8 @@ const getEditionResults = async editedInputs => {
             return await editBookEdition(results.idBookEdition, editedInputs)
         case "bookcopy":
             return await editBookcopy(results.idBookCopy, editedInputs)
+        case "reader":
+            return await editReader(results.idReader, editedInputs)
         default:
             break;
     }

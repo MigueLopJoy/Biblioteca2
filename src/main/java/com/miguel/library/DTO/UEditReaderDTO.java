@@ -41,7 +41,7 @@ public class UEditReaderDTO {
     @NotNull(message = "Date of birth required")
     @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
     @Min(value = 1900, message = "Edition year should not be under 1900")
-    private Integer yearOfBirth;
+    private Integer birthYear;
 
     private Character gender;
 }

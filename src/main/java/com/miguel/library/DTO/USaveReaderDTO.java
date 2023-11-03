@@ -25,7 +25,7 @@ public class USaveReaderDTO {
     @NotNull(message = "Date of birth required")
     @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
     @Min(value = 1900, message = "Edition year should not be under 1900")
-    private Integer yearOfBirth;
+    private Integer birthYear;
 
     @NotNull(message = "Must select a gender")
     private Character gender;
@@ -33,7 +33,6 @@ public class USaveReaderDTO {
     @Email(message = "Must provide a valid email")
     private String email;
 
-    @Pattern(regexp = "^\\+?\\d{1,3}\\d{1,14}$", message = "Must provide a valid phone number")
+    @Pattern(regexp = "^\\+?\\d{1,3}[-.\\s]?\\d{1,14}$", message = "Must provide a valid phone number")
     private String phoneNumber;
-
 }

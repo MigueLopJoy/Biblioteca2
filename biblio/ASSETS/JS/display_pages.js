@@ -97,7 +97,7 @@ const displayBookCopiesCatalogMainPage = async () => {
 const displayReadersMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/readers.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/READERS/readers.js",
+        "./ASSETS/JS/MODULES/USERS/readers.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("readers_page")
 }
@@ -105,7 +105,7 @@ const displayReadersMainPage = async () => {
 const displayLibrariansMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/librarians.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/READERS/librarians.js",
+        "./ASSETS/JS/MODULES/USERS/librarians.js",
         "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
     showPageAndEnableLinks("librarians_page")

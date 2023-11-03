@@ -5,48 +5,104 @@
         <div class="page readers_page hidden">
 
             <div class="page_element_container search_reader">
-                <form class="form author_form search">
+                <form class="form reader_form search">
                     <legend>Search Reader</legend>
                     <p class="error_message general_error"></p>
-                    <input type="text" name="reader_number" id="author_fullName" placeholder="Reader Number">
-                    <input type="text" name="reader_name" id="author_fullName" placeholder="Reader's Name">
+                    <input type="text" name="reader_name" placeholder="Reader's Name">
+                    <input type="text" name="reader_number" placeholder="Reader Number">
 
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
                             <div class="col-6 pe-1">
-                                <input type="text" name="reader_email" id="author_fullName" placeholder="Reader's Email">
+                                <input type="text" name="reader_email" placeholder="Reader's Email">
                             </div>
                             <div class="col-6 ps-1">
-                                <input type="text" name="reader_phone_number" id="author_fullName"
-                                    placeholder="Reader's Phone Number">
+                                <input type="text" name="reader_phone_number" placeholder="Reader's Phone Number">
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
-                            <div class="col-6 pe-1">
-                                <div class="input-group year_of_birth mb-3">
-                                    <input type="date" name="year_of_birth" class="year_of_birth mb-0"
-                                        placeholder="Year Of Birth">
-                                    <span class="input-group-text year_of_birth">
+                            <div>
+                                <div class="input-group col-6 pe-1 single_birth_year mb-3">
+                                    <input type="date" name="birth_year" class="birth_year mb-0"
+                                        placeholder="Birth Year">
+                                    <span class="input-group-text birth_year">
                                         <i class="bi bi-arrows-expand-vertical"></i>
                                     </span>
                                 </div>
-                                <div class="d-none justify-content-between year_of_birth_range">
+                                <div class="d-none justify-content-between range_birth_year">
                                     <div class="col-6 pe-1">
-                                        <input type="date" name="min_year_of_birth" class="min_year_of_birth"
-                                            placeholder="Min Year Of Birth">
+                                        <input type="date" name="min_birth_year" class="min_birth_year"
+                                            placeholder="Min Birth Year">
                                     </div>
                                     <div class="col-6 ps-1">
-                                        <input type="date" name="max_year_of_birth" class="max_year_of_birth"
-                                            placeholder="Max Year Of Birth">
+                                        <input type="date" name="max_birth_year" class="max_birth_year"
+                                            placeholder="Max Birth Year">
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="col-6 ps-1">
-                                <select name="author_gender" id="auhtor_gender" class="author_gender">
+                                <select name="reader_gender" class="reader_gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" id="search_reader_btn" class="btn" value="Search">
+                </form>
+            </div>
+
+            <div class="page_element_container create_reader">
+                <form class="form reader_form create">
+                    <legend>Create New Reader</legend>
+
+                    <p class="error_message general_error"></p>
+
+                    <div class="col-12">
+                        <p class="error_message firstname"></p>
+                        <p class="error_message lastName"></p>
+                        <div class="d-flex justify-content-between">
+                            <div class="col-6 pe-1">
+                                <input type="text" name="reader_firstname" placeholder="First Name">
+                            </div>
+                            <div class="col-6 ps-1">
+                                <input type="text" name="reader_lastname" placeholder="Last Name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <p class="error_message email"></p>
+                        <p class="error_message phoneNumber"></p>
+                        <div class="d-flex justify-content-between">
+                            <div class="col-6 pe-1">
+                                <input type="text" name="reader_email" placeholder="Reader's Email">
+                            </div>
+                            <div class="col-6 ps-1">
+                                <input type="text" name="reader_phone_number" placeholder="Reader's Phone Number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <p class="error_message birthYear"></p>
+                        <p class="error_message gender"></p>
+                        <div class="d-flex justify-content-between">
+                            <div class="input-group col-6 pe-1 birth_year mb-3">
+                                <input type="date" name="birth_year" class="birth_year mb-0" placeholder="Birth Year">
+                                <span class="input-group-text birth_year">
+                                    <i class="bi bi-arrows-expand-vertical"></i>
+                                </span>
+                            </div>
+
+                            <div class="col-6 ps-1">
+                                <select name="reader_gender" id="reader_gender" class="reader_gender">
                                     <option>Select Gender</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
@@ -55,19 +111,7 @@
                         </div>
                     </div>
 
-                    <input type="submit" id="search_author_btn" class="btn" value="Search">
-                </form>
-            </div>
-
-            <div class="page_element_container create_reader">
-                <form class="form reader_form create">
-                    <legend>Create New Reader</legend>
-                    <p class="error_message general_error"></p>
-                    <p class="error_message firstName"></p>
-                    <input type="text" name="firstName" id="author_firstName" placeholder="Name">
-                    <p class="error_message lastName"></p>
-                    <input type="text" name="lastName" id="author_lastName" placeholder="LastName">
-                    <input type="submit" id="create_author_btn" class="btn" value="Create">
+                    <input type="submit" id="create_reader_btn" class="btn" value="Create">
                 </form>
             </div>
 
@@ -81,7 +125,6 @@
                     <div class="left_icons_container">
                         <span class="material-symbols-outlined edit_symbol">edit_note</span>
                         <span class="material-symbols-outlined delete_symbol">delete</span>
-                        <span class="material-symbols-outlined inspect_symbol">manage_search</span>
                     </div>
                     <div class="close_symbol_container">
                         <span class="close_symbol">X</span>
@@ -92,9 +135,13 @@
                     <table class="results_table readers_results_table hidden">
                         <thead>
                             <tr>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th class="select_column">Select author</th>
+                                <th>Name</th>
+                                <th>Reader Number</th>
+                                <th>Birth Year</th>
+                                <th>Gender</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th class="select_column">Select Reader</th>
                             </tr>
                         </thead>
                         <tbody class="results_table_body"></tbody>
@@ -108,22 +155,58 @@
                         <form class="form reader_form">
                             <legend>User Record</legend>
 
-                            <p class="error_message general_error mb-0"></p>
+                            <p class="error_message general_error"></p>
 
-                            <p class="error_message firstName mb-0"></p>
-                            <label>First Name:</label>
-                            <input type="text" name="author_firstName" class="author_firstName card_info" readonly>
+                            <div class="col-12">
+                                <p class="error_message firstname"></p>
+                                <p class="error_message lastName"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <input type="text" name="reader_firstname" placeholder="First Name">
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <input type="text" name="reader_lastname" placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
 
-                            <p class="error_message lastName mb-0"></p>
-                            <label>Last Name:</label>
-                            <input type="text" name="author_lastName" class="author_lastName card_info" readonly>
+                            <p class="error_message readerNumber"></p>
+                            <input type="text" name="reader_number" placeholder="Reader Number">
 
-                            <label for="author_bookworks">Author's Book Works:</label>
-                            <div class="input-group">
-                                <input type="text" name="author_bookworks" class="author_bookworks mb-0" readonly>
-                                <span class="input-group-text search_related_objects">
-                                    <i class="bi bi-search"></i>
-                                </span>
+                            <div class="col-12">
+                                <p class="error_message email"></p>
+                                <p class="error_message phoneNumber"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="col-6 pe-1">
+                                        <input type="text" name="reader_email" placeholder="Reader's Email">
+                                    </div>
+                                    <div class="col-6 ps-1">
+                                        <input type="text" name="reader_phone_number"
+                                            placeholder="Reader's Phone Number">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="error_message birthYear"></p>
+                                <p class="error_message gender"></p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="input-group col-6 pe-1 birth_year mb-3">
+                                        <input type="date" name="birth_year" class="birth_year mb-0"
+                                            placeholder="Birth Year">
+                                        <span class="input-group-text birth_year">
+                                            <i class="bi bi-arrows-expand-vertical"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="col-6 ps-1">
+                                        <select name="reader_gender" class="reader_gender">
+                                            <option>Select Gender</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

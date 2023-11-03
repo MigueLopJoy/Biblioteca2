@@ -7,11 +7,13 @@ import com.miguel.library.model.UReader;
 import com.miguel.library.services.IUReaderService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
 public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePhoneNumber, Object> {
 
+    @Autowired
     private IUReaderService readerService;
 
     @Override
@@ -27,12 +29,14 @@ public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePho
         UEditReaderDTO editDTO = null;
         UReader readerWithPhoneNumber = null;
 
-        if (reader instanceof USaveReaderDTO) {
-            saveDTO = (USaveReaderDTO) reader;
-            phoneNumber = saveDTO.getPhoneNumber();
-        } else if (reader instanceof UEditReaderDTO) {
-            editDTO = (UEditReaderDTO) reader;
-            phoneNumber = editDTO.getPhoneNumber();
+        if (Objects.nonNull(reader)) {
+            if (reader instanceof USaveReaderDTO) {
+                saveDTO = (USaveReaderDTO) reader;
+                phoneNumber = saveDTO.getPhoneNumber();
+            } else if (reader instanceof UEditReaderDTO) {
+                editDTO = (UEditReaderDTO) reader;
+                phoneNumber = editDTO.getPhoneNumber();
+            }
         }
 
         if (Objects.nonNull(phoneNumber)) {

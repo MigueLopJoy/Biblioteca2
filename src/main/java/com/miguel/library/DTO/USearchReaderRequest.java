@@ -14,15 +14,15 @@ public class USearchReaderRequest {
 
     private String readerName;
 
+    private String readerNumber;
+
     private String email;
 
     private String phoneNumber;
 
-    private String readerNumber;
+    private Integer minBirthYear;
 
-    private Integer minYearOfBirth;
-
-    private Integer maxYearOfBirth;
+    private Integer maxBirthYear;
 
     private Character gender;
 }
