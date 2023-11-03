@@ -132,7 +132,8 @@
     outline: none;
 }
 
-.catalog_card input.editing {
+.catalog_card input.editing,
+.catalog_card select.editing {
     border: 2px solid #00CC00;
 }
 

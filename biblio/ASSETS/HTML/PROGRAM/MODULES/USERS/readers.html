@@ -26,19 +26,19 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <div class="input-group col-6 pe-1 single_birth_year mb-3">
-                                    <input type="date" name="birth_year" class="birth_year mb-0"
+                                    <input type="number" name="birth_year" class="birth_year mb-0"
                                         placeholder="Birth Year">
                                     <span class="input-group-text birth_year">
                                         <i class="bi bi-arrows-expand-vertical"></i>
                                     </span>
                                 </div>
                                 <div class="d-none justify-content-between range_birth_year">
-                                    <div class="col-6 pe-1">
-                                        <input type="date" name="min_birth_year" class="min_birth_year"
+                                    <div class="col-6s pe-1">
+                                        <input type="number" name="min_birth_year" class="min_birth_year"
                                             placeholder="Min Birth Year">
                                     </div>
-                                    <div class="col-6 ps-1">
-                                        <input type="date" name="max_birth_year" class="max_birth_year"
+                                    <div class="col-6 ps-1 pe-1">
+                                        <input type="number" name="max_birth_year" class="max_birth_year"
                                             placeholder="Max Birth Year">
                                     </div>
                                 </div>
@@ -91,19 +91,15 @@
                     </div>
 
                     <div class="col-12">
-                        <p class="error_message birthYear"></p>
-                        <p class="error_message gender"></p>
                         <div class="d-flex justify-content-between">
-                            <div class="input-group col-6 pe-1 birth_year mb-3">
-                                <input type="date" name="birth_year" class="birth_year mb-0" placeholder="Birth Year">
-                                <span class="input-group-text birth_year">
-                                    <i class="bi bi-arrows-expand-vertical"></i>
-                                </span>
+                            <div class="col-6 pe-1 single_birth_year mb-3">
+                                <input type="number" name="birth_year" class="birth_year mb-0"
+                                    placeholder="Birth Year">
                             </div>
 
                             <div class="col-6 ps-1">
-                                <select name="reader_gender" id="reader_gender" class="reader_gender">
-                                    <option>Select Gender</option>
+                                <select name="reader_gender" class="reader_gender">
+                                    <option value="">Select Gender</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
                                 </select>
@@ -138,9 +134,6 @@
                                 <th>Name</th>
                                 <th>Reader Number</th>
                                 <th>Birth Year</th>
-                                <th>Gender</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
                                 <th class="select_column">Select Reader</th>
                             </tr>
                         </thead>
@@ -151,7 +144,7 @@
                 <div class="catalog_card_container">
                     <p class="success_message mb-1"></p>
 
-                    <div class="catalog_card readers_catalog_card hidden">
+                    <div class="catalog_card reader_catalog_card hidden">
                         <form class="form reader_form">
                             <legend>User Record</legend>
 
@@ -162,46 +155,41 @@
                                 <p class="error_message lastName"></p>
                                 <div class="d-flex justify-content-between">
                                     <div class="col-6 pe-1">
-                                        <input type="text" name="reader_firstname" placeholder="First Name">
+                                        <input type="text" name="reader_firstname" class="reader_firstname card_info" placeholder="First Name" readonly>
                                     </div>
                                     <div class="col-6 ps-1">
-                                        <input type="text" name="reader_lastname" placeholder="Last Name">
+                                        <input type="text" name="reader_lastname" class="reader_lastname card_info" placeholder="Last Name" readonly>
                                     </div>
                                 </div>
                             </div>
 
                             <p class="error_message readerNumber"></p>
-                            <input type="text" name="reader_number" placeholder="Reader Number">
+                            <input type="text" name="reader_number" class="reader_number card_info" placeholder="Reader Number" readonly>
 
                             <div class="col-12">
                                 <p class="error_message email"></p>
                                 <p class="error_message phoneNumber"></p>
                                 <div class="d-flex justify-content-between">
                                     <div class="col-6 pe-1">
-                                        <input type="text" name="reader_email" placeholder="Reader's Email">
+                                        <input type="text" name="reader_email" class="reader_email card_info" placeholder="Reader's Email" readonly>
                                     </div>
                                     <div class="col-6 ps-1">
-                                        <input type="text" name="reader_phone_number"
-                                            placeholder="Reader's Phone Number">
+                                        <input type="text" name="reader_phone_number" class="reader_phone_number card_info"
+                                            placeholder="Reader's Phone Number" readonly>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-12">
-                                <p class="error_message birthYear"></p>
-                                <p class="error_message gender"></p>
                                 <div class="d-flex justify-content-between">
-                                    <div class="input-group col-6 pe-1 birth_year mb-3">
-                                        <input type="date" name="birth_year" class="birth_year mb-0"
-                                            placeholder="Birth Year">
-                                        <span class="input-group-text birth_year">
-                                            <i class="bi bi-arrows-expand-vertical"></i>
-                                        </span>
+                                    <div class="col-6 pe-1 single_birth_year mb-3">
+                                        <input type="number" name="birth_year" class="birth_year mb-0 card_info"
+                                            placeholder="Birth Year" readonly>
                                     </div>
-
+        
                                     <div class="col-6 ps-1">
-                                        <select name="reader_gender" class="reader_gender">
-                                            <option>Select Gender</option>
+                                        <select name="reader_gender" class="reader_gender card_info" aria-readonly="true">
+                                            <option value="">Select Gender</option>
                                             <option value="M">Male</option>
                                             <option value="F">Female</option>
                                         </select>
