@@ -1,0 +1,32 @@
+<form class="form librarian_form search">
+    <legend>Search Librarian</legend>
+    <p class="error_message general_error"></p>
+
+    <input type="text" name="librarian_name" placeholder="Librarian's Name">
+
+    <input type="text" name="librarian_email" placeholder="Librarian's Email">
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1 mb-3">
+                <div class="input-group">
+                    <input type="text" name="librarian_library" class="mb-0" placeholder="Librarian's Library" readonly>
+                    <span class="input-group-text search_related_objects">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6 ps-1">
+                <select name="librarian_role" class="librarian_role">
+                    <option value="">Select Role</option>
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="cATALOGER">CATALOGER</option>
+                    <option value="LIBRARIAN">LIBRARIAN</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" id="search_librarian_btn" class="btn" value="Search">
+</form>

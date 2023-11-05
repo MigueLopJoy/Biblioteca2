@@ -13,7 +13,7 @@ import lombok.*;
 @Entity
 @Table(name = "readers")
 @AttributeOverride(name = "idUser", column = @Column(name = "idReader"))
-public class UReader extends User{
+public class UReader extends User implements Comparable<UReader>{
 
     @Column(unique = true, nullable = false)
     private String readerNumber;
@@ -36,5 +36,15 @@ public class UReader extends User{
         this.readerNumber = readerNumber;
         this.gender = gender;
         this.birthYear = birthYear;
+    }
+
+    @Override
+    public int compareTo(UReader otherReader) {
+        Integer orderResult = this.getFirstName().compareTo(otherReader.getFirstName());
+
+        if (orderResult == 0) {
+            orderResult = this.getLastName().compareTo(otherReader.getLastName());
+        }
+        return orderResult;
     }
 }

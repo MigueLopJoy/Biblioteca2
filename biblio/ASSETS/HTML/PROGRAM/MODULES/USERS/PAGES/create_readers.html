@@ -1,0 +1,49 @@
+<form class="form reader_form create">
+    <legend>Create New Reader</legend>
+
+    <p class="error_message general_error"></p>
+
+    <div class="col-12">
+        <p class="error_message firstname"></p>
+        <p class="error_message lastName"></p>
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1">
+                <input type="text" name="reader_firstname" placeholder="First Name">
+            </div>
+            <div class="col-6 ps-1">
+                <input type="text" name="reader_lastname" placeholder="Last Name">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <p class="error_message email"></p>
+        <p class="error_message phoneNumber"></p>
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1">
+                <input type="text" name="reader_email" placeholder="Reader's Email">
+            </div>
+            <div class="col-6 ps-1">
+                <input type="text" name="reader_phone_number" placeholder="Reader's Phone Number">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1 single_birth_year mb-3">
+                <input type="number" name="birth_year" class="birth_year mb-0" placeholder="Birth Year">
+            </div>
+
+            <div class="col-6 ps-1">
+                <select name="reader_gender" class="reader_gender">
+                    <option value="">Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" id="create_reader_btn" class="btn" value="Create">
+</form>

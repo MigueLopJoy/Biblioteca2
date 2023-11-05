@@ -51,7 +51,7 @@ const displayCatalogingMainPage = async () => {
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/cataloging.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("author_page")
+    EnableLinks("author_page")
 }
 
 const displayRegisteringMainPage = async () => {
@@ -59,7 +59,6 @@ const displayRegisteringMainPage = async () => {
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/registering.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("bookedition_page")
 }
 
 const displayAuthorsCatalogMainPage = async () => {
@@ -67,7 +66,6 @@ const displayAuthorsCatalogMainPage = async () => {
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/authors_catalog.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("authors_page")
 }
 
 const displayBookWorksCatalogMainPage = async () => {
@@ -75,80 +73,38 @@ const displayBookWorksCatalogMainPage = async () => {
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookworks_catalog.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("bookworks_page")
 }
 
 const displayBookEditionsCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_bookedition.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/CATALOG/bookeditions_catalog.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("bookeditions_page")
 }
 
 const displayBookCopiesCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_bookcopy.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/bookcopies.js",
+        "./ASSETS/JS/MODULES/CATALOG/bookcopies_catalog.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("bookcopies_page")
 }
 
 const displayReadersMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/readers.html", d.getElementById("main-content"))
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/search_readers.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/USERS/readers.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("readers_page")
 }
 
 const displayLibrariansMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/librarians.html", d.getElementById("main-content"))
+    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/search_librarian.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
         "./ASSETS/JS/MODULES/USERS/librarians.js",
-        "./ASSETS/JS/MODULES/CATALOG/CATALOG-COMMONS.js",
         "./ASSETS/JS/MODULES/modules_commons.js")
-    showPageAndEnableLinks("librarians_page")
-}
-
-const showPageAndEnableLinks = page => {
-    showPage(page)
-    enableWindowNavLinkBtns()
-}
-
-const enableWindowNavLinkBtns = () => {
-    const pageLinks = d.querySelectorAll(".page_link")
-
-    if (pageLinks) {
-        pageLinks.forEach(pageLink => {
-            pageLink.addEventListener("click", e => {
-                if (e.target.classList.contains("enabled")) {
-                    e.preventDefault();
-                    showPage(e.target.classList[1])
-                }
-            })
-        })
-    }
-}
-
-const showPage = pageOption => {
-    const pages = d.querySelectorAll(".page"),
-        pageLinks = d.querySelectorAll(".page_link")
-
-    if (pages) {
-        pages.forEach(page => {
-            page.classList.add("hidden")
-        })
-
-        d.querySelector(`.page.${pageOption}`).classList.remove("hidden")
-    }
-
-    if (pageLinks.length > 0) {
-        pageLinks.forEach(pageLink => {
-            pageLink.classList.remove("active");
-        })
-        d.querySelector(`.page_link.${pageOption}`).classList.add("active")
-    }
 }
 
 export {
@@ -160,7 +116,5 @@ export {
     displayBookCopiesCatalogMainPage,
     displayReadersMainPage,
     displayLibrariansMainPage,
-    enableWindowNavLinkBtns,
-    loadContent,
-    showPage
+    loadContent
 }

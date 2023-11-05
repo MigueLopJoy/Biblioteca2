@@ -8,7 +8,6 @@ import {
 
 import {
     fetchRequest,
-    joinParamsToURL
 } from "./../requests.js"
 
 import {
@@ -72,16 +71,16 @@ const runReaderProcess = async form => {
 
 const displayBirthYearRange = () => {
     let singleBirthYear = d.querySelector(".form .single_birth_year"),
-        rangeBirthYear = d.querySelector(".form .range_birth_year")
+        rangeBirthYear = d.querySelector(".form .range_birth_year"),
+        genderSelect = d.querySelector(".form .reader_gender").parentNode
 
     singleBirthYear.classList.add("hidden")
 
-    birthYearRange.classList.remove("d-none")
-    birthYearRange.classList.add("d-flex")
-    rangeBirthYear.querySelectorAll("div").forEach(el => {
-        el.classList.remove("col-6")
-        el.classList.add("col-4")
-    })
+    rangeBirthYear.classList.remove("d-none")
+    rangeBirthYear.classList.add("d-flex")
+
+    genderSelect.classList.remove("col-6")
+    genderSelect.classList.add("col-4")
 }
 
 const getReaders = async form => {
@@ -89,25 +88,9 @@ const getReaders = async form => {
         genderSelect = form.querySelector(".reader_gender")
 
     try {
-        console.log(
-            {
-                readerName: form.reader_name.value,
-                readerNumber: form.reader_number.value,
-                email: form.reader_email.value,
-                phoneNumber: form.reader_phone_number.value,
-                minBirthYear:
-                    containerContainsClass(rangeBirthYearContainer) ?
-                        form.birth_year.value : form.min_birth_year.value,
-                maxBirthYear:
-                    containerContainsClass(rangeBirthYearContainer) ?
-                        form.birth_year.value : form.max_birth_year.value,
-                gender: genderSelect.options[genderSelect.selectedIndex].value,
-            }
-        )
-
-        results = await fetchRequest(
+        return await fetchRequest(
             "POST",
-            "http://localhost:8080/readers/search-readers",
+            "http://localhost:8080/readers/search-reader",
             {
                 readerName: form.reader_name.value,
                 readerNumber: form.reader_number.value,
@@ -122,8 +105,6 @@ const getReaders = async form => {
                 gender: genderSelect.options[genderSelect.selectedIndex].value,
             }
         )
-        console.log(results)
-        return results
     } catch (ex) {
         error = ex
     }
@@ -135,7 +116,7 @@ const containerContainsClass = inputContainer =>
 
 
 const createReader = async form => {
-    const genderSelect = form.querySelector("reader_gender")
+    const genderSelect = form.querySelector(".reader_gender")
 
     try {
         return await fetchRequest(
@@ -161,13 +142,14 @@ const editReader = async (idReader, editedFields) => {
             "PUT",
             `http://localhost:8080/readers/edit-reader/${idReader}`,
             {
-                firstName: form.reader_firstname.value,
-                lastName: form.reader_lastname.value,
-                email: form.reader_email.value,
-                phoneNumber: form.reader_phone_number.value,
-                readerNumber: form.reader_number.value,
-                birthYear: form.birth_year.value,
-                gender: genderSelect.options[genderSelect.selectedIndex].value,
+                originalReaderId: idReader,
+                firstName: editedFields[0],
+                lastName: editedFields[1],
+                readerNumber: editedFields[2],
+                email: editedFields[3],
+                phoneNumber: editedFields[4],
+                birthYear: editedFields[5],
+                gender: editedFields[6],
             }
         )
     } catch (ex) {
@@ -213,6 +195,7 @@ const generateReadersTableContent = () => {
         newRow.appendChild(readerName)
         newRow.appendChild(readerNumber)
         newRow.appendChild(birthYear)
+        newRow.appendChild(selectReader)
         table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
@@ -221,10 +204,14 @@ const generateReadersCatalogCard = async results => {
     let reader = results,
         catalogCard = d.querySelector(".catalog_card.reader_catalog_card")
 
+    console.log(reader)
+
     catalogCard.classList.remove("hidden")
 
-    catalogCard.querySelector(".reader_firstName").value = reader.firstName
-    catalogCard.querySelector(".reader_lastName").value = reader.lastName
+    console.log(catalogCard)
+
+    catalogCard.querySelector(".reader_firstname").value = reader.firstName
+    catalogCard.querySelector(".reader_lastname").value = reader.lastName
     catalogCard.querySelector(".reader_number").value = reader.readerNumber
     catalogCard.querySelector(".birth_year").value = reader.birthYear
     catalogCard.querySelector(".reader_gender").value = reader.gender

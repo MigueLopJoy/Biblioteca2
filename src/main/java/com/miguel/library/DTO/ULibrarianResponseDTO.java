@@ -1,6 +1,6 @@
 package com.miguel.library.DTO;
 
-import com.miguel.library.model.Role;
+import com.miguel.library.model.ULibrarian;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class USearchLibrarianRequest {
-
-    private String librarianName;
-
-    private String email;
-
-    private String mainRole;
-
+public class ULibrarianResponseDTO {
+    private String successMessage;
+    private ULibrarian librarian;
 }

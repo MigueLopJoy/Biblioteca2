@@ -1,6 +1,9 @@
 const d = document
 
 const handleErrorMessages = (error, layer) => {
+
+    layer = selectCorrectLayer(layer)
+
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
             let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)
@@ -12,6 +15,12 @@ const handleErrorMessages = (error, layer) => {
         generalErrorMessage.classList.add("active")
         generalErrorMessage.textContent = error.message
     }
+}
+
+const selectCorrectLayer = layer => {
+    return layer.parentNode.classList.contains("auxiliar_element_container") ?
+        d.querySelector(".page_element_container .form") :
+        layer
 }
 
 const clearErrorMessages = () => {

@@ -1,0 +1,48 @@
+<form class="form reader_form search">
+    <legend>Search Reader</legend>
+    <p class="error_message general_error"></p>
+    <input type="text" name="reader_name" placeholder="Reader's Name">
+    <input type="text" name="reader_number" placeholder="Reader Number">
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1">
+                <input type="text" name="reader_email" placeholder="Reader's Email">
+            </div>
+            <div class="col-6 ps-1">
+                <input type="text" name="reader_phone_number" placeholder="Reader's Phone Number">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <div class="input-group col-6 pe-1 single_birth_year mb-3">
+                    <input type="number" name="birth_year" class="birth_year mb-0" placeholder="Birth Year">
+                    <span class="input-group-text birth_year">
+                        <i class="bi bi-arrows-expand-vertical"></i>
+                    </span>
+                </div>
+                <div class="d-none justify-content-between range_birth_year">
+                    <div class="col-6s pe-1">
+                        <input type="number" name="min_birth_year" class="min_birth_year" placeholder="Min Birth Year">
+                    </div>
+                    <div class="col-6 ps-1 pe-1">
+                        <input type="number" name="max_birth_year" class="max_birth_year" placeholder="Max Birth Year">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 ps-1">
+                <select name="reader_gender" class="reader_gender">
+                    <option value="">Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" id="search_reader_btn" class="btn" value="Search">
+</form>

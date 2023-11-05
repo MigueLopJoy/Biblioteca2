@@ -20,7 +20,7 @@ public class Author implements Comparable<Author> {
 
     @Override
     public int compareTo(Author otherAuthor) {
-        int orderResult = this.firstName.compareTo(otherAuthor.getFirstName());
+        Integer orderResult = this.firstName.compareTo(otherAuthor.getFirstName());
 
         if (orderResult == 0) {
             orderResult = this.lastName.compareTo(otherAuthor.getLastName());

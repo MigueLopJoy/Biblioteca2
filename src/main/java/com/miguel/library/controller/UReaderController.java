@@ -22,7 +22,7 @@ public class UReaderController {
     private IUSearchService searchService;
 
     @PostMapping("/save-reader")
-    public ResponseEntity<UReader> saveNewReader(
+    public ResponseEntity<UReaderResponseDTO> saveNewReader(
             @Valid @RequestBody USaveReaderDTO reader
     ) {
         return ResponseEntity.ok(
@@ -44,7 +44,7 @@ public class UReaderController {
     }
 
     @PutMapping("/edit-reader/{readerId}")
-    public ResponseEntity<UReader> editReader(
+    public ResponseEntity<UReaderResponseDTO> editReader(
             @PathVariable Integer readerId,
             @Valid @RequestBody UEditReaderDTO readerEdit
     ) {
@@ -52,10 +52,9 @@ public class UReaderController {
     }
 
     @DeleteMapping("/delete-reader/{readerId}")
-    public ResponseEntity<String> deleteReader(
+    public ResponseEntity<SuccessfulObjectDeletionDTO> deleteReader(
             @PathVariable Integer readerId
     ) {
-        readerService.deleteReader(readerId);
-        return ResponseEntity.ok("Reader deleted successfully");
+        return ResponseEntity.ok(readerService.deleteReader(readerId));
     }
 }

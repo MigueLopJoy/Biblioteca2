@@ -1,0 +1,57 @@
+<form class="form librarian_form create">
+    <legend>Create New Librarian</legend>
+
+    <p class="error_message general_error"></p>
+
+    <div class="col-12">
+        <p class="error_message firstname"></p>
+        <p class="error_message lastName"></p>
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1">
+                <input type="text" name="librarian_firstname" placeholder="First Name">
+            </div>
+            <div class="col-6 ps-1">
+                <input type="text" name="librarian_lastname" placeholder="Last Name">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <p class="error_message email"></p>
+        <p class="error_message phoneNumber"></p>
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1">
+                <input type="text" name="librarian_email" placeholder="Librarian's Email">
+            </div>
+            <div class="col-6 ps-1">
+                <input type="password" name="provisional_password" placeholder="provisional_password">
+            </div>
+        </div>
+    </div>
+
+    <input type="text" name="librarian_phone_number" placeholder="Librarian's Phone Number">
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div class="col-6 pe-1 mb-3">
+                <div class="input-group">
+                    <input type="text" name="librarian_library" class="mb-0" placeholder="Librarian's Library" readonly>
+                    <span class="input-group-text search_related_objects">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6 ps-1">
+                <select name="librarian_role" class="librarian_role">
+                    <option value="">Select Role</option>
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="cATALOGER">CATALOGER</option>
+                    <option value="LIBRARIAN">LIBRARIAN</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <input type="submit" id="create_librarian_btn" class="btn" value="Create">
+</form>

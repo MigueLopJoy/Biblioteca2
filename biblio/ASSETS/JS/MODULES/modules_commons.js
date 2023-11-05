@@ -20,14 +20,6 @@ import {
 } from "./CATALOG/authors_catalog.js"
 
 import {
-    editReader,
-    deleteReader,
-    setReaderValue,
-    generateReadersCatalogCard,
-    generateReadersTableContent
-} from "./USERS/readers.js"
-
-import {
     sendBookWorkForm,
     editBookwork,
     deleteBookwork,
@@ -54,6 +46,21 @@ import {
     generateBookCopiesTableContent
 } from "./CATALOG/bookcopies_catalog.js"
 
+import {
+    editReader,
+    deleteReader,
+    setReaderValue,
+    generateReadersCatalogCard,
+    generateReadersTableContent
+} from "./USERS/readers.js"
+
+import {
+    editLibrarian,
+    deleteLibrarian,
+    setLibrarianValue,
+    generateLibrarianCatalogCard,
+    generateLibrariansTableContent
+} from "./USERS/librarians.js"
 
 const d = document
 
@@ -105,18 +112,18 @@ const renderModal = () => {
 }
 
 const generaTableContent = async table => {
-    console.log(table)
     if (table.classList.contains("authors_results_table")) {
         generateAuthorsTableContent()
     } else if (table.classList.contains("bookworks_results_table")) {
         generateBookworksTableContent()
     } else if (table.classList.contains("bookeditions_results_table")) {
-        console.log(table)
         generateBookEditionsTableContent()
     } else if (table.classList.contains("bookcopies_results_table")) {
         generateBookCopiesTableContent()
     } else if (table.classList.contains("readers_results_table")) {
         generateReadersTableContent()
+    } else if (table.classList.contains("librarians_results_table")) {
+        generateLibrariansTableContent()
     }
 }
 
@@ -136,6 +143,8 @@ const generateCatalogCard = (results, resultsType) => {
             break
         case "reader":
             generateReadersCatalogCard(results)
+        case "librarian":
+            generateLibrarianCatalogCard(results)
         default:
             break
     }
@@ -159,6 +168,8 @@ const selectResultObject = results => {
         else if (results.bookWork) return results.bookWork
         else if (results.bookEdition) return results.bookEdition
         else if (results.bookCopy) return results.bookCopy
+        else if (results.reader) return results.reader
+        else if (results.librarian) return results.librarian
     } else return results
 }
 
@@ -264,7 +275,9 @@ const deleteObject = async () => {
             case "bookcopy":
                 return await deleteBookCopy(results.idBookCopy)
             case "reader":
-                return await deleteReader(results.idReader)
+                return await deleteReader(results.idUser)
+            case "librarian":
+                return await deleteLibrarian(results.idUser)
             default:
                 break
         }
@@ -289,6 +302,8 @@ const saveResult = () => {
             break
         case "reader":
             setReaderValue(results)
+        case "librarian":
+            setLibrarianValue(results)
         default:
             break
     }
@@ -303,7 +318,7 @@ const browseObject = () => {
 }
 
 const prepareEditonProcess = () => {
-    const inputs = d.querySelectorAll(".form input.card_info")
+    const inputs = d.querySelectorAll(".form .card_info")
 
     for (const input of inputs) {
         input.removeAttribute("readonly")
@@ -312,14 +327,14 @@ const prepareEditonProcess = () => {
 }
 
 const confirmEdition = async btn => {
-    const editedInputs = [...d.querySelectorAll(".form input.editing")].map(input => input.value)
+    const editedInputs = [...d.querySelectorAll(".form .editing")].map(input => input.value)
 
     clearErrorMessages()
     try {
 
         results = await getEditionResults(editedInputs)
 
-        d.querySelectorAll(".form input.card_info").forEach(input => {
+        d.querySelectorAll(".form .card_info").forEach(input => {
             if (input.classList.contains("editing")) {
                 input.classList.remove("editing")
             }
@@ -356,7 +371,9 @@ const getEditionResults = async editedInputs => {
         case "bookcopy":
             return await editBookcopy(results.idBookCopy, editedInputs)
         case "reader":
-            return await editReader(results.idReader, editedInputs)
+            return await editReader(results.idUser, editedInputs)
+        case "librarian":
+            return await editReader(results.idUser, editedInputs)
         default:
             break;
     }
@@ -383,7 +400,6 @@ const closeModal = (form) => {
     hiddeResultsContainers()
     disableAllSymbols()
     clearForms(form)
-    // toggleNextPageChanging(resultsType)
     modal.classList.add("hidden")
 }
 

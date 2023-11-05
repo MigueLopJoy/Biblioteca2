@@ -3,7 +3,9 @@ import {
     setCreationValues,
     setSearchValues,
     showSearchResults,
-    showCatalogCard
+    showCatalogCard,
+    findSelectedResult,
+    closeModal
 } from "./../modules_commons.js"
 
 import {
@@ -44,7 +46,7 @@ const sendAuthorForm = async (author, form) => {
             setSearchValues(results, resultsType, table)
         } else if (operation === "create") {
             showCatalogCard(results, resultsType, catalogCard)
-            setCreationValues(results.author, resultsType, catalogCard)
+            setCreationValues(results, resultsType, catalogCard)
         }
     }
 }
@@ -70,6 +72,53 @@ const runAuthorProcess = async form => {
         operation = "create"
         results = await createAuthor(form)
     }
+}
+
+const displayAuthorSelectionTable = async () => {
+    const authorForm = d.querySelector(".form.author_form.search")
+    let authorName = d.querySelector(".form.create .author_name").value
+    authorForm.author_name.value = authorName
+    await sendAuthorForm(authorName, authorForm)
+    try {
+        getAuthorResults()
+        changeSelectBtn()
+    } catch (ex) {
+        error = ex
+        handleErrorMessages(error, d.querySelector(".form.create"))
+    }
+}
+
+const changeSelectBtn = () => {
+    const selectResultBtn = d.querySelector(".select_results_btn")
+
+    if (selectResultBtn.classList.contains("select_bookwork_author")) {
+        selectResultBtn.textContent = "Select Book Work"
+        selectResultBtn.classList.remove("select_bookwork_author")
+    } else {
+        selectResultBtn.textContent = "Select Author"
+        selectResultBtn.classList.add("select_bookwork_author")
+    }
+}
+
+const selectBookWorkAuthor = () => {
+    changeSelectBtn()
+    author = getAuthorResults()[findSelectedResult()]
+    closeModal(d.querySelector(".form.create"))
+    manageInputValues()
+}
+
+const manageInputValues = () => {
+    const authorNameInput = d.querySelector(".form.create .author_name"),
+        bookWorkTitleInput = d.querySelector(".form.create .bookwork_title"),
+        bookEditionIsbnInput = d.querySelector(".form.create bookedition_isbn")
+
+    if (author) {
+        authorNameInput.value = `${author.firstName} ${author.lastName}`
+
+        if (bookWorkTitleInput) bookWorkTitleInput.value = ""
+        if (bookEditionIsbnInput) bookEditionIsbnInput.value = ""
+
+    } else authorNameInput.value = ""
 }
 
 const getAuthors = async form => {
@@ -203,6 +252,8 @@ const setAuthorValue = newAuthorValue => {
 
 export {
     sendAuthorForm,
+    displayAuthorSelectionTable,
+    selectBookWorkAuthor,
     deleteAuthor,
     editAuthor,
     generateAuthorsTableContent,

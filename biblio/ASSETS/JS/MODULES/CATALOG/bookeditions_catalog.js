@@ -3,7 +3,9 @@ import {
     setCreationValues,
     setSearchValues,
     showSearchResults,
-    showCatalogCard
+    showCatalogCard,
+    findSelectedResult,
+    closeModal
 } from "./../modules_commons.js"
 
 
@@ -15,6 +17,8 @@ import {
     handleErrorMessages,
     clearErrorMessages
 } from "../api_messages_handler.js"
+
+import { getBookWork } from "./bookworks_catalog.js"
 
 const d = document
 
@@ -42,9 +46,9 @@ const sendBookEditionForm = async (bookwork, form) => {
         if (operation === "search") {
             showSearchResults(table)
             setSearchValues(results, resultsType, operation, table)
-        } else if (operation === "edit") {
+        } else if (operation === "create") {
             showCatalogCard(results, resultsType, catalogCard)
-            setCreationValues()
+            setCreationValues(results, resultsType, catalogCard)
         }
     }
 }
@@ -63,9 +67,72 @@ const runBookEditionProcess = async form => {
     bookedition = ""
     resultsType = "bookedition"
 
-    table = d.querySelector(".results_table.bookeditions_results_table")
-    operation = "search"
-    results = await getBookeditions(form)
+    if (form.classList.contains("search")) {
+        table = d.querySelector(".results_table.bookeditions_results_table")
+        operation = "search"
+        results = await getBookeditions(form)
+    } else if (form.classList.contains("create")) {
+        catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
+        operation = "create"
+        results = await createBookEdition(form)
+    }
+}
+
+const displayBookEditionSelectionTable = async () => {
+    const bookeditionForm = d.querySelector(".form.bookedition_form.search")
+
+    let bookeditionIsbn = d.querySelector(".form.create .bookedition_isbn").value,
+        bookWorkTitle = d.querySelector(".form.create .bookwork_title").value,
+        bookWorkAuthor = d.querySelector(".form.create .author_name").value
+
+    bookeditionForm.editor_name.value = ""
+    bookeditionForm.edition_language.value = ""
+    bookeditionForm.bookedition_isbn.value = bookeditionIsbn
+    bookeditionForm.bookwork_title.value = bookWorkTitle
+    bookeditionForm.author_name.value = bookWorkAuthor
+
+    await sendBookEditionForm(bookWorkTitle, bookeditionForm)
+    try {
+        getBookeditionsResults()
+        changeSelectBtn()
+    } catch (ex) {
+        error = ex
+        handleErrorMessages(error, d.querySelector(".form.create"))
+    }
+}
+
+const changeSelectBtn = () => {
+    const selectResultBtn = d.querySelector(".select_results_btn")
+
+    if (selectResultBtn.classList.contains("select_copy_bookedition")) {
+        selectResultBtn.textContent = "Select Book Copy"
+        selectResultBtn.classList.remove("select_copy_bookedition")
+    } else {
+        selectResultBtn.textContent = "Select Book Edition"
+        selectResultBtn.classList.add("select_copy_bookedition")
+    }
+}
+
+const selectCopyBookEdition = () => {
+    changeSelectBtn()
+    bookedition = getBookeditionsResults()[findSelectedResult()]
+    closeModal(d.querySelector(".form.create"))
+    manageInputValues()
+}
+
+const manageInputValues = () => {
+    const bookeditionIsbnInput = d.querySelector(".form.create .bookedition_isbn"),
+        bookworkTitleInput = d.querySelector(".form.create .bookwork_title"),
+        bookworkAuthorInput = d.querySelector(".form.create .author_name")
+
+    let bookwork = bookedition.bookWork,
+        author = bookwork.author
+
+    if (bookedition) {
+        bookeditionIsbnInput.value = bookedition.isbn
+        bookworkTitleInput.value = bookwork.title
+        bookworkAuthorInput.value = `${author.firstName} ${author.lastName}`
+    } else bookworkTitleInput.value = ""
 }
 
 const getBookeditions = async form => {
@@ -74,9 +141,9 @@ const getBookeditions = async form => {
             "POST",
             "http://localhost:8080/general-catalog/search-bookeditions",
             {
-                title: form.title.value,
-                author: form.author.value,
-                isbn: form.isbn.value,
+                title: form.bookwork_title.value,
+                author: form.author_name.value,
+                isbn: form.bookedition_isbn.value,
                 editor: form.editor_name.value,
                 language: form.edition_language.value,
             }
@@ -97,12 +164,12 @@ const createBookEdition = async form => {
                 editionYear: form.edition_year.value,
                 language: form.edition_language.value,
                 bookWork: {
-                    title: bookwork.title,
+                    title: getBookWork() ? getBookWork().title : "",
                     author: {
-                        firstName: bookwork.author.firstName,
-                        lastName: bookwork.author.lastName
+                        firstName: getBookWork() ? getBookWork().author.firstName : "",
+                        lastName: getBookWork() ? getBookWork().author.lastName : ""
                     },
-                    publicationYear: bookwork.publicationYear
+                    publicationYear: getBookWork() ? getBookWork().publicationYear : ""
                 }
             }
         )
@@ -227,12 +294,20 @@ const getBrowseBookWork = () => {
     return author
 }
 
+const getBookeditionsResults = () => {
+    if (error) throw error
+    return results
+}
+
+
 const setBookeditionValue = newBookEditionValue => {
     bookedition = newBookEditionValue
 }
 
 export {
     sendBookEditionForm,
+    displayBookEditionSelectionTable,
+    selectCopyBookEdition,
     editBookEdition,
     deleteBookedition,
     generateBookEditionCatalogCard,

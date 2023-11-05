@@ -1,6 +1,8 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
 import com.miguel.library.DTO.UEditReaderDTO;
+import com.miguel.library.DTO.UReaderResponseDTO;
 import com.miguel.library.DTO.USaveReaderDTO;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
@@ -21,11 +23,14 @@ public class ImpUReaderService implements IUReaderService{
     private IUReaderRepository readerRepository;
 
     @Override
-    public UReader saveNewUReader(UReader reader) {
+    public UReaderResponseDTO saveNewUReader(UReader reader) {
         if (Objects.isNull(reader)) {
             throw new ExceptionNullObject("Reader should not be null");
         }
-        return readerRepository.save(reader);
+        return new UReaderResponseDTO(
+                "New Reader Created Successfully",
+                readerRepository.save(reader)
+        );
     }
 
     @Override
@@ -57,7 +62,7 @@ public class ImpUReaderService implements IUReaderService{
     }
 
     @Override
-    public UReader editReader(Integer readerId, UEditReaderDTO readerEdit) {
+    public UReaderResponseDTO editReader(Integer readerId, UEditReaderDTO readerEdit) {
         String firstName = readerEdit.getFirstName();
         String lastName = readerEdit.getLastName();
         String email = readerEdit.getEmail();
@@ -99,18 +104,21 @@ public class ImpUReaderService implements IUReaderService{
             fetchedReader.setGender(gender);
         }
 
-        return readerRepository.save(fetchedReader);
+        return new UReaderResponseDTO(
+                "Reader Edited Successfully",
+                readerRepository.save(fetchedReader)
+        );
     }
 
     @Override
-    public String deleteReader(Integer readerId) {
+    public SuccessfulObjectDeletionDTO deleteReader(Integer readerId) {
         UReader fetchedReader = this.searchById(readerId);
 
         if (Objects.isNull(fetchedReader)) {
             throw new ExceptionObjectNotFound("Reader not found");
         }
         readerRepository.deleteById(readerId);
-        return "Reader deleted successfully";
+        return new SuccessfulObjectDeletionDTO("Reader Deleted Successfully");
     }
 
     @Override

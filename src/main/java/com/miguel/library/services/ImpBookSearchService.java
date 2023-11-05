@@ -301,7 +301,6 @@ public class ImpBookSearchService implements IBookSearchService {
         String title = bookSearchRequest.getTitle();
 
         if (isValidString(author)) {
-
             Expression<String> authorName = this.getAuthorNameExpression(criteriaBuilder, bookWorkAuthorJoin);
 
             predicates.add(

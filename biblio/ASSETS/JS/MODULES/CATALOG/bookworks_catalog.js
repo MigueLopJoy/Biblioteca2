@@ -17,10 +17,7 @@ import {
     clearErrorMessages
 } from "../api_messages_handler.js"
 
-import {
-    sendAuthorForm,
-    getAuthorResults
-} from "./authors_catalog.js"
+import { getAuthor } from "./authors_catalog.js"
 
 const d = document
 
@@ -76,44 +73,55 @@ const runBookWorkProcess = async form => {
     }
 }
 
-const displayAuthorSelectionTable = async () => {
-    const authorForm = d.querySelector(".form.author_form.search")
-    let authorName = d.querySelector(".bookwork_form.create .author_name").value
-    authorForm.author_name.value = authorName
-    await sendAuthorForm(authorName, authorForm)
+const displayBookWorkSelectionTable = async () => {
+    const bookworkForm = d.querySelector(".form.bookwork_form.search")
+    let bookWorkTitle = d.querySelector(".form.create .bookwork_title").value,
+        bookWorkAuthor = d.querySelector(".form.create .author_name").value
+
+    bookworkForm.bookwork_title.value = bookWorkTitle
+    bookworkForm.author_name.value = bookWorkAuthor
+
+    await sendBookWorkForm(bookWorkTitle, bookworkForm)
     try {
-        getAuthorResults()
+        getBookWorkResults()
         changeSelectBtn()
     } catch (ex) {
         error = ex
-        handleErrorMessages(error, d.querySelector(".form.bookwork_form.create"))
+        handleErrorMessages(error, d.querySelector(".form.create"))
     }
-}
-
-const selectBookWorkAuthor = () => {
-    changeSelectBtn()
-    author = getAuthorResults()[findSelectedResult()]
-    closeModal(d.querySelector(".bookwork_form.create"))
-    manageAuthorNameInput(author)
 }
 
 const changeSelectBtn = () => {
     const selectResultBtn = d.querySelector(".select_results_btn")
 
-    if (selectResultBtn.classList.contains("select_bookwork_author")) {
-        selectResultBtn.textContent = "Select Book Work"
-        selectResultBtn.classList.remove("select_bookwork_author")
+    if (selectResultBtn.classList.contains("select_edition_bookwork")) {
+        selectResultBtn.textContent = "Select Book Edition"
+        selectResultBtn.classList.remove("select_edition_bookwork")
     } else {
-        selectResultBtn.textContent = "Select Author"
-        selectResultBtn.classList.add("select_bookwork_author")
+        selectResultBtn.textContent = "Select Book Work"
+        selectResultBtn.classList.add("select_edition_bookwork")
     }
 }
 
-const manageAuthorNameInput = author => {
-    const authorNameInput = d.querySelector(".bookwork_form.create .author_name")
-    if (author) {
-        authorNameInput.value = `${author.firstName} ${author.lastName}`
-    } else authorNameInput.value = ""
+const selectEditionBookWork = () => {
+    changeSelectBtn()
+    bookwork = getBookWorkResults()[findSelectedResult()]
+    closeModal(d.querySelector(".form.create"))
+    manageInputValues()
+}
+
+const manageInputValues = () => {
+    const bookworkTitleInput = d.querySelector(".form.create .bookwork_title"),
+        bookworkAuthorInput = d.querySelector(".form.create .author_name"),
+        bookEditionIsbnInput = d.querySelector(".form.create .bookedition_isbn")
+
+    if (bookwork) {
+        bookworkTitleInput.value = bookwork.title
+        bookworkAuthorInput.value = `${bookwork.author.firstName} ${bookwork.author.lastName}`
+
+        if (bookEditionIsbnInput) bookEditionIsbnInput.value = ""
+
+    } else bookworkTitleInput.value = ""
 }
 
 const getBookworks = async form => {
@@ -122,7 +130,7 @@ const getBookworks = async form => {
             "POST",
             "http://localhost:8080/bookworks-catalog/search-bookwork",
             {
-                title: form.title.value,
+                title: form.bookwork_title.value,
                 author: form.author_name.value
             }
         )
@@ -151,8 +159,8 @@ const createBookwork = async form => {
             {
                 title: form.title.value,
                 author: {
-                    firstName: author.firstName,
-                    lastName: author.lastName
+                    firstName: getAuthor() ? getAuthor().firstName : "",
+                    lastName: getAuthor() ? getAuthor().lastName : ""
                 },
                 publicationYear: form.publication_year.value
             }
@@ -248,7 +256,12 @@ const generateBookWorkCatalogCard = async results => {
 }
 
 const getBookWork = () => {
-    return author
+    return bookwork
+}
+
+const getBookWorkResults = () => {
+    if (error) throw error
+    return results
 }
 
 const setBookworkValue = newBookWorkValue => {
@@ -257,12 +270,13 @@ const setBookworkValue = newBookWorkValue => {
 
 export {
     sendBookWorkForm,
+    displayBookWorkSelectionTable,
+    selectEditionBookWork,
     editBookwork,
     deleteBookwork,
     generateBookworksTableContent,
     generateBookWorkCatalogCard,
     getBookWork,
     setBookworkValue,
-    displayAuthorSelectionTable,
-    selectBookWorkAuthor
+    getBookWorkResults
 }

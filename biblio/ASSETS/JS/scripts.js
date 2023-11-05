@@ -26,13 +26,7 @@ for (let i = 0; i < dropdownBTNs.length; i++) {
 }
 
 d.addEventListener("click", async e => {
-  if (e.target.matches("#cataloging")) {
-    displayCatalogingMainPage()
-  } else if (e.target.matches("#registering")) {
-    displayRegisteringMainPage()
-  } else if (e.target.matches("#search_readers")) {
-    displaySearchReadersMainPage()
-  } else if (e.target.matches("#authors_catalog")) {
+  if (e.target.matches("#authors_catalog")) {
     displayAuthorsCatalogMainPage()
   } else if (e.target.matches("#bookworks_catalog")) {
     displayBookWorksCatalogMainPage()
