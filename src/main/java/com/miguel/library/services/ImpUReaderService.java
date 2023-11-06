@@ -1,9 +1,9 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
-import com.miguel.library.DTO.UEditReaderDTO;
-import com.miguel.library.DTO.UReaderResponseDTO;
-import com.miguel.library.DTO.USaveReaderDTO;
+import com.miguel.library.DTO.UserDTOEditReader;
+import com.miguel.library.DTO.UserDTOReaderResponse;
+import com.miguel.library.DTO.UserDTOSaveUser;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
@@ -12,22 +12,21 @@ import com.miguel.library.repository.IUReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ImpUReaderService implements IUReaderService{
+public class ImpUReaderService implements IUReaderService {
 
     @Autowired
     private IUReaderRepository readerRepository;
 
     @Override
-    public UReaderResponseDTO saveNewUReader(UReader reader) {
+    public UserDTOReaderResponse saveNewUReader(UReader reader) {
         if (Objects.isNull(reader)) {
             throw new ExceptionNullObject("Reader should not be null");
         }
-        return new UReaderResponseDTO(
+        return new UserDTOReaderResponse(
                 "New Reader Created Successfully",
                 readerRepository.save(reader)
         );
@@ -36,16 +35,6 @@ public class ImpUReaderService implements IUReaderService{
     @Override
     public UReader searchByReaderNumber(String readerNumber) {
         return readerRepository.findByReaderNumber(readerNumber).orElse(null);
-    }
-
-    @Override
-    public UReader searchByPhoneNumber(String phoneNumber) {
-        return readerRepository.findByPhoneNumber(phoneNumber).orElse(null);
-    }
-
-    @Override
-    public UReader searchByEmail(String email) {
-        return readerRepository.findByEmail(email).orElse(null);
     }
 
     public UReader searchById(Integer readerId) {
@@ -62,7 +51,7 @@ public class ImpUReaderService implements IUReaderService{
     }
 
     @Override
-    public UReaderResponseDTO editReader(Integer readerId, UEditReaderDTO readerEdit) {
+    public UserDTOReaderResponse editReader(Integer readerId, UserDTOEditReader readerEdit) {
         String firstName = readerEdit.getFirstName();
         String lastName = readerEdit.getLastName();
         String email = readerEdit.getEmail();
@@ -104,7 +93,7 @@ public class ImpUReaderService implements IUReaderService{
             fetchedReader.setGender(gender);
         }
 
-        return new UReaderResponseDTO(
+        return new UserDTOReaderResponse(
                 "Reader Edited Successfully",
                 readerRepository.save(fetchedReader)
         );
@@ -122,15 +111,17 @@ public class ImpUReaderService implements IUReaderService{
     }
 
     @Override
-    public UReader createReaderFromDTO(USaveReaderDTO readerDTO) {
+    public UReader createReaderFromDTO(UserDTOSaveUser readerDTO) {
         return new UReader(
                 readerDTO.getFirstName(),
                 readerDTO.getLastName(),
-                readerDTO.getEmail(),
-                readerDTO.getPhoneNumber(),
-                generateReaderNumber(),
+                readerDTO.getGender(),
                 readerDTO.getBirthYear(),
-                readerDTO.getGender()
+                readerDTO.getPhoneNumber(),
+                readerDTO.getEmail(),
+                readerDTO.getPassword(),
+                readerDTO.getRole(),
+                generateReaderNumber()
         );
     }
 

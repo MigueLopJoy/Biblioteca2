@@ -6,33 +6,44 @@ import com.miguel.library.Validations.YearNotGreaterThanCurrent;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @UniquePhoneNumber
 @UniqueEmail
-@AllArgsConstructor
-public class USaveReaderDTO {
+public class UserDTOEditUser {
+
+    @NotNull
+    private Integer originalUserId;
+
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Must introduce a valid first name")
     private String firstName;
 
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Must introduce a valid last name")
     private String lastName;
 
+    private Character gender;
+
     @NotNull(message = "Date of birth required")
     @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
     @Min(value = 1900, message = "Edition year should not be under 1900")
     private Integer birthYear;
 
-    @NotNull(message = "Must select a gender")
-    private Character gender;
+    @Pattern(regexp = "^\\+?\\d{1,3}\\d{1,14}$", message = "Must provide a valid phone number")
+    private String phoneNumber;
 
     @Email(message = "Must provide a valid email")
     private String email;
 
-    @Pattern(regexp = "^\\+?\\d{1,3}[-.\\s]?\\d{1,14}$", message = "Must provide a valid phone number")
-    private String phoneNumber;
+    @NotBlank(message = "Password Required")
+    @Size(min = 8, message = "Password must contain at least 8 characters")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).*$",
+            message = "Password must contain at least one digit, one uppercase letter, and one special character"
+    )
+    private String password;
 }

@@ -5,9 +5,9 @@ import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
 import com.miguel.library.model.ULibrarian;
-import com.miguel.library.model.UReader;
 import com.miguel.library.repository.IULibrarianRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,22 +16,25 @@ import java.util.Objects;
 public class ImpULibrarianService implements  IULibrarianService {
 
     @Autowired
+    private ILibraryService libraryService;
+
+    @Autowired
     private IULibrarianRepository librarianRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
-    public ULibrarianResponseDTO saveNewLibrarian(ULibrarian librarian) {
+    public UserDTOLibrarianResponse saveNewLibrarian(ULibrarian librarian) {
         if (Objects.isNull(librarian)) {
             throw new ExceptionNullObject("Librarian should not be null");
         }
-        return new ULibrarianResponseDTO(
+        return new UserDTOLibrarianResponse(
                 "New Librarian Created Successfully",
                 librarianRepository.save(librarian)
         );
     }
 
-    @Override
-    public ULibrarian searchByEmail(String email) {
-        return librarianRepository.findByEmail(email).orElse(null);
-    }
     public ULibrarian searchById(Integer librarianId) {
         return librarianRepository.findById(librarianId).orElse(null);
     }
@@ -45,7 +48,7 @@ public class ImpULibrarianService implements  IULibrarianService {
     }
 
     @Override
-    public ULibrarianResponseDTO editLibrarian(Integer librarianId, UEditLibrarianDTO librarianEdit) {
+    public UserDTOLibrarianResponse editLibrarian(Integer librarianId, UserDTOEditUser librarianEdit) {
         String firstName = librarianEdit.getFirstName();
         String lastName = librarianEdit.getLastName();
         String email = librarianEdit.getEmail();
@@ -78,7 +81,7 @@ public class ImpULibrarianService implements  IULibrarianService {
             fetchedLibrarian.setPassword(password);
         }
 
-        return new ULibrarianResponseDTO(
+        return new UserDTOLibrarianResponse(
                 "Librarian Edited Successfully",
                 librarianRepository.save(fetchedLibrarian)
         );    }
@@ -94,14 +97,17 @@ public class ImpULibrarianService implements  IULibrarianService {
         return new SuccessfulObjectDeletionDTO("Librarian Deleted Successfully");    }
 
     @Override
-    public ULibrarian createLibrarianFromDTO(USaveLibrarianDTO librarianDTO) {
+    public ULibrarian createLibrarianFromDTO(UserDTOSaveLibrarian librarianDTO) {
         return new ULibrarian(
                 librarianDTO.getFirstName(),
                 librarianDTO.getLastName(),
-                librarianDTO.getEmail(),
-                librarianDTO.getPassword(),
+                librarianDTO.getGender(),
+                librarianDTO.getBirthYear(),
                 librarianDTO.getPhoneNumber(),
-                librarianDTO.getAuthorities()
+                librarianDTO.getEmail(),
+                passwordEncoder.encode(librarianDTO.getPassword()),
+                librarianDTO.getRole(),
+                libraryService.searchByLibraryId(librarianDTO.getIdLibrary())
         );
     }
 }

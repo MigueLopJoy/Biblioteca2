@@ -1,10 +1,14 @@
 package com.miguel.library.model;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,30 +16,23 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "readers")
-@AttributeOverride(name = "idUser", column = @Column(name = "idReader"))
 public class UReader extends User implements Comparable<UReader>{
 
     @Column(unique = true, nullable = false)
     private String readerNumber;
 
-    @Column(nullable = false)
-    private Character gender;
-
-    @Column(nullable = false)
-    private Integer birthYear;
-
     public UReader(String firstName,
                    String lastName,
-                   String email,
-                   String phoneNumber,
-                   String readerNumber,
+                   Character gender,
                    Integer birthYear,
-                   Character gender
+                   String phoneNumber,
+                   String email,
+                   String password,
+                   Role role,
+                   String readerNumber
     ) {
-        super(firstName, lastName, email, phoneNumber);
+        super(firstName, lastName, gender, birthYear, phoneNumber, email, password, role);
         this.readerNumber = readerNumber;
-        this.gender = gender;
-        this.birthYear = birthYear;
     }
 
     @Override

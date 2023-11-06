@@ -1,6 +1,6 @@
 package com.miguel.library.Validations;
 
-import com.miguel.library.DTO.UEditReaderDTO;
+import com.miguel.library.DTO.UserDTOEditReader;
 import com.miguel.library.model.UReader;
 import com.miguel.library.services.IUReaderService;
 import jakarta.validation.ConstraintValidator;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
-public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueReaderNumber, UEditReaderDTO> {
+public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueReaderNumber, UserDTOEditReader> {
     @Autowired
     private IUReaderService readerService;
 
@@ -19,7 +19,7 @@ public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueRe
     }
 
     @Override
-    public boolean isValid(UEditReaderDTO reader, ConstraintValidatorContext context) {
+    public boolean isValid(UserDTOEditReader reader, ConstraintValidatorContext context) {
         Boolean isValidReaderNumber = true;
         String readerNumber;
         UReader readerWithReaderNumber = null;
@@ -31,7 +31,7 @@ public class UniqueReaderNumberValidator implements ConstraintValidator<UniqueRe
         }
 
         if (Objects.nonNull(readerWithReaderNumber)) {
-            if (!readerWithReaderNumber.getIdUser().equals(reader.getOriginalReaderId())) {
+            if (!readerWithReaderNumber.getIdUser().equals(reader.getOriginalUserId())) {
                 isValidReaderNumber = false;
             }
         }

@@ -60,7 +60,11 @@ public class ImpAuthorService implements IAuthorService {
 
     @Override
     public Author searchByAuthorName(Author author) {
-        return authorRepository.findByAuthorName(this.getFullAuthorName(author)).orElse(null);
+        Author fetchedAuthor = null;
+        if (Objects.nonNull(author)) {
+            fetchedAuthor = authorRepository.findByAuthorName(this.getFullAuthorName(author)).orElse(null);
+        }
+        return fetchedAuthor;
     }
 
     @Override
@@ -137,8 +141,12 @@ public class ImpAuthorService implements IAuthorService {
     }
 
     private String getFullAuthorName(Author author) {
-        String authorFirstName = author.getFirstName() != null ? author.getFirstName() : "";
-        String authorLastName = author.getLastName() != null ? author.getLastName() : "";
-        return (authorFirstName + ' ' + authorLastName).trim();
+        String fullAuthorName = null;
+        if (Objects.nonNull(author)) {
+            String authorFirstName = author.getFirstName() != null ? author.getFirstName() : "";
+            String authorLastName = author.getLastName() != null ? author.getLastName() : "";
+            fullAuthorName = (authorFirstName + ' ' + authorLastName).trim();
+        }
+        return fullAuthorName;
     }
 }

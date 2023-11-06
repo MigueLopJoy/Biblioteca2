@@ -1,7 +1,7 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.USearchLibrarianRequest;
-import com.miguel.library.DTO.USearchReaderRequest;
+import com.miguel.library.DTO.UserDTOSearchLibrarianRequest;
+import com.miguel.library.DTO.UserDTOSearchReaderRequest;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.model.*;
 import jakarta.persistence.EntityManager;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +21,7 @@ public class ImpUSearchService implements IUSearchService {
     private EntityManager entityManager;
 
     @Override
-    public List<UReader> searchReaders(USearchReaderRequest searchRequest) {
+    public List<UReader> searchReaders(UserDTOSearchReaderRequest searchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UReader> criteriaQuery = criteriaBuilder.createQuery(UReader.class);
         Root<UReader> root = criteriaQuery.from(UReader.class);
@@ -51,7 +50,7 @@ public class ImpUSearchService implements IUSearchService {
     private void addReaderPredicates(
             CriteriaBuilder criteriaBuilder,
             Root<UReader> root,
-            USearchReaderRequest searchRequest,
+            UserDTOSearchReaderRequest searchRequest,
             List<Predicate> predicates
     ) {
 
@@ -110,7 +109,7 @@ public class ImpUSearchService implements IUSearchService {
     }
 
     @Override
-    public List<ULibrarian> searchLibrarians(USearchLibrarianRequest searchRequest) {
+    public List<ULibrarian> searchLibrarians(UserDTOSearchLibrarianRequest searchRequest) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ULibrarian> criteriaQuery = criteriaBuilder.createQuery(ULibrarian.class);
         Root<ULibrarian> root = criteriaQuery.from(ULibrarian.class);
@@ -143,7 +142,7 @@ public class ImpUSearchService implements IUSearchService {
             CriteriaBuilder criteriaBuilder,
             Root<ULibrarian> root,
             Join<ULibrarian, Role> librarianToRoleJoin,
-            USearchLibrarianRequest searchRequest,
+            UserDTOSearchLibrarianRequest searchRequest,
             List<Predicate> predicates
     ) {
         String name = searchRequest.getLibrarianName();

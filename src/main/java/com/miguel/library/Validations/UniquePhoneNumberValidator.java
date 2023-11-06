@@ -1,10 +1,14 @@
 package com.miguel.library.Validations;
 
-import com.miguel.library.DTO.BooksSaveDTOBookCopy;
-import com.miguel.library.DTO.UEditReaderDTO;
-import com.miguel.library.DTO.USaveReaderDTO;
+import com.miguel.library.DTO.*;
+import com.miguel.library.model.Library;
+import com.miguel.library.model.ULibrarian;
 import com.miguel.library.model.UReader;
+import com.miguel.library.model.User;
+import com.miguel.library.services.ILibraryService;
+import com.miguel.library.services.IULibrarianService;
 import com.miguel.library.services.IUReaderService;
+import com.miguel.library.services.IUserService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,10 @@ import java.util.Objects;
 public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePhoneNumber, Object> {
 
     @Autowired
-    private IUReaderService readerService;
+    private IUserService userService;
+
+    @Autowired
+    private ILibraryService libraryService;
 
     @Override
     public void initialize(UniquePhoneNumber constraintAnnotation) {
@@ -22,32 +29,53 @@ public class UniquePhoneNumberValidator implements ConstraintValidator<UniquePho
     }
 
     @Override
-    public boolean isValid(Object reader, ConstraintValidatorContext context) {
+    public boolean isValid(Object object, ConstraintValidatorContext context) {
         Boolean isValidPhoneNumber = true;
         String phoneNumber = null;
-        USaveReaderDTO saveDTO = null;
-        UEditReaderDTO editDTO = null;
-        UReader readerWithPhoneNumber = null;
+        UserDTOSaveUser saveUserDTO = null;
+        UserDTOEditUser editUserDTO = null;
+        LibraryDTOSaveLibrary saveLibraryDTO = null;
+        LibraryDTOEditLibrary editLibraryDTO = null;
+        User userWithPhoneNumber = null;
+        Library libraryWithPhoneNumber = null;
 
-        if (Objects.nonNull(reader)) {
-            if (reader instanceof USaveReaderDTO) {
-                saveDTO = (USaveReaderDTO) reader;
-                phoneNumber = saveDTO.getPhoneNumber();
-            } else if (reader instanceof UEditReaderDTO) {
-                editDTO = (UEditReaderDTO) reader;
-                phoneNumber = editDTO.getPhoneNumber();
-            }
+        if (object instanceof UserDTOSaveUser ||
+                object instanceof UserDTOSaveLibrarian
+        ) {
+            saveUserDTO = (UserDTOSaveUser) object;
+            phoneNumber = saveUserDTO.getPhoneNumber();
+        } else if (object instanceof UserDTOEditUser ||
+                object instanceof UserDTOEditReader
+        ) {
+            editUserDTO = (UserDTOEditUser) object;
+            phoneNumber = editUserDTO.getPhoneNumber();
+        } else if (object instanceof LibraryDTOSaveLibrary) {
+            saveLibraryDTO = (LibraryDTOSaveLibrary) object;
+            phoneNumber = saveLibraryDTO.getLibraryPhoneNumber();
+        } else if (object instanceof LibraryDTOEditLibrary) {
+            editLibraryDTO = (LibraryDTOEditLibrary) object;
+            phoneNumber = editLibraryDTO.getLibraryPhoneNumber();
         }
 
         if (Objects.nonNull(phoneNumber)) {
-            readerWithPhoneNumber = readerService.searchByPhoneNumber(phoneNumber);
+            userWithPhoneNumber = userService.searchByPhoneNumber(phoneNumber);
+            libraryWithPhoneNumber = libraryService.searchByLibraryPhoneNumber(phoneNumber);
         }
 
-        if (Objects.nonNull(readerWithPhoneNumber)) {
-            if (Objects.nonNull(saveDTO)) {
+        if (Objects.nonNull(userWithPhoneNumber) ||
+            Objects.nonNull(libraryWithPhoneNumber)
+        ) {
+            if (Objects.nonNull(saveUserDTO) ||
+                    Objects.nonNull(saveLibraryDTO)
+            ) {
                 isValidPhoneNumber = false;
-            } else if (Objects.nonNull(editDTO)) {
-                if (!readerWithPhoneNumber.getIdUser().equals(editDTO.getOriginalReaderId())) {
+
+            } else if (Objects.nonNull(editUserDTO)) {
+                if (!userWithPhoneNumber.getIdUser().equals(editUserDTO.getOriginalUserId())) {
+                    isValidPhoneNumber = false;
+                }
+            } else if (Objects.nonNull(editLibraryDTO)) {
+                if (!libraryWithPhoneNumber.getIdLibrary().equals(editLibraryDTO.getOriginalLibraryId())) {
                     isValidPhoneNumber = false;
                 }
             }

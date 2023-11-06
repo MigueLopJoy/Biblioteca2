@@ -22,8 +22,8 @@ public class UReaderController {
     private IUSearchService searchService;
 
     @PostMapping("/save-reader")
-    public ResponseEntity<UReaderResponseDTO> saveNewReader(
-            @Valid @RequestBody USaveReaderDTO reader
+    public ResponseEntity<UserDTOReaderResponse> saveNewReader(
+            @Valid @RequestBody UserDTOSaveUser reader
     ) {
         return ResponseEntity.ok(
                 readerService.saveNewUReader(
@@ -38,15 +38,15 @@ public class UReaderController {
 
     @PostMapping("/search-reader")
     public ResponseEntity<List<UReader>> searchReader(
-            @Valid @RequestBody USearchReaderRequest searchRequest
+            @Valid @RequestBody UserDTOSearchReaderRequest searchRequest
             ) {
         return ResponseEntity.ok(searchService.searchReaders(searchRequest));
     }
 
     @PutMapping("/edit-reader/{readerId}")
-    public ResponseEntity<UReaderResponseDTO> editReader(
+    public ResponseEntity<UserDTOReaderResponse> editReader(
             @PathVariable Integer readerId,
-            @Valid @RequestBody UEditReaderDTO readerEdit
+            @Valid @RequestBody UserDTOEditReader readerEdit
     ) {
         return ResponseEntity.ok(readerService.editReader(readerId, readerEdit));
     }

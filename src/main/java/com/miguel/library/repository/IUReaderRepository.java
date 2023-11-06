@@ -11,8 +11,4 @@ public interface IUReaderRepository extends JpaRepository<UReader, Integer> {
 
     public Optional<UReader> findByReaderNumber(String readerNumber);
 
-    public Optional<UReader> findByPhoneNumber(String phoneNumber);
-
-    public Optional<UReader> findByEmail(String email);
-
 }

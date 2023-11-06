@@ -2,9 +2,7 @@ package com.miguel.library.controller;
 
 import com.miguel.library.DTO.*;
 import com.miguel.library.model.ULibrarian;
-import com.miguel.library.model.UReader;
 import com.miguel.library.services.IULibrarianService;
-import com.miguel.library.services.IUReaderService;
 import com.miguel.library.services.IUSearchService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,8 @@ public class ULibrarianController {
     private IUSearchService searchService;
 
     @PostMapping("/save-librarian")
-    public ResponseEntity<ULibrarianResponseDTO> saveNewLibrarian(
-            @Valid @RequestBody USaveLibrarianDTO librarian
+    public ResponseEntity<UserDTOLibrarianResponse> saveNewLibrarian(
+            @Valid @RequestBody UserDTOSaveLibrarian librarian
     ) {
         return ResponseEntity.ok(
                 librarianService.saveNewLibrarian(
@@ -42,15 +40,15 @@ public class ULibrarianController {
 
     @PostMapping("/search-librarian")
     public ResponseEntity<List<ULibrarian>> searchReader(
-            @Valid @RequestBody USearchLibrarianRequest searchRequest
+            @Valid @RequestBody UserDTOSearchLibrarianRequest searchRequest
     ) {
         return ResponseEntity.ok(searchService.searchLibrarians(searchRequest));
     }
 
     @PutMapping("/edit-librarian/{librarianId}")
-    public ResponseEntity<ULibrarianResponseDTO> editLibrarian(
+    public ResponseEntity<UserDTOLibrarianResponse> editLibrarian(
             @PathVariable Integer librarianId,
-            @Valid @RequestBody UEditLibrarianDTO librarianEdit
+            @Valid @RequestBody UserDTOEditUser librarianEdit
     ) {
         return ResponseEntity.ok(librarianService.editLibrarian(librarianId, librarianEdit));
     }

@@ -1,21 +1,15 @@
 package com.miguel.library.DTO;
 
-import com.miguel.library.model.Role;
+import com.miguel.library.model.UReader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class USearchLibrarianRequest {
-
-    private String librarianName;
-
-    private String email;
-
-    private String mainRole;
-
+public class UserDTOReaderResponse {
+    private String successMessage;
+    private UReader reader;
 }

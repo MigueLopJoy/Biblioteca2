@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+</head>
+
+<body>
+    <h2>Registro de Usuario</h2>
+    <form id="registrationForm" onsubmit="submitForm(event)">
+        <!-- Datos de la biblioteca -->
+        <label for="libraryName">Nombre de la biblioteca:</label>
+        <input type="text" id="libraryName" name="libraryName" required>
+
+        <label for="libraryPhoneNumber">Número de teléfono de la biblioteca:</label>
+        <input type="text" id="libraryPhoneNumber" name="libraryPhoneNumber" required>
+
+        <label for="libraryEmail">Correo electrónico de la biblioteca:</label>
+        <input type="email" id="libraryEmail" name="libraryEmail" required>
+
+        <!-- Agrega los demás campos de LibraryDTOSaveLibrary aquí -->
+
+        <label for="city">Ciudad:</label>
+        <input type="text" id="city" name="city" required>
+
+        <label for="province">Provincia:</label>
+        <input type="text" id="province" name="province" required>
+
+        <label for="postalCode">Código Postal:</label>
+        <input type="text" id="postalCode" name="postalCode" required>
+
+        <!-- Datos del bibliotecario -->
+        <label for="firstName">Nombre del bibliotecario:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Apellido del bibliotecario:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="email">Correo electrónico del bibliotecario:</label>
+        <input type="email" id="email" name="email" required>
+
+        <!-- Agrega los demás campos de USaveLibrarianDTO aquí -->
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="phoneNumber">Número de teléfono del bibliotecario:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="authorities">Autoridades:</label>
+        <input type="text" id="authorities" name="authorities" required>
+
+        <button type="submit">Registrar</button>
+    </form>
+
+    <script src="authentication.js"></script>
+</body>
+
+</html>
