@@ -21,35 +21,27 @@ public class Library {
     @Column(name = "id_library")
     private Integer idLibrary;
 
-    @NotBlank
     @Column(unique = true, nullable = false)
     private String libraryName;
 
-    @NotBlank
     @Column(unique = true, nullable = false)
     private String libraryPhoneNumber;
 
-    @NotBlank
     @Column(unique = true, nullable = false)
     private String libraryEmail;
 
-    @NotBlank
     @Column(nullable = false)
     private String libraryAddress;
 
-    @NotBlank
     @Column(nullable = false)
     private String city;
 
-    @NotBlank
     @Column(nullable = false)
     private String province;
 
-    @NotBlank
     @Column(nullable = false)
     private String postalCode;
 
-    @NotEmpty
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="library_librarians_junction",

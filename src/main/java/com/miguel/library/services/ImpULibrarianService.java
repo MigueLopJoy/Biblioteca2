@@ -4,6 +4,8 @@ import com.miguel.library.DTO.*;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
+import com.miguel.library.model.Library;
+import com.miguel.library.model.Role;
 import com.miguel.library.model.ULibrarian;
 import com.miguel.library.repository.IULibrarianRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,23 @@ public class ImpULibrarianService implements  IULibrarianService {
 
     @Override
     public UserDTOLibrarianResponse saveNewLibrarian(ULibrarian librarian) {
+        librarian.setRole(Role.MANAGER);
+        return saveLibrarian(librarian);
+    }
+
+    @Override
+    public UserDTOLibrarianResponse saveNewCataloger(ULibrarian librarian) {
+        librarian.setRole(Role.CATALOGER);
+        return saveLibrarian(librarian);
+    }
+
+    @Override
+    public UserDTOLibrarianResponse saveLibraryManager(ULibrarian librarian) {
+        librarian.setRole(Role.MANAGER);
+        return saveLibrarian(librarian);
+    }
+
+    private UserDTOLibrarianResponse saveLibrarian(ULibrarian librarian) {
         if (Objects.isNull(librarian)) {
             throw new ExceptionNullObject("Librarian should not be null");
         }
@@ -97,6 +116,20 @@ public class ImpULibrarianService implements  IULibrarianService {
         return new SuccessfulObjectDeletionDTO("Librarian Deleted Successfully");    }
 
     @Override
+    public ULibrarian createLibrarianFromDTO(UserDTOSaveUser librarianDTO, Library library) {
+        return new ULibrarian(
+                librarianDTO.getFirstName(),
+                librarianDTO.getLastName(),
+                librarianDTO.getGender(),
+                librarianDTO.getBirthYear(),
+                librarianDTO.getPhoneNumber(),
+                librarianDTO.getEmail(),
+                passwordEncoder.encode(librarianDTO.getPassword()),
+                library
+        );
+    }
+
+    @Override
     public ULibrarian createLibrarianFromDTO(UserDTOSaveLibrarian librarianDTO) {
         return new ULibrarian(
                 librarianDTO.getFirstName(),
@@ -106,7 +139,6 @@ public class ImpULibrarianService implements  IULibrarianService {
                 librarianDTO.getPhoneNumber(),
                 librarianDTO.getEmail(),
                 passwordEncoder.encode(librarianDTO.getPassword()),
-                librarianDTO.getRole(),
                 libraryService.searchByLibraryId(librarianDTO.getIdLibrary())
         );
     }

@@ -7,6 +7,7 @@ import com.miguel.library.DTO.UserDTOSaveUser;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
+import com.miguel.library.model.Role;
 import com.miguel.library.model.UReader;
 import com.miguel.library.repository.IUReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ImpUReaderService implements IUReaderService {
         if (Objects.isNull(reader)) {
             throw new ExceptionNullObject("Reader should not be null");
         }
+
+        reader.setRole(Role.READER);
+
         return new UserDTOReaderResponse(
                 "New Reader Created Successfully",
                 readerRepository.save(reader)
@@ -120,7 +124,6 @@ public class ImpUReaderService implements IUReaderService {
                 readerDTO.getPhoneNumber(),
                 readerDTO.getEmail(),
                 readerDTO.getPassword(),
-                readerDTO.getRole(),
                 generateReaderNumber()
         );
     }

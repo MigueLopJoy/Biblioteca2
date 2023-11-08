@@ -45,7 +45,4 @@ public class UserDTOSaveUser {
             message = "Password must contain at least one digit, one uppercase letter, and one special character"
     )
     private String password;
-
-    @NotBlank(message = "Role Required")
-    private Role role;
 }

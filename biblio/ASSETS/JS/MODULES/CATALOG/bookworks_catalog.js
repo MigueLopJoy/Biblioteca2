@@ -21,7 +21,7 @@ import { getAuthor } from "./authors_catalog.js"
 
 const d = document
 
-let bookwork, author, results, error, table, catalogCard, resultsType, operation
+let bookwork, results, error, table, catalogCard, resultsType, operation
 
 d.addEventListener("submit", async e => {
     e.preventDefault();

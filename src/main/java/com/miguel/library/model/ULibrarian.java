@@ -35,10 +35,9 @@ public class ULibrarian extends User implements Comparator<ULibrarian> {
                       String phoneNumber,
                       String email,
                       String password,
-                      Role role,
                       Library library
     ) {
-        super(firstName, lastName, gender, birthYear, phoneNumber, email, password, role);
+        super(firstName, lastName, gender, birthYear, phoneNumber, email, password);
         this.library = library;
     }
 

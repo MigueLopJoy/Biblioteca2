@@ -28,10 +28,9 @@ public class UReader extends User implements Comparable<UReader>{
                    String phoneNumber,
                    String email,
                    String password,
-                   Role role,
                    String readerNumber
     ) {
-        super(firstName, lastName, gender, birthYear, phoneNumber, email, password, role);
+        super(firstName, lastName, gender, birthYear, phoneNumber, email, password);
         this.readerNumber = readerNumber;
     }
 

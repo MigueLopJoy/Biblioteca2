@@ -3,9 +3,12 @@ package com.miguel.library.services;
 import com.miguel.library.DTO.AuthRegisterRequest;
 import com.miguel.library.DTO.AuthRequest;
 import com.miguel.library.DTO.AuthResponse;
+import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
-import com.miguel.library.model.ULibrarian;
+import com.miguel.library.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -20,7 +23,13 @@ public class ImpAuthenticationService implements IAuthenticationService {
     private IULibrarianService librarianService;
 
     @Autowired
+    private IUserService userService;
+
+    @Autowired
     private ITokenService tokenService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public AuthResponse register(AuthRegisterRequest request) {
@@ -29,23 +38,26 @@ public class ImpAuthenticationService implements IAuthenticationService {
             throw new ExceptionNullObject("Registration Request Should Not Be Null");
         }
 
-        libraryService.saveNewLibrary(
+        Library newLibrary = libraryService.saveNewLibrary(
                 libraryService.createLibraryFromDTO(
                         request.getLibrary()
                 )
-        );
+        ).getLibrary();
 
         ULibrarian savedLibrarian =
-                librarianService.saveNewLibrarian(
+                librarianService.saveLibraryManager(
                         librarianService.createLibrarianFromDTO(
-                                request.getLibrarian()
+                                request.getLibrarian(),
+                                newLibrary
                         )
                 ).getLibrarian();
 
         String jwtToken = tokenService.generateToken(savedLibrarian);
         String refreshToken = tokenService.generateRefreshToken(savedLibrarian);
 
-        tokenService.saveToken(savedLibrarian, jwtToken);
+        tokenService.saveToken(
+                tokenService.generateUserTokenFromJwtString(jwtToken, savedLibrarian)
+        );
 
         return new AuthResponse(
                 jwtToken,
@@ -55,6 +67,27 @@ public class ImpAuthenticationService implements IAuthenticationService {
 
     @Override
     public AuthResponse authenticate(AuthRequest request) {
-        return null;
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        User user = userService.searchByEmail(request.getEmail());
+
+        if (Objects.isNull(user)) {
+            throw new ExceptionNoSearchResultsFound("User not found");
+        }
+
+        String accessToken = tokenService.generateToken(user);
+        String refreshToken = tokenService.generateRefreshToken(user);
+        tokenService.revokeAllUserTokens(user);
+        tokenService.saveToken(
+                tokenService.generateUserTokenFromJwtString(accessToken, user)
+        );
+        return new AuthResponse(
+                accessToken,
+                refreshToken
+        );
     }
 }

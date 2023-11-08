@@ -1,5 +1,7 @@
 package com.miguel.library.services;
 
+import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
+import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.model.*;
 import com.miguel.library.repository.ITokenRepository;
 import io.jsonwebtoken.Claims;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -32,7 +35,12 @@ public class ImpTokenService implements ITokenService {
     private long refreshExpiration;
 
     @Override
-    public Token saveToken(User user, String jwtToken) {
+    public Token saveToken(Token token) {
+        return tokenRepository.save(token);
+    }
+
+    @Override
+    public Token generateUserTokenFromJwtString(String jwtToken, User user) {
         Token token = new Token();
         token.setUser(user);
         token.setToken(jwtToken);
@@ -40,12 +48,26 @@ public class ImpTokenService implements ITokenService {
         token.setExpired(false);
         token.setRevoked(false);
 
-        return tokenRepository.save(token);
+        return token;
+    }
+
+    @Override
+    public List<Token> saveAllTokens(List<Token> tokens) {
+        return tokenRepository.saveAll(tokens);
     }
 
     @Override
     public Token searchByToken(String token) {
         return tokenRepository.findByToken(token).orElse(null);
+    }
+
+    @Override
+    public List<Token> searchAllValidTokensByUser(Integer userId) {
+        List<Token> userValidTokens = tokenRepository.findAllValidTokenByUser(userId);
+        if (userValidTokens.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No tokens where found");
+        }
+        return userValidTokens;
     }
 
     public String extractUsername(String token) {
@@ -92,6 +114,19 @@ public class ImpTokenService implements ITokenService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    @Override
+    public void revokeAllUserTokens(User user) {
+        try {
+            List<Token> validUserTokens = this.searchAllValidTokensByUser(user.getIdUser());
+
+            validUserTokens.forEach(token -> {
+                token.setExpired(true);
+                token.setRevoked(true);
+            });
+            this.saveAllTokens(validUserTokens);
+        } catch (ExceptionNoSearchResultsFound ex) {}
     }
 
     private boolean isTokenExpired(String token) {

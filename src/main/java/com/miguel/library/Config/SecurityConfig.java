@@ -51,7 +51,8 @@ public class SecurityConfig {
             "/auth/**",
             "/authors/",
             "/librarians/",
-            "/bookworks-catalog/"
+            "/bookworks-catalog/",
+            "/library/"
     };
 
     @Autowired
@@ -69,11 +70,11 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("/librarians/**").hasAnyRole(MANAGER.name(), CATALOGER.name(), LIBRARIAN.name())
                                 .requestMatchers(GET, "/librarians/**").hasAnyAuthority(MANAGER_READ.name(), CATALOGER_READ.name(), LIBRARIAN_READ.name())
-                                .requestMatchers(POST, "/librarians/**").hasAnyAuthority(MANAGER_CREATE.name())
+                                .requestMatchers(POST, "/librarians/save-librarian").hasAnyAuthority(MANAGER_CREATE.name())
                                 .requestMatchers(PUT, "/librarians/**").hasAnyAuthority(MANAGER_UPDATE.name(), CATALOGER_UPDATE.name(), LIBRARIAN_UPDATE.name())
                                 .requestMatchers(DELETE, "/librarians/**").hasAnyAuthority(MANAGER_DELETE.name())
                                 .anyRequest()
-                                .authenticated()
+                                .permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

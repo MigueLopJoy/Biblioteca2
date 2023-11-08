@@ -61,8 +61,7 @@ public class User implements UserDetails {
             Integer birthYear,
             String phoneNumber,
             String email,
-            String password,
-            Role role
+            String password
     ) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -71,7 +70,6 @@ public class User implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     @Override

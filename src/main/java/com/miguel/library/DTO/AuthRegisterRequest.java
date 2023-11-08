@@ -14,5 +14,5 @@ public class AuthRegisterRequest {
     private LibraryDTOSaveLibrary library;
 
     @NotNull(message = "Librarian Required")
-    private UserDTOSaveLibrarian librarian;
+    private UserDTOSaveUser librarian;
 }

@@ -81,7 +81,10 @@ const displayBirthYearRange = () => {
 
     genderSelect.classList.remove("col-6")
     genderSelect.classList.add("col-4")
+
+
 }
+
 
 const getReaders = async form => {
     const rangeBirthYearContainer = form.querySelector(".range_birth_year"),
