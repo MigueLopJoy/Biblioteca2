@@ -1,5 +1,6 @@
 package com.miguel.library.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -49,6 +50,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Token> tokens;
 
     @Enumerated(EnumType.STRING)
@@ -74,13 +76,20 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.role.getAuthorities();
+        return role.getAuthorities();
     }
 
     @Override
     public String getUsername() {
         return email;
     }
+
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {

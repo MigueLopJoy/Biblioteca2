@@ -1,5 +1,6 @@
 package com.miguel.library.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Token {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
+    @JsonBackReference
     public User user;
 
     public Token(String token, TokenType tokenType, boolean revoked, boolean expired) {

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,15 +46,8 @@ import static com.miguel.library.model.Permission.READER_UPDATE;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled = true)
 public class SecurityConfig {
-
-    private static final String[] WHITE_LIST_URL = {
-            "/auth/**",
-            "/authors/",
-            "/librarians/",
-            "/bookworks-catalog/",
-            "/library/"
-    };
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
@@ -66,15 +60,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .requestMatchers("/librarians/**").hasAnyRole(MANAGER.name(), CATALOGER.name(), LIBRARIAN.name())
-                                .requestMatchers(GET, "/librarians/**").hasAnyAuthority(MANAGER_READ.name(), CATALOGER_READ.name(), LIBRARIAN_READ.name())
-                                .requestMatchers(POST, "/librarians/save-librarian").hasAnyAuthority(MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/librarians/**").hasAnyAuthority(MANAGER_UPDATE.name(), CATALOGER_UPDATE.name(), LIBRARIAN_UPDATE.name())
-                                .requestMatchers(DELETE, "/librarians/**").hasAnyAuthority(MANAGER_DELETE.name())
-                                .anyRequest()
-                                .permitAll()
+                        req
+                                .requestMatchers("/auth/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

@@ -75,7 +75,6 @@ class AuthenticationControllerTest {
         userDTO.setPhoneNumber("+9876543210");
         userDTO.setEmail("john.doe@example.com");
         userDTO.setPassword("P@ssw0rd");
-        userDTO.setRole(Role.LIBRARIAN);
 
         request.setLibrary(libraryDTO);
         request.setLibrarian(userDTO);

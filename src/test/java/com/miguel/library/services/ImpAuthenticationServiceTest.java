@@ -105,7 +105,6 @@ class ImpAuthenticationServiceTest {
         userDTOSaveLibrarian.setPhoneNumber("+9876543210");
         userDTOSaveLibrarian.setEmail("john.doe@example.com");
         userDTOSaveLibrarian.setPassword("P@ssw0rd");
-        userDTOSaveLibrarian.setRole(Role.LIBRARIAN);
         return userDTOSaveLibrarian;
     }
 
