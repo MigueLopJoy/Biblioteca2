@@ -11,15 +11,14 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class ImpTokenService implements ITokenService {
@@ -40,9 +39,8 @@ public class ImpTokenService implements ITokenService {
     }
 
     @Override
-    public Token generateUserTokenFromJwtString(String jwtToken, User user) {
+    public Token generateUserTokenFromJwtString(String jwtToken) {
         Token token = new Token();
-        token.setUser(user);
         token.setToken(jwtToken);
         token.setTokenType(TokenType.BEARER);
         token.setExpired(false);
@@ -101,9 +99,17 @@ public class ImpTokenService implements ITokenService {
             UserDetails userDetails,
             long expiration
     ) {
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        List<String> roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        Map<String, Object> claims = new HashMap<>(extraClaims);
+        claims.put("roles", roles);
+
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))

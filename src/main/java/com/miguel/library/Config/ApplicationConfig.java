@@ -24,21 +24,13 @@ public class ApplicationConfig {
     @Autowired
     private IUserService userService;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return email -> {
-            User user = userService.searchByEmail(email);
-            if (Objects.isNull(user)) {
-                throw new ExceptionObjectNotFound("User Not Found");
-            }
-            return user;
-        };
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(this.userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

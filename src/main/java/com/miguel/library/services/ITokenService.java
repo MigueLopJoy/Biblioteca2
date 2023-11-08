@@ -15,7 +15,7 @@ public interface ITokenService {
 
     public List<Token> saveAllTokens(List<Token> tokens);
 
-    public Token generateUserTokenFromJwtString(String JwtToken, User user);
+    public Token generateUserTokenFromJwtString(String JwtToken);
 
     public Token searchByToken(String token);
 

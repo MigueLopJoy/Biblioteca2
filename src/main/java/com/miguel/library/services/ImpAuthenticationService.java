@@ -56,7 +56,7 @@ public class ImpAuthenticationService implements IAuthenticationService {
         String refreshToken = tokenService.generateRefreshToken(savedLibrarian);
 
         tokenService.saveToken(
-                tokenService.generateUserTokenFromJwtString(jwtToken, savedLibrarian)
+                tokenService.generateUserTokenFromJwtString(jwtToken)
         );
 
         return new AuthResponse(
@@ -83,7 +83,7 @@ public class ImpAuthenticationService implements IAuthenticationService {
         String refreshToken = tokenService.generateRefreshToken(user);
         tokenService.revokeAllUserTokens(user);
         tokenService.saveToken(
-                tokenService.generateUserTokenFromJwtString(accessToken, user)
+                tokenService.generateUserTokenFromJwtString(accessToken)
         );
         return new AuthResponse(
                 accessToken,

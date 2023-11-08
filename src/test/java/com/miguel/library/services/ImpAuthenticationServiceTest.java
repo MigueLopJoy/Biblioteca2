@@ -62,7 +62,7 @@ class ImpAuthenticationServiceTest {
         verify(tokenService, times(1)).generateToken(savedLibrarian);
         verify(tokenService, times(1)).generateRefreshToken(savedLibrarian);
         verify(tokenService, times(1)).saveToken(
-                tokenService.generateUserTokenFromJwtString(jwtToken, savedLibrarian)
+                tokenService.generateUserTokenFromJwtString(jwtToken)
         );
     }
     private AuthRegisterRequest createSampleAuthRegisterRequest() {
@@ -105,7 +105,6 @@ class ImpAuthenticationServiceTest {
         userDTOSaveLibrarian.setPhoneNumber("+9876543210");
         userDTOSaveLibrarian.setEmail("john.doe@example.com");
         userDTOSaveLibrarian.setPassword("P@ssw0rd");
-        userDTOSaveLibrarian.setRole(Role.LIBRARIAN);
         return userDTOSaveLibrarian;
     }
 

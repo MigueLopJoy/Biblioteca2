@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,14 +48,6 @@ import static com.miguel.library.model.Permission.READER_UPDATE;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URL = {
-            "/auth/**",
-            "/authors/",
-            "/librarians/",
-            "/bookworks-catalog/",
-            "/library/"
-    };
-
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
 
@@ -66,15 +59,39 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(WHITE_LIST_URL)
-                                .permitAll()
-                                .requestMatchers("/librarians/**").hasAnyRole(MANAGER.name(), CATALOGER.name(), LIBRARIAN.name())
-                                .requestMatchers(GET, "/librarians/**").hasAnyAuthority(MANAGER_READ.name(), CATALOGER_READ.name(), LIBRARIAN_READ.name())
-                                .requestMatchers(POST, "/librarians/save-librarian").hasAnyAuthority(MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/librarians/**").hasAnyAuthority(MANAGER_UPDATE.name(), CATALOGER_UPDATE.name(), LIBRARIAN_UPDATE.name())
-                                .requestMatchers(DELETE, "/librarians/**").hasAnyAuthority(MANAGER_DELETE.name())
-                                .anyRequest()
-                                .permitAll()
+                        req
+                                .requestMatchers("/auth/**").permitAll()
+
+                                .requestMatchers("librarians/save-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("librarians/search-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("librarians/edit-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("librarians/delete-librarian").hasAuthority("ROLE_MANAGER")
+
+                                .requestMatchers("readers/save-reader").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("readers/search-reader").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("readers/edit-reader").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("readers/delete-reader").hasAuthority("ROLE_MANAGER")
+
+                                .requestMatchers("authors/save-authors").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("authors/search-authors").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("authors/edit-authors").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("authors/delete-authors").hasAuthority("ROLE_MANAGER")
+
+                                .requestMatchers("bookworks-catalog/save-bookworks").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookworks-catalog/search-bookworks").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookworks-catalog/edit-bookworks").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookworks-catalog/delete-bookworks").hasAuthority("ROLE_MANAGER")
+
+                                .requestMatchers("bookeditions-catalog/save-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookeditions-catalog/search-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookeditions-catalog/edit-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookeditions-catalog/delete-librarian").hasAuthority("ROLE_MANAGER")
+
+                                .requestMatchers("bookcopies/save-librarian").hasAuthority("ROLE_LIBRARIAN")
+                                .requestMatchers("bookcopies/search-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookcopies/edit-librarian").hasAuthority("ROLE_MANAGER")
+                                .requestMatchers("bookcopies/delete-librarian").hasAuthority("ROLE_MANAGER")
+
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
