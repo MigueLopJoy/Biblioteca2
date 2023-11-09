@@ -4,20 +4,22 @@ import { fetchRequest } from "./MODULES/requests.js";
 
 import {
     handleErrorMessages,
-    clearErrorMessages
+    clearErrorMessages,
+    displaySuccessMessage
 } from "./MODULES/api_messages_handler.js";
 
 import { clearForms } from "./MODULES/modules_commons.js";
 
-const d = document
+const d = document,
+    pageContainer = d.querySelector(".page.login_page .page_element_container")
 
 d.addEventListener("DOMContentLoaded", e => {
-    loadContent("./ASSETS/HTML/login.html", d.querySelector(".page.login_page .page_element_container"))
+    loadContent("./ASSETS/HTML/login.html", pageContainer)
 })
 
 d.addEventListener("click", e => {
     if (e.target.matches(".page_element_container .create-account")) {
-        loadContent("./ASSETS/HTML/register.html", d.querySelector(".page.login_page .page_element_container"))
+        loadContent("./ASSETS/HTML/register.html", pageContainer)
     }
 })
 
@@ -27,29 +29,31 @@ d.addEventListener("submit", async e => {
     clearErrorMessages()
 
     try {
-        console.log(e.target)
-        console.log(e.target.classList.contains(".form"))
-        console.log(e.target.matches(".form .registration_form"))
-        console.log(e.target === d.querySelector(".form .registration_form"))
         if (e.target.matches(".form.login_form")) {
-            await loginUser()
+            let tokens = await loginUser()
+            window.location.replace('http://localhost/biblio/ASSETS/HTML/program-container.html');
         } else if (e.target.matches(".form.registration_form")) {
-            console.log("AAA")
-            await registerLibrary()
+            let newAccount = await registerLibrary()
+            backToLoginPage(newAccount)
         }
     } catch (ex) {
-        handleErrorMessages(ex, form)
+        handleErrorMessages(ex, e.target)
         clearForms()
     }
 })
+
+const backToLoginPage = newAccount => {
+    loadContent("./ASSETS/HTML/login.html", pageContainer)
+    displaySuccessMessage(newAccount)
+}
 
 const loginUser = async () => {
     try {
         return await fetchRequest(
             "POST",
-            "http://localhost:8080/auth/register",
+            "http://localhost:8080/auth/authenticate",
             {
-                userName: document.getElementById('userEmail').value,
+                email: document.getElementById('userEmail').value,
                 password: document.getElementById('userPassword').value
             }
         )
@@ -60,38 +64,28 @@ const loginUser = async () => {
 
 const registerLibrary = async () => {
     try {
-        console.log(
-            {
-                libraryName: d.getElementById('libraryName').value,
-                libraryPhoneNumber: d.getElementById('libraryPhoneNumber').value,
-                libraryEmail: d.getElementById('libraryEmail').value,
-                city: d.getElementById('city').value,
-                province: d.getElementById('province').value,
-                postalCode: d.getElementById('postalCode').value,
-                firstName: d.getElementById('firstName').value,
-                lastName: d.getElementById('lastName').value,
-                gender: d.getElementById('gender').value,
-                birthYear: d.getElementById('birth_year').value,
-                email: d.getElementById('email').value,
-                password: d.getElementById('password').value,
-                phoneNumber: d.getElementById('phoneNumber').value,
-            }
-        )
         return await fetchRequest(
             "POST",
             "http://localhost:8080/auth/register",
             {
-                libraryName: document.getElementById('libraryName').value,
-                libraryPhoneNumber: document.getElementById('libraryPhoneNumber').value,
-                libraryEmail: document.getElementById('libraryEmail').value,
-                city: document.getElementById('city').value,
-                province: document.getElementById('province').value,
-                postalCode: document.getElementById('postalCode').value,
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
+                library: {
+                    libraryName: d.getElementById('libraryName').value,
+                    libraryPhoneNumber: d.getElementById('libraryPhoneNumber').value,
+                    libraryEmail: d.getElementById('libraryEmail').value,
+                    libraryAddress: d.getElementById('library_address').value,
+                    city: d.getElementById('city').value,
+                    province: d.getElementById('province').value,
+                    postalCode: d.getElementById('postalCode').value,
+                },
+                librarian: {
+                    firstName: d.getElementById('firstName').value,
+                    lastName: d.getElementById('lastName').value,
+                    gender: d.getElementById('gender').value,
+                    birthYear: d.getElementById('birth_year').value,
+                    email: d.getElementById('email').value,
+                    password: d.getElementById('password').value,
+                    phoneNumber: d.getElementById('phoneNumber').value,
+                }
             }
         )
     } catch (ex) {

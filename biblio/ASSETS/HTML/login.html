@@ -1,19 +1,26 @@
-<div class="container fluid">
+<div class="container fluid d-felx flex-column justify-content-center align-items-center">
 
     <div class="col-12">
         <h2 class="text-center">Login</h2>
     </div>
 
-    <form class="form login_form">
+    <form class="form login_form m-auto mb-4">
+
+        <div class="col-12">
+            <p class="success_message"></p>
+            <p class="error_message general_error"></p>
+        </div>
 
         <input type="email" id="userEmail" name="userEmail" placeholder="User Email">
 
         <input type="password" id="userPassword" name="userPassword" placeholder="User Password">
 
-        <button type="submit">Login</button>
+        <div class="col-12 text-center">
+            <button type="submit" class="btn">Login</button>
+        </div>
     </form>
 
-    <div class="col-12">
-        <p>Don't have an account yet? <a class="create-account">Register</a></p>
+    <div class="col-12 text-center">
+        <p >Don't have an account yet? <a class="create-account">Register</a></p>
     </div>
 </div>

@@ -281,6 +281,7 @@ body {
 .form input[type="text"],
 .form input[type="number"],
 .form input[type="date"],
+.form input[type="email"],
 .form input[type="password"],
 .form select {
     width: 100%;

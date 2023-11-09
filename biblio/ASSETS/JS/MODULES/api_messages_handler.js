@@ -6,6 +6,7 @@ const handleErrorMessages = (error, layer) => {
 
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
+            console.log(er.field)
             let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)
             validationErrorMessage.classList.add("active")
             validationErrorMessage.textContent = er.message

@@ -116,33 +116,29 @@ d.addEventListener("click", async e => {
         toggleLinkActivation("search")
 
         if (d.querySelector(".authors_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_authors.html")
+            await loadPageElementContent("./CATALOG/authors_catalog.html")
         } else if (d.querySelector(".bookworks_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_bookworks.html")
+            await loadPageElementContent("./CATALOG/bookworks_catalog.html")
         } else if (d.querySelector(".bookeditions_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_bookeditions.html")
+            await loadPageElementContent("./CATALOG/PAGES/search_bookeditions.html")
         } else if (d.querySelector(".bookcopies_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/search_bookcopies.html")
+            await loadPageElementContent("./CATALOG/PAGES/search_bookcopies.html")
         } else if (d.querySelector(".readers_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/search_readers.html")
+            await loadPageElementContent("./USERS/PAGES/search_readers.html")
         } else if (d.querySelector(".librarians_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/search_librarian.html")
+            await loadPageElementContent("./USERS/PAGES/search_librarian.html")
         }
     } else if (e.target.matches(".page_link.create")) {
         toggleLinkActivation("create")
 
-        if (d.querySelector(".authors_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/create_authors.html")
-        } else if (d.querySelector(".bookworks_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/create_bookworks.html")
-        } else if (d.querySelector(".bookeditions_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/create_bookedition.html")
+        if (d.querySelector(".bookeditions_page")) {
+            await loadPageElementContent("./CATALOG/PAGES/create_bookedition.html")
         } else if (d.querySelector(".bookcopies_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/PAGES/create_bookcopy.html")
+            await loadPageElementContent("./CATALOG/PAGES/create_bookcopy.html")
         } else if (d.querySelector(".readers_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/create_readers.html")
+            await loadPageElementContent("./USERS/PAGES/create_readers.html")
         } else if (d.querySelector(".librarians_page")) {
-            await loadPageElementContent("./ASSETS/HTML/PROGRAM/MODULES/USERS/PAGES/create_librarian.html")
+            await loadPageElementContent("./USERS/PAGES/create_librarian.html")
         }
     }
 })
