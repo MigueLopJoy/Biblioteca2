@@ -1,7 +1,5 @@
 import {
-    loadContent,
-    displayCatalogingMainPage,
-    displayRegisteringMainPage,
+    loadContent
 } from "../display_pages.js"
 
 import {

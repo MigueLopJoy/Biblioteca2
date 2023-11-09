@@ -1,11 +1,10 @@
 package com.miguel.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.miguel.library.DTO.AuthRegisterRequest;
-import com.miguel.library.DTO.AuthResponse;
-import com.miguel.library.DTO.LibraryDTOSaveLibrary;
-import com.miguel.library.DTO.UserDTOSaveUser;
+import com.miguel.library.DTO.*;
+import com.miguel.library.model.Library;
 import com.miguel.library.model.Role;
+import com.miguel.library.model.ULibrarian;
 import com.miguel.library.services.ImpAuthenticationService;
 import org.apache.coyote.Response;
 import org.junit.Before;
@@ -45,11 +44,15 @@ class AuthenticationControllerTest {
     @Test
     void register() throws Exception {
         AuthRegisterRequest authRequest = createSampleRegisterRequest();
-        AuthResponse authResponse = new AuthResponse("Access", "Refresh");
+        AuthRegisterResponse authResponse
+                = new AuthRegisterResponse(
+                        "New Library Account Created Successfully",
+                        new Library(),
+                        new ULibrarian());
 
         when(authenticationService.register(authRequest)).thenReturn(authResponse);
 
-        ResponseEntity<AuthResponse> currentResponse = authenticationController.register(authRequest);
+        ResponseEntity<AuthRegisterResponse> currentResponse = authenticationController.register(authRequest);
 
         assertEquals(200, currentResponse.getStatusCode());
         assertEquals(currentResponse.getBody(), authResponse);

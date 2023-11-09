@@ -19,11 +19,6 @@ public interface ILibraryService {
 
     public Library searchByLibraryName(String libraryName);
 
-    public List<Library> searchByCity(String city);
-
-    public List<Library> searchByProvince(String province);
-
-    public LibraryResponseDTO editLibrary(Integer libraryId, LibraryDTOEditLibrary libraryEdit);
 
     public Library createLibraryFromDTO(LibraryDTOSaveLibrary libraryDTO);
 }

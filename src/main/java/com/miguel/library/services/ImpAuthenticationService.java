@@ -1,6 +1,7 @@
 package com.miguel.library.services;
 
 import com.miguel.library.DTO.AuthRegisterRequest;
+import com.miguel.library.DTO.AuthRegisterResponse;
 import com.miguel.library.DTO.AuthRequest;
 import com.miguel.library.DTO.AuthResponse;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
@@ -32,7 +33,7 @@ public class ImpAuthenticationService implements IAuthenticationService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponse register(AuthRegisterRequest request) {
+    public AuthRegisterResponse register(AuthRegisterRequest request) {
 
         if (Objects.isNull(request)) {
             throw new ExceptionNullObject("Registration Request Should Not Be Null");
@@ -52,16 +53,10 @@ public class ImpAuthenticationService implements IAuthenticationService {
                         )
                 ).getLibrarian();
 
-        String jwtToken = tokenService.generateToken(savedLibrarian);
-        String refreshToken = tokenService.generateRefreshToken(savedLibrarian);
-
-        tokenService.saveToken(
-                tokenService.generateUserTokenFromJwtString(jwtToken)
-        );
-
-        return new AuthResponse(
-                jwtToken,
-                refreshToken
+        return new AuthRegisterResponse(
+                "New Library Account Created Successfully",
+                newLibrary,
+                savedLibrarian
         );
     }
 

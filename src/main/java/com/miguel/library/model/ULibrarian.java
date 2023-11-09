@@ -14,7 +14,6 @@ import java.util.Comparator;
 @Table(name = "librarians")
 public class ULibrarian extends User implements Comparator<ULibrarian> {
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name="id_library", nullable=false)
     private Library library;

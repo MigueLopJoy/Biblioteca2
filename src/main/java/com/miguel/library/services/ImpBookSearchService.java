@@ -4,10 +4,7 @@ import com.miguel.library.DTO.BookSearchRequestBookCopy;
 import com.miguel.library.DTO.BookSearchRequestBookEdition;
 import com.miguel.library.DTO.BookSearchRequestBookWork;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
-import com.miguel.library.model.Author;
-import com.miguel.library.model.BookCopy;
-import com.miguel.library.model.BookEdition;
-import com.miguel.library.model.BookWork;
+import com.miguel.library.model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -48,6 +45,7 @@ public class ImpBookSearchService implements IBookSearchService {
         Root<BookCopy> root = criteriaQuery.from(BookCopy.class);
 
         Join<BookCopy, BookEdition> bookCopyToBookEditionJoin = root.join("bookEdition", JoinType.INNER);
+        Join<BookCopy, Library> bookCopyToLibraryJoin = root.join("library", JoinType.INNER);
         Join<BookEdition, BookWork> bookEditionToBookWorkJoin = bookCopyToBookEditionJoin.join("bookWork", JoinType.INNER);
         Join<BookWork, Author> bookWorkAuthorJoin = bookEditionToBookWorkJoin.join("author");
 
@@ -57,6 +55,7 @@ public class ImpBookSearchService implements IBookSearchService {
                 criteriaBuilder,
                 root,
                 bookCopyToBookEditionJoin,
+                bookCopyToLibraryJoin,
                 bookEditionToBookWorkJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
@@ -79,6 +78,7 @@ public class ImpBookSearchService implements IBookSearchService {
             CriteriaBuilder criteriaBuilder,
             Root<BookCopy> root,
             Join<BookCopy, BookEdition> bookCopyToBookEditionJoin,
+            Join<BookCopy, Library> bookCopyToLibraryJoin,
             Join<BookEdition, BookWork> bookEditionToBookWorkJoin,
             Join<BookWork, Author> bookWorkAuthorJoin,
             BookSearchRequestBookCopy bookSearchRequest,
@@ -90,8 +90,7 @@ public class ImpBookSearchService implements IBookSearchService {
         Long maxRegistrationNumber = bookSearchRequest.getMaxRegistrationNumber();
         LocalDate minRegistrationDate = bookSearchRequest.getMinRegistrationDate();
         LocalDate maxRegistrationDate = bookSearchRequest.getMaxRegistrationDate();
-        Character status = bookSearchRequest.getStatus();
-        Boolean borrowed = bookSearchRequest.getBorrowed();
+        Integer library = bookSearchRequest.getLibrary();
         String ISBN = bookSearchRequest.getISBN();
         String editor = bookSearchRequest.getEditor();
         String language = bookSearchRequest.getLanguage();
@@ -142,13 +141,10 @@ public class ImpBookSearchService implements IBookSearchService {
             );
         }
 
-        if (Objects.nonNull(status)){
-            predicates.add(criteriaBuilder.equal(root.get("status"), status));
+        if (Objects.nonNull(library)) {
+            predicates.add((criteriaBuilder.equal(bookCopyToLibraryJoin.get("idLibrary"), library)));
         }
 
-        if (Objects.nonNull(borrowed)) {
-            predicates.add(criteriaBuilder.equal(root.get("borrowed"), borrowed));
-        }
         if (isValidString(ISBN)) {
             predicates.add(criteriaBuilder.equal(bookCopyToBookEditionJoin.get("ISBN"), ISBN));
         }

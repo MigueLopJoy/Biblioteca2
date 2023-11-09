@@ -24,6 +24,9 @@ public class BooksSaveDTOBookCopy {
 
     @NotNull(message = "Book edition should not be null")
     private BooksSaveDTOBookEdition bookEdition;
+
+    @NotNull(message = "Must Specify a Library")
+    private Integer libraryId;
 }
 
 

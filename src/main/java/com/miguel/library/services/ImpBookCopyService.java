@@ -103,7 +103,6 @@ public class ImpBookCopyService implements IBookCopyService {
     public BookResponseDTOBookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit) {
         String signature = bookEdit.getSignature();
         Long registrationNumber = bookEdit.getRegistrationNumber();
-        Character status = bookEdit.getStatus();
 
         Optional<BookCopy> optionalBookCopy = bookCopyRepository.findById(bookCopyId);
 
@@ -119,10 +118,6 @@ public class ImpBookCopyService implements IBookCopyService {
 
         if (Objects.nonNull(registrationNumber)) {
             savedBookCopy.setRegistrationNumber(registrationNumber);
-        }
-
-        if (Objects.nonNull(status)) {
-            savedBookCopy.setBookCopyStatus(status);
         }
 
         return new BookResponseDTOBookCopy(
@@ -149,8 +144,6 @@ public class ImpBookCopyService implements IBookCopyService {
                 .registrationNumber(bookCopy.getRegistrationNumber())
                 .registrationDate(LocalDate.now())
                 .signature(bookCopy.getSignature())
-                .bookCopyStatus('B')
-                .borrowed(false)
                 .bookEdition(bookEditionService.createBookEditionFromBookSaveDTO(bookCopy.getBookEdition()))
                 .build();
     }

@@ -15,8 +15,4 @@ public interface ILibraryRepository extends JpaRepository<Library, Integer> {
     public Optional<Library> findByLibraryPhoneNumber(String libraryPhoneNumber);
 
     public Optional<Library> findByLibraryName(String libraryName);
-    public List<Library> findByProvince(String province);
-
-    public List<Library> findByCity(String city);
-
 }

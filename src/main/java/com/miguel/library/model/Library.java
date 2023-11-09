@@ -50,6 +50,13 @@ public class Library {
     )
     private List<ULibrarian> librarians;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="library_bookcopies_junction",
+            joinColumns = {@JoinColumn(name="id_library")},
+            inverseJoinColumns = {@JoinColumn(name="id_bookCopy")}
+    )
+    private List<BookCopy> libraryBookCopies;
     public Library(String libraryName,
                    String libraryPhoneNumber,
                    String libraryEmail,

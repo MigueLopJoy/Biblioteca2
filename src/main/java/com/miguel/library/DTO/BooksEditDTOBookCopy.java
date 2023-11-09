@@ -23,8 +23,4 @@ public class BooksEditDTOBookCopy {
     private Long registrationNumber;
 
     private String signature;
-
-    private Character status;
-
-    private boolean borrowed;
 }

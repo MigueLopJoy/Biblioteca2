@@ -49,11 +49,9 @@ class ImpAuthenticationServiceTest {
 
         // When
 
-        AuthResponse authResponse = authService.register(registerRequest);
+        AuthRegisterResponse authResponse = authService.register(registerRequest);
 
         // Then
-        assertEquals(jwtToken, authResponse.getAccessToken());
-        assertEquals(refreshToken, authResponse.getRefreshToken());
 
         verify(libraryService, times(1)).createLibraryFromDTO(registerRequest.getLibrary());
         verify(libraryService, times(1)).saveNewLibrary(libraryToSave);

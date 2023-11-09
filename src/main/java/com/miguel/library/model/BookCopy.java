@@ -1,6 +1,7 @@
 package com.miguel.library.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,12 +30,12 @@ public class BookCopy {
 
     private String signature;
 
-    private Character bookCopyStatus;
-
-    private boolean borrowed;
-
     @ManyToOne
     @JoinColumn(name = "id_Book_Edition")
     private BookEdition bookEdition;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name="id_library", nullable=false)
+    private Library library;
 }

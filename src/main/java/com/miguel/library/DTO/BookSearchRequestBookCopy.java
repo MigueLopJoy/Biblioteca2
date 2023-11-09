@@ -27,4 +27,6 @@ public class BookSearchRequestBookCopy extends BookSearchRequestBookEdition {
     private Character status;
 
     private Boolean borrowed;
+
+    private Integer library;
 }

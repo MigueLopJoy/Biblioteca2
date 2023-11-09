@@ -46,14 +46,6 @@ public class BookCopyController {
         return ResponseEntity.ok(bookCopyService.findAll());
     }
 
-
-    @GetMapping("/get-bookwork-editions/{bookEditionId}")
-    public ResponseEntity<List<BookCopy>> getAuthorBookWorks(
-            @PathVariable Integer bookEditionId
-    ) {
-        return ResponseEntity.ok(bookCopyService.searchBookEditionCopies(bookEditionId));
-    }
-
     @PostMapping("/search-bookcopies")
     public ResponseEntity<List<Object>> searchBookCopies(
             @RequestBody BookSearchRequestBookCopy bookSearchRequest

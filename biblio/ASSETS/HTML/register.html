@@ -1,0 +1,62 @@
+<div class="container fluid">
+
+    <div class="col-12">
+        <h2 class="text-center">Library Registration</h2>
+    </div>
+
+    <form class="form registration_form">
+
+        <p class="error_message libraryName"></p>
+        <input type="text" id="libraryName" name="libraryName" placeholder="Library Name">
+
+        <p class="error_message libraryPhoneNumber"></p>
+        <input type="text" id="libraryPhoneNumber" name="libraryPhoneNumber" placeholder="Library Phone Number">
+
+        <p class="error_message libraryEmail"></p>
+        <input type="email" id="libraryEmail" name="libraryEmail" placeholder="Library Email">
+
+        <p class="error_message city"></p>
+        <input type="text" id="city" name="city" placeholder="Library City">
+
+        <p class="error_message province"></p>
+        <input type="text" id="province" name="province" placeholder="Library Province">
+
+        <p class="error_message postalCode"></p>
+        <input type="text" id="postalCode" name="postalCode" placeholder="Postal Code">
+
+        <p class="error_message firstName"></p>
+        <input type="text" id="firstName" name="firstName" placeholder="Manager Firstname">
+
+        <p class="error_message lastName"></p>
+        <input type="text" id="lastName" name="lastName" placeholder="Manager Lastname">
+
+        <div class="col-12">
+            <p class="error_message birthYear"></p>
+            <p class="error_message gender"></p>
+            <div class="d-flex justify-content-between">
+                <div class="col-6 pe-1 single_birth_year mb-3">
+                    <input type="number" id="birth_year" name="birth_year" class="birth_year mb-0"
+                        placeholder="Birth Year">
+                </div>
+                <div class="col-6 ps-1">
+                    <select id="gender" name="gender" class="gender">
+                        <option value="">Select Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <p class="error_message email"></p>
+        <input type="email" id="email" name="email" placeholder="Manager email">
+
+        <p class="error_message password"></p>
+        <input type="password" id="password" name="password" placeholder="Manager Password">
+
+        <p class="error_message phoneNumber"></p>
+        <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Manager Phone Number">
+
+        <button type="submit">Register</button>
+    </form>
+</div>

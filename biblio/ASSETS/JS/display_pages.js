@@ -45,22 +45,6 @@ const removeScriptsExcept = (...scriptsToKeep) => {
     }
 }
 
-
-const displayCatalogingMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/cataloging.html", d.getElementById("main-content"))
-    await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/cataloging.js",
-        "./ASSETS/JS/MODULES/modules_commons.js")
-    EnableLinks("author_page")
-}
-
-const displayRegisteringMainPage = async () => {
-    await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/registering.html", d.getElementById("main-content"))
-    await loadJsFiles(
-        "./ASSETS/JS/MODULES/CATALOG/registering.js",
-        "./ASSETS/JS/MODULES/modules_commons.js")
-}
-
 const displayAuthorsCatalogMainPage = async () => {
     await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/authors_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
@@ -108,8 +92,6 @@ const displayLibrariansMainPage = async () => {
 }
 
 export {
-    displayCatalogingMainPage,
-    displayRegisteringMainPage,
     displayAuthorsCatalogMainPage,
     displayBookWorksCatalogMainPage,
     displayBookEditionsCatalogMainPage,

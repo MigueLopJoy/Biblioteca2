@@ -1,6 +1,4 @@
 import {
-  displayCatalogingMainPage,
-  displayRegisteringMainPage,
   displayAuthorsCatalogMainPage,
   displayBookWorksCatalogMainPage,
   displayBookEditionsCatalogMainPage,

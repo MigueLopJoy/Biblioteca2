@@ -1,6 +1,7 @@
 package com.miguel.library.controller;
 
 import com.miguel.library.DTO.AuthRegisterRequest;
+import com.miguel.library.DTO.AuthRegisterResponse;
 import com.miguel.library.DTO.AuthRequest;
 import com.miguel.library.DTO.AuthResponse;
 import com.miguel.library.services.IAuthenticationService;
@@ -20,7 +21,7 @@ public class AuthenticationController {
     private IAuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(
+    public ResponseEntity<AuthRegisterResponse> register(
             @Valid @RequestBody AuthRegisterRequest request
     ) {
         return ResponseEntity.ok(authenticationService.register(request));
