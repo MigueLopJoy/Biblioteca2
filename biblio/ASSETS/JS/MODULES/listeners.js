@@ -34,6 +34,8 @@ import {
     displayBirthYearRange
 } from "./USERS/readers.js"
 
+import { logout } from "./USERS/user.js"
+
 const d = document
 
 d.addEventListener("click", async e => {
@@ -110,6 +112,21 @@ d.addEventListener("click", async e => {
 
     if (e.target.matches(".input-group-text.birth_year")) {
         displayBirthYearRange()
+    }
+
+    if (e.target.matches("#user_icon")) {
+        d.getElementById("user_popover").classList.toggle("active");
+    }
+
+    if (e.target.matches("#user_popover .close-btn")) {
+        d.getElementById("user_popover").classList.remove("active");
+    }
+
+    if (e.target.matches("#user_popover .logout")) {
+        logout()
+    }
+    if (e.target.matches("#user_popover .see_account")) {
+        
     }
 
     if (e.target.matches(".page_link.search")) {

@@ -115,9 +115,7 @@ const getBookCopies = async form => {
                 maxRegistrationDate:
                     containerContainsClass(rangeRegDateContainer) ?
                         form.registration_date.value : form.max_registration_date.value,
-                signature: form.signature.value,
-                status: undefined,
-                borrowed: undefined,
+                signature: form.signature.value
             }
         )
     } catch (ex) {

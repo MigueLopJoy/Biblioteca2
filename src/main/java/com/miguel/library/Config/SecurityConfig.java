@@ -1,6 +1,7 @@
 package com.miguel.library.Config;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
@@ -135,6 +138,9 @@ public class SecurityConfig {
 
                                 .requestMatchers("users/change-password")
                                         .hasAnyAuthority("ROLE_MANAGER", "ROLE_CATALOGER", "ROLE_LIBRARIAN", "ROLE_READER")
+                                .requestMatchers("users/logout")
+                                        .hasAnyAuthority("ROLE_MANAGER", "ROLE_CATALOGER", "ROLE_LIBRARIAN", "ROLE_READER")
+
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
@@ -149,5 +155,16 @@ public class SecurityConfig {
                 )
         ;
         return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        source.registerCorsConfiguration("/users/logout", config);
+        return new CorsFilter(source);
     }
 }

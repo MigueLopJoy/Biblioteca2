@@ -11,6 +11,7 @@ const loadJsFiles = async (...sources) => {
     removeScriptsExcept(
         'http://localhost/biblio/ASSETS/JS/scripts.js',
         'http://localhost/biblio/ASSETS/JS/listeners.js',
+        'http://localhost/biblio/ASSETS/JS/MODULES/CATALOG/USERS/user.js',
         'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
     )
 
@@ -87,7 +88,7 @@ const displayLibrariansMainPage = async () => {
     await loadContent("./USERS/librarians.html", d.getElementById("main-content"))
     await loadContent("./USERS/PAGES/search_librarian.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./USERS/librarians.js",
+        "./PROGRAM/MODULES/USERS/librarians.js",
         "./modules_commons.js")
 }
 
