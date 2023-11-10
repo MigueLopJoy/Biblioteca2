@@ -4,6 +4,7 @@ import com.miguel.library.DTO.*;
 import com.miguel.library.model.Library;
 import com.miguel.library.model.Role;
 import com.miguel.library.model.ULibrarian;
+import com.miguel.library.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -60,7 +61,7 @@ class ImpAuthenticationServiceTest {
         verify(tokenService, times(1)).generateToken(savedLibrarian);
         verify(tokenService, times(1)).generateRefreshToken(savedLibrarian);
         verify(tokenService, times(1)).saveToken(
-                tokenService.generateUserTokenFromJwtString(jwtToken)
+                tokenService.generateUserTokenFromJwtString(jwtToken, new User())
         );
     }
     private AuthRegisterRequest createSampleAuthRegisterRequest() {

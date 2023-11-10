@@ -50,12 +50,13 @@ public class ImpTokenService implements ITokenService {
         tokenRepository.save(token);
     }
     @Override
-    public Token generateUserTokenFromJwtString(String jwtToken) {
+    public Token generateUserTokenFromJwtString(String jwtToken, User user) {
         Token token = new Token();
         token.setToken(jwtToken);
         token.setTokenType(TokenType.BEARER);
         token.setExpired(false);
         token.setRevoked(false);
+        token.setUser(user);
 
         return token;
     }

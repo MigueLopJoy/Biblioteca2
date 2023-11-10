@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@CrossOrigin(origins = "http://localhost/")
+@CrossOrigin(origins = "http://localhost:8080/")
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     @Autowired
     private IUserService userService;
 
@@ -32,5 +31,12 @@ public class UserController {
             Principal connectedUser
     ) {
         return ResponseEntity.ok(userService.changeUserPassword(passwordRequest, connectedUser));
+    }
+
+    @PostMapping("/get-connected-user")
+    public ResponseEntity<?> getConnectedUser(
+            Principal connectedUser
+    ) {
+        return ResponseEntity.ok(userService.getConnectedUser(connectedUser));
     }
 }

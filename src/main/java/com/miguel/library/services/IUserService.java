@@ -11,7 +11,9 @@ import java.security.Principal;
 public interface IUserService {
 
     public UserDTOUserResponse changeUserPassword(UserDTOChangePasswordRequest passwordRequest, Principal connectedUser);
-    public User searchByEmail(String email);
 
+    public User getConnectedUser(Principal principal);
+
+    public User searchByEmail(String email);
     public User searchByPhoneNumber(String phoneNumber);
 }

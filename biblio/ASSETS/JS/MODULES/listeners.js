@@ -31,10 +31,13 @@ import {
 } from "./CATALOG/bookcopies_catalog.js"
 
 import {
-    displayBirthYearRange
+    displayBirthYearRange,
 } from "./USERS/readers.js"
 
-import { logout } from "./USERS/user.js"
+import { 
+    logout, 
+    seeAccount 
+} from "./USERS/user.js"
 
 const d = document
 
@@ -126,7 +129,8 @@ d.addEventListener("click", async e => {
         logout()
     }
     if (e.target.matches("#user_popover .see_account")) {
-        
+        console.log(e.target)
+        seeAccount()
     }
 
     if (e.target.matches(".page_link.search")) {

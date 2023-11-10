@@ -81,8 +81,6 @@ const displayBirthYearRange = () => {
 
     genderSelect.classList.remove("col-6")
     genderSelect.classList.add("col-4")
-
-
 }
 
 

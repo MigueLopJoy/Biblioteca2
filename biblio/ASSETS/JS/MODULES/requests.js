@@ -1,9 +1,11 @@
 const fetchRequest = async (method, url, bodyContent) => {
     try {
+        console.log("Authorization: " + "Bearer " + localStorage.getItem("jwtToken"))
         let options = {
             method: method,
             headers: {
-                "Content-type": "application/json; charset=utf-8"
+                "Content-type": "application/json; charset=utf-8",
+                "Authorization": "Bearer " + localStorage.getItem("jwtToken")
             },
             body: bodyContent ? JSON.stringify(bodyContent) : null
         },
@@ -14,6 +16,7 @@ const fetchRequest = async (method, url, bodyContent) => {
         return await res.json()
 
     } catch (ex) {
+        console.log(ex)
         const errorData = await ex.json(),
             errorResponse = {
                 status: errorData.status,

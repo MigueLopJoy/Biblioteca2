@@ -83,7 +83,7 @@ public class ImpAuthenticationService implements IAuthenticationService {
         String refreshToken = tokenService.generateRefreshToken(user);
         tokenService.revokeAllUserTokens(user);
         tokenService.saveToken(
-                tokenService.generateUserTokenFromJwtString(accessToken)
+                tokenService.generateUserTokenFromJwtString(accessToken, user)
         );
         return new AuthResponse(
                 accessToken,
