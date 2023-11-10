@@ -15,7 +15,7 @@
 
 <body>
     <div id="program-wrapper" class="container d-flex">
-        <aside id="sidebar" class="main-box h-100">
+        <aside id="sidebar" class="main-box h-100 d-flex flex-column justify-content-between">
             <menu class="sidenav">
                 <div class="catalog">
                     <button class="dropdown-btn text-white">Catalog
@@ -39,15 +39,43 @@
                     </div>
                 </div>
             </menu>
+
+            <div class="user-account position-relative">
+                <div class="user-icon text-center fs-3">
+                    <a data-toggle="modal" data-target="#userModal" class="text-white">
+                        <i class="bi bi-person-circle text-white"></i>
+                    </a>
+                </div>
+
+                <div class="modal fade " id="userModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content user-modal-dialog">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="userModalLabel">User Options</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li class="list-group-item">See User Account</li>
+                                    <li class="list-group-item">Logout</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </aside>
         <main id="main-content" class="main-box px-5">
             <div class="container"></div>
         </main>
     </div>
-
     <script type="module" src="./../JS/scripts.js"></script>
     <script type="module" src="./../JS/MODULES/listeners.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>

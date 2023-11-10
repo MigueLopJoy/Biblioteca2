@@ -1,5 +1,6 @@
 package com.miguel.library.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miguel.library.DTO.AuthRegisterRequest;
 import com.miguel.library.DTO.AuthRegisterResponse;
 import com.miguel.library.DTO.AuthRequest;
@@ -7,11 +8,15 @@ import com.miguel.library.DTO.AuthResponse;
 import com.miguel.library.Exceptions.ExceptionNoSearchResultsFound;
 import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.model.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Service
@@ -80,6 +85,44 @@ public class ImpAuthenticationService implements IAuthenticationService {
         tokenService.saveToken(
                 tokenService.generateUserTokenFromJwtString(accessToken)
         );
+        return new AuthResponse(
+                accessToken,
+                refreshToken
+        );
+    }
+
+    @Override
+    public AuthResponse refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String refreshToken;
+        String userEmail;
+
+        if (Objects.nonNull(authHeader) && authHeader.startsWith("Bearer ")) {
+            throw new IOException();
+        }
+
+        refreshToken = authHeader.substring(7);
+        userEmail = tokenService.extractUsername(refreshToken);
+        if (Objects.nonNull(userEmail)) {
+            throw new IOException();
+        }
+
+        User user = userService.searchByEmail(userEmail);
+        if (Objects.isNull(user)) {
+            throw new ExceptionNoSearchResultsFound("User not found");
+        }
+
+        if (!tokenService.isTokenValid(refreshToken, user)) {
+            throw new IOException();
+        }
+
+        String accessToken = tokenService.generateToken(user);
+        tokenService.revokeAllUserTokens(user);
+        tokenService.saveUserToken(user, accessToken);
+
         return new AuthResponse(
                 accessToken,
                 refreshToken

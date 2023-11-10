@@ -5,10 +5,14 @@ import com.miguel.library.DTO.AuthRegisterResponse;
 import com.miguel.library.DTO.AuthRequest;
 import com.miguel.library.DTO.AuthResponse;
 import com.miguel.library.services.IAuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @CrossOrigin(origins = "http://localhost/")
 @RestController
@@ -29,5 +33,13 @@ public class AuthenticationController {
             @Valid @RequestBody AuthRequest request
     ) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public void refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws IOException {
+        authenticationService.refreshToken(request, response);
     }
 }

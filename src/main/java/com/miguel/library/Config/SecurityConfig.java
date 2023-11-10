@@ -10,8 +10,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
@@ -54,6 +56,8 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
+    @Autowired
+    private LogoutHandler logoutHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -129,10 +133,20 @@ public class SecurityConfig {
                                 .requestMatchers("library/search-library")
                                         .hasAnyAuthority("ROLE_MANAGER", "ROLE_CATALOGER", "ROLE_LIBRARIAN", "ROLE_READER")
 
+                                .requestMatchers("users/change-password")
+                                        .hasAnyAuthority("ROLE_MANAGER", "ROLE_CATALOGER", "ROLE_LIBRARIAN", "ROLE_READER")
+
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout ->
+                        logout.logoutUrl("/users/logout")
+                                .addLogoutHandler(logoutHandler)
+                                .logoutSuccessHandler(
+                                        (request, response, authentication) -> SecurityContextHolder.clearContext()
+                                )
+                )
         ;
         return http.build();
     }

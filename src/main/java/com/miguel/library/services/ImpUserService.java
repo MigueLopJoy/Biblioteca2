@@ -1,15 +1,45 @@
 package com.miguel.library.services;
 
+import com.miguel.library.DTO.UserDTOChangePasswordRequest;
+import com.miguel.library.DTO.UserDTOSaveUser;
+import com.miguel.library.DTO.UserDTOUserResponse;
 import com.miguel.library.model.User;
 import com.miguel.library.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
 
 @Service
 public class ImpUserService implements IUserService {
 
     @Autowired
-    public IUserRepository userRepository;
+    private IUserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDTOUserResponse changeUserPassword(UserDTOChangePasswordRequest passwordRequest, Principal connectedUser) {
+        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+
+        if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalStateException("Wrong password");
+        }
+
+        if (!passwordRequest.getNewPassword().equals(passwordRequest.getConfirmationPassword())) {
+            throw new IllegalStateException("Password are not the same");
+        }
+
+        user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+
+        return new UserDTOUserResponse(
+            "Password changed successfully",
+                userRepository.save(user)
+        );
+    }
 
     @Override
     public User searchByEmail(String email) {

@@ -13,6 +13,8 @@ public interface ITokenService {
 
     public Token saveToken(Token token);
 
+    public void saveUserToken(User user, String jwtToken);
+
     public List<Token> saveAllTokens(List<Token> tokens);
 
     public Token generateUserTokenFromJwtString(String JwtToken);

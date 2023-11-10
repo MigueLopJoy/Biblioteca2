@@ -39,6 +39,17 @@ public class ImpTokenService implements ITokenService {
     }
 
     @Override
+    public void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+    @Override
     public Token generateUserTokenFromJwtString(String jwtToken) {
         Token token = new Token();
         token.setToken(jwtToken);
@@ -99,17 +110,9 @@ public class ImpTokenService implements ITokenService {
             UserDetails userDetails,
             long expiration
     ) {
-        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-        List<String> roles = authorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        Map<String, Object> claims = new HashMap<>(extraClaims);
-        claims.put("roles", roles);
-
         return Jwts
                 .builder()
-                .setClaims(claims)
+                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
