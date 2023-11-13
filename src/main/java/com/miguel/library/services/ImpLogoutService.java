@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-
 @Service
 public class ImpLogoutService implements LogoutHandler {
 

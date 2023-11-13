@@ -1,30 +1,29 @@
 import { fetchRequest } from "../requests.js"
-import { 
+import {
     displayReadersMainPage,
-    displayLibrariansMainPage 
+    displayLibrariansMainPage
 } from "../../display_pages.js"
 
 
 const logout = async () => {
-    await fetchRequest(
-        "POST",
-        "http://localhost:8080/users/logout"
+    let response = await fetchRequest(
+        "GET",
+        "http://localhost:8080/test/get-headers"
     )
 
     localStorage.clear("jwtToken")
-
-    window.location.replace('http://localhost/biblio');
+    console.log(response)
 }
 
 const seeAccount = async () => {
     let user = await fetchRequest(
-        "POST",
-        "http://localhost:8080/users/get-connected-user",
+        "GET",
+        "http://localhost:8080/test/get-authorization-header",
     )
     console.log(user)
 }
 
-export { 
+export {
     logout,
-    seeAccount 
+    seeAccount
 }

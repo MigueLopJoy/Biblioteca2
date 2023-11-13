@@ -49,47 +49,47 @@ const removeScriptsExcept = (...scriptsToKeep) => {
 const displayAuthorsCatalogMainPage = async () => {
     await loadContent("./PROGRAM/MODULES/CATALOG/authors_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/CATALOG/authors_catalog.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/CATALOG/authors_catalog.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 const displayBookWorksCatalogMainPage = async () => {
     await loadContent("./PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/CATALOG/bookworks_catalog.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/CATALOG/bookworks_catalog.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 const displayBookEditionsCatalogMainPage = async () => {
     await loadContent("./PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
     await loadContent("./PROGRAM/MODULES/CATALOG/PAGES/search_bookedition.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/CATALOG/bookeditions_catalog.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/CATALOG/bookeditions_catalog.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 const displayBookCopiesCatalogMainPage = async () => {
     await loadContent("./PROGRAM/MODULES/CATALOG/bookcopies.html", d.getElementById("main-content"))
     await loadContent("./PROGRAM/MODULES/CATALOG/PAGES/search_bookcopy.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/CATALOG/bookcopies_catalog.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/CATALOG/bookcopies_catalog.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 const displayReadersMainPage = async () => {
     await loadContent("./PROGRAM/MODULES/USERS/readers.html", d.getElementById("main-content"))
     await loadContent("./PROGRAM/MODULES/USERS/PAGES/search_readers.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/USERS/readers.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/USERS/readers.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 const displayLibrariansMainPage = async () => {
     await loadContent("./USERS/librarians.html", d.getElementById("main-content"))
     await loadContent("./USERS/PAGES/search_librarian.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
-        "./PROGRAM/MODULES/USERS/librarians.js",
-        "./modules_commons.js")
+        "./../JS/MODULES/USERS/librarians.js",
+        "./../JS/MODULES/modules_commons.js")
 }
 
 export {

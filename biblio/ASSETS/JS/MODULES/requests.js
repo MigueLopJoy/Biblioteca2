@@ -1,15 +1,17 @@
 const fetchRequest = async (method, url, bodyContent) => {
     try {
-        console.log("Authorization: " + "Bearer " + localStorage.getItem("jwtToken"))
         let options = {
             method: method,
             headers: {
-                "Content-type": "application/json; charset=utf-8",
-                "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                "content-type": "application/json; charset=utf-8",
+                "authorization": "Bearer " + localStorage.getItem("jwtToken")
             },
             body: bodyContent ? JSON.stringify(bodyContent) : null
-        },
-            res = await fetch(url, options)
+        }
+
+        console.log("Request Options:", options);
+
+        let res = await fetch(url, options)
 
         if (!res.ok) throw res
 

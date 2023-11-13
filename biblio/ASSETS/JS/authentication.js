@@ -30,9 +30,11 @@ d.addEventListener("submit", async e => {
 
     try {
         if (e.target.matches(".form.login_form")) {
+            localStorage.clear()
             let tokens = await loginUser()
             localStorage.setItem("jwtToken", tokens.access_token)
             window.location.replace('http://localhost/biblio/ASSETS/HTML/program-container.html');
+            console.log(localStorage.getItem("jwtToken"))
         } else if (e.target.matches(".form.registration_form")) {
             let newAccount = await registerLibrary()
             backToLoginPage(newAccount)

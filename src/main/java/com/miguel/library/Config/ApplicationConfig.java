@@ -1,7 +1,4 @@
 package com.miguel.library.Config;
-
-import com.miguel.library.Exceptions.ExceptionObjectNotFound;
-import com.miguel.library.model.User;
 import com.miguel.library.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +11,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,6 +29,20 @@ public class ApplicationConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/**")
+                        .allowedOrigins("http://localhost")
+                        .allowedMethods("*")
+                        .allowedHeaders("authorization", "content-type")
+                        .exposedHeaders("*");
+            }
+        };
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,11 +44,12 @@ import java.util.Objects;
                 filterChain.doFilter(request, response);
                 return;
             }
-            String authHeader = request.getHeader("Authorization");
+
+            String authHeader = request.getHeader("authorization");
             String jwt;
             String userEmail;
 
-            if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            if (Objects.isNull(authHeader) ||!authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -55,14 +57,15 @@ import java.util.Objects;
             jwt = authHeader.substring(7);
             userEmail = tokenService.extractUsername(jwt);
 
-            if (Objects.nonNull(userEmail) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
-
+            if (Objects.nonNull(userEmail) &&
+                    Objects.isNull(SecurityContextHolder.getContext().getAuthentication())
+            ) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
                 Boolean isTokenValid = this.isTokenValid(jwt);
 
                 if (tokenService.isTokenValid(jwt, userDetails) && isTokenValid) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
+                             userDetails,
                             null,
                             userDetails.getAuthorities()
                     );

@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost/")
 @RestController
 @RequestMapping("/authors-catalog")
 public class AuthorController {
-
     @Autowired
     private IAuthorService authorService;
     @PostMapping("/save-author")

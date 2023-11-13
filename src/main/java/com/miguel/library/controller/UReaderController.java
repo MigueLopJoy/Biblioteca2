@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost/")
 @RestController
 @RequestMapping("/readers")
 public class UReaderController {
