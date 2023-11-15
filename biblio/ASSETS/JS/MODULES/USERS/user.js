@@ -8,7 +8,7 @@ import {
 const logout = async () => {
     let response = await fetchRequest(
         "GET",
-        "http://localhost:8080/test/get-headers"
+        "http://localhost:8080/users/logout"
     )
 
     localStorage.clear("jwtToken")

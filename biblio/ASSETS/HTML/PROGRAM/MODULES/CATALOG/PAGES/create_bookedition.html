@@ -2,33 +2,45 @@
     <legend>Create new book edition</legend>
     <p class="error_message general_error mb-0"></p>
 
-    <p class="error_message author"></p>
-    <div class="input-group mb-3">
-        <input type="text" name="author_name" class="author_name mb-0" placeholder="Search Author">
-        <span class="input-group-text search_bookwork_author">
-            <i class="bi bi-search"></i>
-        </span>
+    <div>
+        <p class="error_message author"></p>
+        <div class="input-group mb-3">
+            <input type="text" name="author_name" class="author_name mb-0" placeholder="Search Author">
+            <span class="input-group-text search_bookwork_author">
+                <i class="bi bi-search"></i>
+            </span>
+        </div>
     </div>
 
-    <div class="error_message bookWork"></div>
-    <div class="input-group mb-3">
-        <input type="text" name="bookwork_title" class="bookwork_title mb-0" placeholder="Search Book Work">
-        <span class="input-group-text search_edition_bookwork">
-            <i class="bi bi-search"></i>
-        </span>
+    <div>
+        <p class="error_message bookWork"></p>
+        <div class="input-group mb-3">
+            <input type="text" name="bookwork_title" class="bookwork_title mb-0" placeholder="Search Book Work">
+            <span class="input-group-text search_edition_bookwork">
+                <i class="bi bi-search"></i>
+            </span>
+        </div>
     </div>
 
-    <p class="error_message ISBN mb-0"></p>
-    <input type="text" name="bookedition_isbn" class="bookedition_isbn" placeholder="ISBN">
+    <div>
+        <p class="error_message ISBN mb-0"></p>
+        <input type="text" name="bookedition_isbn" class="bookedition_isbn" placeholder="ISBN">
+    </div>
 
-    <p class="error_message editor mb-0"></p>
-    <input type="text" name="editor_name" placeholder="Editor name">
+    <div>
+        <p class="error_message editor mb-0"></p>
+        <input type="text" name="editor_name" placeholder="Editor name">
+    </div>
 
-    <p class="error_message editionYear mb-0"></p>
-    <input type="number" name="edition_year" placeholder="Edition year">
+    <div>
+        <p class="error_message editionYear mb-0"></p>
+        <input type="number" name="edition_year" placeholder="Edition year">
+    </div>
 
-    <p class="error_message language mb-0"></p>
-    <input type="text" name="edition_language" placeholder="Language">
+    <div>
+        <p class="error_message language mb-0"></p>
+        <input type="text" name="edition_language" placeholder="Language">
+    </div>
 
     <input type="submit" id="create_bookwork_btn" class="btn">
 </form>

@@ -96,7 +96,6 @@ public class ImpBookEditionService implements IBookEditionService{
         if (bookWorkEditions.isEmpty()) {
             throw new ExceptionNoSearchResultsFound("No Editions were found");
         }
-
         return bookWorkEditions;
     }
 
@@ -140,14 +139,14 @@ public class ImpBookEditionService implements IBookEditionService{
     @Override
     public SuccessfulObjectDeletionDTO deleteBookEdition(Integer bookEditionId) {
 
-        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
-        if (!optionalBookEdition.isPresent()) {
+        BookEdition bookEdition = this.searchById(bookEditionId);
+        if (Objects.isNull(bookEdition)) {
             throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
 
         try{
             bookCopyService.searchBookEditionCopies(
-                    optionalBookEdition.get().getIdBookEdition()
+                    bookEdition.getIdBookEdition()
             );
             throw new ExceptionHasRelatedObjects("Cannot Delete Book Edition While Associated Copies Exist");
         } catch (ExceptionNoSearchResultsFound ex) {

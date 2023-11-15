@@ -22,6 +22,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
 
@@ -35,9 +36,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req
+                        req.anyRequest().permitAll()
+
+                        /*
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/test/get-headers").permitAll()
                                 .requestMatchers("/test/**").permitAll()
 
                                 .requestMatchers("/librarians/save-librarian")
@@ -114,6 +116,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users/get-connected-user")
                                         .hasAnyAuthority("ROLE_MANAGER", "ROLE_CATALOGER", "ROLE_LIBRARIAN", "ROLE_READER")
 
+                 */
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

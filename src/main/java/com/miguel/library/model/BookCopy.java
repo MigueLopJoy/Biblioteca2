@@ -31,10 +31,9 @@ public class BookCopy {
     private String signature;
 
     @ManyToOne
-    @JoinColumn(name = "id_Book_Edition")
+    @JoinColumn(name = "id_book_edition")
     private BookEdition bookEdition;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name="id_library", nullable=false)
     private Library library;

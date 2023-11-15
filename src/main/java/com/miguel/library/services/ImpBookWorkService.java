@@ -29,7 +29,7 @@ public class ImpBookWorkService implements IBookWorkService{
     private IAuthorService authorService;
 
     @Autowired
-    private IBookEditionRepository bookEditionService;
+    private IBookEditionService bookEditionService;
 
     @Override
     public BookResponseDTOBookWork saveNewBookWork(BookWork bookWork) {
@@ -66,6 +66,11 @@ public class ImpBookWorkService implements IBookWorkService{
         }
         Collections.sort(allBookWorks);
         return allBookWorks;
+    }
+
+    @Override
+    public BookWork searchById(Integer bookWorkId) {
+        return bookWorkRepository.findById(bookWorkId).orElse(null);
     }
 
     @Override
@@ -164,13 +169,13 @@ public class ImpBookWorkService implements IBookWorkService{
     @Override
     public SuccessfulObjectDeletionDTO deleteBookWork(Integer bookWorkId) {
 
-        Optional<BookWork> optionalBookWork = bookWorkRepository.findById(bookWorkId);
-        if (!optionalBookWork.isPresent()) {
+        BookWork bookWork = this.searchByBookWorkId(bookWorkId);
+        if (Objects.isNull(bookWork)) {
             throw new ExceptionObjectNotFound("Book Work Not Found");
         }
 
         try{
-            bookEditionService.findByBookWork(optionalBookWork.get());
+            bookEditionService.searchBookWorkEditions(bookWork.getIdBookWork());
             throw new ExceptionHasRelatedObjects("Cannot Delete Book Work While Associated Editions Exist");
         } catch (ExceptionNoSearchResultsFound ex) {
             bookWorkRepository.deleteById(bookWorkId);

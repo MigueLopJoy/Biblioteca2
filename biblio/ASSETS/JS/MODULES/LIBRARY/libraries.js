@@ -22,21 +22,21 @@ import { getBookWork } from "./bookworks_catalog.js"
 
 const d = document
 
-let bookedition, results, error, resultsType, operation, table, catalogCard
+let library, results, error, resultsType, operation, table, catalogCard
 
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
     if (d.getElementById("bookeditions_section")) {
-        sendBookEditionForm(undefined, e.target)
+        sendLibraryForm(undefined, e.target)
     }
 })
 
-const sendBookEditionForm = async (bookwork, form) => {
-    if (!form) form = setFormInputsValues(bookwork)
+const sendLibraryForm = async (library, form) => {
+    if (!form) form = setFormInputsValues(library)
 
     clearErrorMessages()
-    await runBookEditionProcess(form)
+    await runLibraryProcess(form)
 
     if (error) {
         handleErrorMessages(error, form)
@@ -53,47 +53,39 @@ const sendBookEditionForm = async (bookwork, form) => {
     }
 }
 
-const setFormInputsValues = bookwork => {
-    let searchBookEditionForm = d.querySelector(".form.bookedition_form.search"),
-        author = bookwork.author
+const setFormInputsValues = library => {
+    let searchLibraryForm = d.querySelector(".form.library_form.search")
 
-    searchBookEditionForm.title.value = bookwork.title
-    searchBookEditionForm.author.value = `${author.firstName} ${author.lastName}`
+    searchLibraryForm.library_name.value = library.libraryName
+    searchLibraryForm.city.value = library.city
+    searchLibraryForm.province.value = library.province
 
-    return searchBookEditionForm
+    return searchLibraryForm
 }
 
-const runBookEditionProcess = async form => {
-    bookedition = ""
-    resultsType = "bookedition"
+const runLibraryProcess = async form => {
+    library = ""
+    resultsType = "library"
 
     if (form.classList.contains("search")) {
-        table = d.querySelector(".results_table.bookeditions_results_table")
+        table = d.querySelector(".results_table.library_results_table")
         operation = "search"
-        results = await getBookeditions(form)
-    } else if (form.classList.contains("create")) {
-        catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
-        operation = "create"
-        results = await createBookEdition(form)
+        results = await getLibrary(form)
     }
 }
 
-const displayBookEditionSelectionTable = async () => {
-    const bookeditionForm = d.querySelector(".form.bookedition_form.search")
+const displayLibrariesSelectionTable = async () => {
+    const libraryForm = d.querySelector(".form.library_form.search")
 
-    let bookeditionIsbn = d.querySelector(".form.create .bookedition_isbn").value,
-        bookWorkTitle = d.querySelector(".form.create .bookwork_title").value,
-        bookWorkAuthor = d.querySelector(".form.create .author_name").value
+    let libraryName = d.querySelector(".form.search .edition_library").value
 
-    bookeditionForm.editor_name.value = ""
-    bookeditionForm.edition_language.value = ""
-    bookeditionForm.bookedition_isbn.value = bookeditionIsbn
-    bookeditionForm.bookwork_title.value = bookWorkTitle
-    bookeditionForm.author_name.value = bookWorkAuthor
+    libraryForm.editor_name.value = libraryName
+    libraryForm.province.value = ""
+    libraryForm.city.value = ""
 
-    await sendBookEditionForm(bookWorkTitle, bookeditionForm)
+    await sendLibraryForm(libraryName, libraryForm)
     try {
-        getBookeditionsResults()
+        getLibraryResults()
         changeSelectBtn()
     } catch (ex) {
         error = ex
@@ -104,42 +96,26 @@ const displayBookEditionSelectionTable = async () => {
 const changeSelectBtn = () => {
     const selectResultBtn = d.querySelector(".select_results_btn")
 
-    if (selectResultBtn.classList.contains("select_copy_bookedition")) {
-        selectResultBtn.textContent = "Select Book Copy"
-        selectResultBtn.classList.remove("select_copy_bookedition")
+    if (selectResultBtn.classList.contains("select_edition_library")) {
+        selectResultBtn.textContent = "Select Library"
+        selectResultBtn.classList.remove("select_edition_library")
     } else {
         selectResultBtn.textContent = "Select Book Edition"
-        selectResultBtn.classList.add("select_copy_bookedition")
+        selectResultBtn.classList.add("select_edition_library")
     }
 }
 
-const selectCopyBookEdition = () => {
+const selectEditionLibrary = () => {
     changeSelectBtn()
-    bookedition = getBookeditionsResults()[findSelectedResult()]
+    library = getLibraryResults()[findSelectedResult()]
     closeModal(d.querySelector(".form.create"))
-    manageInputValues()
 }
 
-const manageInputValues = () => {
-    const bookeditionIsbnInput = d.querySelector(".form.create .bookedition_isbn"),
-        bookworkTitleInput = d.querySelector(".form.create .bookwork_title"),
-        bookworkAuthorInput = d.querySelector(".form.create .author_name")
-
-    let bookwork = bookedition.bookWork,
-        author = bookwork.author
-
-    if (bookedition) {
-        bookeditionIsbnInput.value = bookedition.isbn
-        bookworkTitleInput.value = bookwork.title
-        bookworkAuthorInput.value = `${author.firstName} ${author.lastName}`
-    } else bookworkTitleInput.value = ""
-}
-
-const getBookeditions = async form => {
+const getLibrary = async form => {
     try {
         return await fetchRequest(
             "POST",
-            "http://localhost:8080/general-catalog/search-bookeditions",
+            "http://localhost:8080/library/search-bookeditions",
             {
                 title: form.bookwork_title.value,
                 author: form.author_name.value,
@@ -290,7 +266,7 @@ const generateBookEditionCatalogCard = async results => {
     catalogCard.querySelector(".bookedition_copies").value = editionCopiesMessage
 }
 
-const getBookeditionsResults = () => {
+const getLibraryResults = () => {
     if (error) throw error
     return results
 }
@@ -303,10 +279,12 @@ const setBookeditionValue = newBookEditionValue => {
 export {
     sendBookEditionForm,
     displayBookEditionSelectionTable,
-    selectCopyBookEdition,
+    displayLibrariesSelectionTable,
+    selectEditionLibrary,
     editBookEdition,
     deleteBookedition,
     generateBookEditionCatalogCard,
     generateBookEditionsTableContent,
+    getBrowseBookWork,
     setBookeditionValue
 }

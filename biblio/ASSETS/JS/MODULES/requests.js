@@ -9,8 +9,6 @@ const fetchRequest = async (method, url, bodyContent) => {
             body: bodyContent ? JSON.stringify(bodyContent) : null
         }
 
-        console.log("Request Options:", options);
-
         let res = await fetch(url, options)
 
         if (!res.ok) throw res
@@ -18,7 +16,6 @@ const fetchRequest = async (method, url, bodyContent) => {
         return await res.json()
 
     } catch (ex) {
-        console.log(ex)
         const errorData = await ex.json(),
             errorResponse = {
                 status: errorData.status,

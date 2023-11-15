@@ -54,7 +54,7 @@ const sendBookWorkForm = async (author, form) => {
 
 const setFormInputsValues = author => {
     let searchBookWorkForm = d.querySelector(".form.bookwork_form.search")
-    searchBookWorkForm.author_name.value = `${author.firstName} ${author.lastName}`
+    if (author) searchBookWorkForm.author_name.value = `${author.firstName} ${author.lastName}`
     return searchBookWorkForm
 }
 
@@ -118,7 +118,6 @@ const manageInputValues = () => {
     if (bookwork) {
         bookworkTitleInput.value = bookwork.title
         bookworkAuthorInput.value = `${bookwork.author.firstName} ${bookwork.author.lastName}`
-
         if (bookEditionIsbnInput) bookEditionIsbnInput.value = ""
 
     } else bookworkTitleInput.value = ""

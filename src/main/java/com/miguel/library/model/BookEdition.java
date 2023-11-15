@@ -3,6 +3,8 @@ package com.miguel.library.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter @Setter
 @Builder
 @NoArgsConstructor
@@ -26,4 +28,12 @@ public class BookEdition {
     @ManyToOne
     @JoinColumn(name = "id_Book_Work")
     private BookWork bookWork;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="edition_copies_junction",
+            joinColumns = {@JoinColumn(name="id_bookEdition")},
+            inverseJoinColumns = {@JoinColumn(name="id_bookCopy")}
+    )
+    private List<BookCopy> bookEditionCopies;
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-@CrossOrigin(allowedHeaders = "*")
+@CrossOrigin
 @RestController
 @RequestMapping("/test")
 public class testController {

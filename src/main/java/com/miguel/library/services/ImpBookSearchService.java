@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -185,6 +184,7 @@ public class ImpBookSearchService implements IBookSearchService {
         Root<BookEdition> root = criteriaQuery.from(BookEdition.class);
 
         Join<BookEdition, BookWork> bookEditionToBookWorkJoin = root.join("bookWork", JoinType.INNER);
+        Join<BookEdition, BookCopy> bookEditionToBookCopyJoin = root.join("bookEditionCopies", JoinType.LEFT);
         Join<BookWork, Author> bookWorkAuthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
@@ -193,6 +193,7 @@ public class ImpBookSearchService implements IBookSearchService {
                 criteriaBuilder,
                 root,
                 bookEditionToBookWorkJoin,
+                bookEditionToBookCopyJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -213,15 +214,21 @@ public class ImpBookSearchService implements IBookSearchService {
             CriteriaBuilder criteriaBuilder,
             Root<BookEdition> root,
             Join<BookEdition, BookWork> bookEditionBookWorkJoin,
+            Join<BookEdition, BookCopy> bookEditionBookCopyJoin,
             Join<BookWork, Author> bookWorkAuthorJoin,
             BookSearchRequestBookEdition bookSearchRequest,
             List<Predicate> predicates
     ) {
+        Integer idLibrary = bookSearchRequest.getIdLibrary();
         String ISBN = bookSearchRequest.getISBN();
         String editor = bookSearchRequest.getEditor();
         String language = bookSearchRequest.getLanguage();
         String author = bookSearchRequest.getAuthor();
         String title = bookSearchRequest.getTitle();
+
+        if (Objects.nonNull(idLibrary)) {
+            predicates.add(criteriaBuilder.equal(bookEditionBookCopyJoin.get("idLibrary"), idLibrary));
+        }
 
         if (isValidString(ISBN)) {
             predicates.add(criteriaBuilder.equal(root.get("ISBN"), ISBN));

@@ -11,6 +11,7 @@ public interface IBookWorkService {
 
     public List<BookWork> findAll();
 
+    public BookWork searchById(Integer bookWorkId);
     public BookWork searchByBookWorkId(Integer BookWorkId);
 
     public BookWork searchByTitleAndAuthor(BookWork bookWork);

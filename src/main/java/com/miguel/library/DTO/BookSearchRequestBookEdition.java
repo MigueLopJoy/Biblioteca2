@@ -17,4 +17,5 @@ public class BookSearchRequestBookEdition extends BookSearchRequestBookWork {
 
     private String ISBN;
 
+    private Integer idLibrary;
 }

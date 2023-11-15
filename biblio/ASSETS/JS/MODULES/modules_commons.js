@@ -125,31 +125,31 @@ const generaTableContent = async table => {
     }
 }
 
-const generateCatalogCard = (results, resultsType) => {
+const generateCatalogCard = async (results, resultsType) => {
     switch (resultsType) {
         case "author":
-            generateAuthorCatalogCard(results)
+            await generateAuthorCatalogCard(results)
             break
         case "bookwork":
-            generateBookWorkCatalogCard(results)
+            await generateBookWorkCatalogCard(results)
             break
         case "bookedition":
-            generateBookEditionCatalogCard(results)
+            await generateBookEditionCatalogCard(results)
             break
         case "bookcopy":
-            generateBookCopyCatalogCard(results)
+            await generateBookCopyCatalogCard(results)
             break
         case "reader":
-            generateReadersCatalogCard(results)
+            await generateReadersCatalogCard(results)
         case "librarian":
-            generateLibrarianCatalogCard(results)
+            await generateLibrarianCatalogCard(results)
         default:
             break
     }
-    toggleSearchRelatedObjectsSymbolActivation()
+    toggleSearchRelatedObjectsSymbol()
 }
 
-const toggleSearchRelatedObjectsSymbolActivation = () => {
+const toggleSearchRelatedObjectsSymbol = () => {
     const searchRelatedObjectsSymbol = d.querySelector(".search_related_objects"),
         inputs = d.querySelectorAll(".catalog_card .form input")
 
@@ -245,15 +245,15 @@ const executeSearchRelatedObjectsListener = async () => {
     closeModal()
     switch (resultsType) {
         case "author":
-            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
+            await loadContent("./PROGRAM/MODULES/CATALOG/bookworks_catalog.html", d.getElementById("main-content"))
             sendBookWorkForm(results)
             break;
         case "bookwork":
-            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
+            await loadContent("./PROGRAM/MODULES/CATALOG/bookeditions_catalog.html", d.getElementById("main-content"))
             sendBookEditionForm(results)
             break;
         case "bookedition":
-            await loadContent("./ASSETS/HTML/PROGRAM/MODULES/CATALOG/bookcopies_catalog.html", d.getElementById("main-content"))
+            await loadContent("./PROGRAM/MODULES/CATALOG/bookcopies_catalog.html", d.getElementById("main-content"))
             sendBookCopyForm(results)
             break;
         default:

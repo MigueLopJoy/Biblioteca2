@@ -30,6 +30,7 @@ public class ApplicationConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -38,8 +39,11 @@ public class ApplicationConfig {
                         .addMapping("/**")
                         .allowedOrigins("http://localhost")
                         .allowedMethods("*")
-                        .allowedHeaders("authorization", "content-type")
-                        .exposedHeaders("*");
+                        .allowedHeaders("Authorization", "Content-type")
+                        .exposedHeaders("*")
+                        .allowCredentials(true)
+                        .allowedOriginPatterns("http://localhost")
+                        .maxAge(3600);
             }
         };
     }

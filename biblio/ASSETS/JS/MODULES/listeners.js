@@ -7,6 +7,7 @@ import {
     executeSelectResultBtnListener,
     executeEditSymbolListener,
     executeConfirmCreationBtnListener,
+    executeSearchRelatedObjectsListener,
     confirmEdition,
 } from "./modules_commons.js"
 
@@ -34,10 +35,12 @@ import {
     displayBirthYearRange,
 } from "./USERS/readers.js"
 
-import { 
-    logout, 
-    seeAccount 
+import {
+    logout,
+    seeAccount
 } from "./USERS/user.js"
+
+import { displayLibrariesSelectionTable } from "./LIBRARY/libraries.js"
 
 const d = document
 
@@ -70,6 +73,9 @@ d.addEventListener("click", async e => {
                 case "select_copy_bookedition":
                     selectCopyBookEdition()
                     break
+                case "select_edition_library":
+                    selectEditionLibrary()
+                    break
                 default:
                     executeSelectResultBtnListener()
                     break
@@ -90,7 +96,8 @@ d.addEventListener("click", async e => {
     }
 
     if (e.target.matches(".search_related_objects")) {
-        executeSearchRelatedObjectsListener()
+        if (e.target.classList.contains("active"))
+            executeSearchRelatedObjectsListener()
     }
 
     if (e.target.matches(".search_bookwork_author")) {
@@ -99,6 +106,10 @@ d.addEventListener("click", async e => {
 
     if (e.target.matches(".search_edition_bookwork")) {
         displayBookWorkSelectionTable()
+    }
+
+    if (e.target.matches(".search_edition_library")) {
+        displayLibrariesSelectionTable()
     }
 
     if (e.target.matches(".search_copy_bookedition")) {
@@ -136,30 +147,27 @@ d.addEventListener("click", async e => {
     if (e.target.matches(".page_link.search")) {
         toggleLinkActivation("search")
 
-        if (d.querySelector(".authors_page")) {
-            await loadPageElementContent("./CATALOG/authors_catalog.html")
-        } else if (d.querySelector(".bookworks_page")) {
-            await loadPageElementContent("./CATALOG/bookworks_catalog.html")
-        } else if (d.querySelector(".bookeditions_page")) {
-            await loadPageElementContent("./CATALOG/PAGES/search_bookeditions.html")
+        if (d.querySelector(".bookeditions_page")) {
+            await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/search_bookedition.html")
         } else if (d.querySelector(".bookcopies_page")) {
-            await loadPageElementContent("./CATALOG/PAGES/search_bookcopies.html")
+            await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/search_bookcopy.html")
         } else if (d.querySelector(".readers_page")) {
-            await loadPageElementContent("./USERS/PAGES/search_readers.html")
+            await loadPageElementContent("PROGRAM/MODULES/USERS/PAGES/search_readers.html")
         } else if (d.querySelector(".librarians_page")) {
-            await loadPageElementContent("./USERS/PAGES/search_librarian.html")
+            await loadPageElementContent("PROGRAM/MODULES/USERS/PAGES/search_librarian.html")
         }
     } else if (e.target.matches(".page_link.create")) {
         toggleLinkActivation("create")
 
         if (d.querySelector(".bookeditions_page")) {
-            await loadPageElementContent("./CATALOG/PAGES/create_bookedition.html")
+            console.log(e.target)
+            await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/create_bookedition.html")
         } else if (d.querySelector(".bookcopies_page")) {
-            await loadPageElementContent("./CATALOG/PAGES/create_bookcopy.html")
+            await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/create_bookcopy.html")
         } else if (d.querySelector(".readers_page")) {
-            await loadPageElementContent("./USERS/PAGES/create_readers.html")
+            await loadPageElementContent("PROGRAM/MODULES/USERS/PAGES/create_readers.html")
         } else if (d.querySelector(".librarians_page")) {
-            await loadPageElementContent("./USERS/PAGES/create_librarian.html")
+            await loadPageElementContent("PROGRAM/MODULES/USERS/PAGES/create_librarian.html")
         }
     }
 })
