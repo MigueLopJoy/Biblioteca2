@@ -24,7 +24,7 @@
                 </form>
             </div>
 
-            <div class="auxiliar_element_container search_library">
+            <div class="auxiliar_element_container search_library hidden">
                 <form class="form library_form search">
                     <input type="text" name="library_name">
                     <input type="text" name="province">
@@ -80,6 +80,19 @@
                                 <th>Author</th>
                                 <th>Publication year</th>
                                 <th class="select_colum">Select Book Work</th>
+                            </tr>
+                        </thead>
+                        <tbody class="results_table_body"></tbody>
+                    </table>
+
+                    <table class="results_table libraries_results_table hidden">
+                        <thead>
+                            <tr>
+                                <th>Library Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>Province</th>
+                                <th class="select_column">Select Library</th>
                             </tr>
                         </thead>
                         <tbody class="results_table_body"></tbody>

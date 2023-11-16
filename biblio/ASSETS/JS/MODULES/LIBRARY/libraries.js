@@ -18,7 +18,6 @@ import {
     clearErrorMessages
 } from "../api_messages_handler.js"
 
-import { getBookWork } from "./bookworks_catalog.js"
 
 const d = document
 
@@ -27,7 +26,7 @@ let library, results, error, resultsType, operation, table, catalogCard
 d.addEventListener("submit", async e => {
     e.preventDefault();
 
-    if (d.getElementById("bookeditions_section")) {
+    if (d.getElementById("libraries_section")) {
         sendLibraryForm(undefined, e.target)
     }
 })
@@ -54,11 +53,14 @@ const sendLibraryForm = async (library, form) => {
 }
 
 const setFormInputsValues = library => {
-    let searchLibraryForm = d.querySelector(".form.library_form.search")
+    let searchLibraryForm = d.querySelector(".form.library_form.search"),
+        libraryName = library.libraryName,
+        city = library.city,
+        province = library.province
 
-    searchLibraryForm.library_name.value = library.libraryName
-    searchLibraryForm.city.value = library.city
-    searchLibraryForm.province.value = library.province
+    searchLibraryForm.library_name.value = libraryName ? libraryName : library
+    searchLibraryForm.city.value = city ? city : ""
+    searchLibraryForm.province.value = province ? province : ""
 
     return searchLibraryForm
 }
@@ -68,18 +70,18 @@ const runLibraryProcess = async form => {
     resultsType = "library"
 
     if (form.classList.contains("search")) {
-        table = d.querySelector(".results_table.library_results_table")
+        table = d.querySelector(".results_table.libraries_results_table")
         operation = "search"
-        results = await getLibrary(form)
+        results = await searchLibrary(form)
     }
 }
 
 const displayLibrariesSelectionTable = async () => {
     const libraryForm = d.querySelector(".form.library_form.search")
 
-    let libraryName = d.querySelector(".form.search .edition_library").value
+    let libraryName = d.querySelector(".bookedition_form.search .edition_library").value
 
-    libraryForm.editor_name.value = libraryName
+    libraryForm.library_name.value = libraryName
     libraryForm.province.value = ""
     libraryForm.city.value = ""
 
@@ -97,10 +99,10 @@ const changeSelectBtn = () => {
     const selectResultBtn = d.querySelector(".select_results_btn")
 
     if (selectResultBtn.classList.contains("select_edition_library")) {
-        selectResultBtn.textContent = "Select Library"
+        selectResultBtn.textContent = "Select Book Edition"
         selectResultBtn.classList.remove("select_edition_library")
     } else {
-        selectResultBtn.textContent = "Select Book Edition"
+        selectResultBtn.textContent = "Select Library"
         selectResultBtn.classList.add("select_edition_library")
     }
 }
@@ -109,19 +111,26 @@ const selectEditionLibrary = () => {
     changeSelectBtn()
     library = getLibraryResults()[findSelectedResult()]
     closeModal(d.querySelector(".form.create"))
+    manageInputValues()
 }
 
-const getLibrary = async form => {
+const manageInputValues = () => {
+    const libraryNameInput = d.querySelector(".form.search .edition_library")
+
+    if (library) {
+        libraryNameInput.value = library.libraryName
+    } else libraryNameInput.value = ""
+}
+
+const searchLibrary = async form => {
     try {
         return await fetchRequest(
             "POST",
-            "http://localhost:8080/library/search-bookeditions",
+            "http://localhost:8080/library/search-library",
             {
-                title: form.bookwork_title.value,
-                author: form.author_name.value,
-                isbn: form.bookedition_isbn.value,
-                editor: form.editor_name.value,
-                language: form.edition_language.value,
+                libraryName: form.library_name.value,
+                city: form.city.value,
+                province: form.province.value
             }
         )
     } catch (ex) {
@@ -129,54 +138,7 @@ const getLibrary = async form => {
     }
 }
 
-const createBookEdition = async form => {
-    try {
-        return await fetchRequest(
-            "POST",
-            "http://localhost:8080/general-catalog/save-bookedition",
-            {
-                isbn: form.isbn.value,
-                editor: form.editor_name.value,
-                editionYear: form.edition_year.value,
-                language: form.edition_language.value,
-                bookWork: {
-                    title: getBookWork() ? getBookWork().title : "",
-                    author: {
-                        firstName: getBookWork() ? getBookWork().author.firstName : "",
-                        lastName: getBookWork() ? getBookWork().author.lastName : ""
-                    },
-                    publicationYear: getBookWork() ? getBookWork().publicationYear : ""
-                }
-            }
-        )
-    } catch (ex) {
-        error = ex
-    }
-}
-
-const getEditionCopies = async bookEditionId => {
-    try {
-        return await fetchRequest(
-            "GET",
-            `http://localhost:8080/bookcopies/get-bookwork-editions/${bookEditionId}`,
-        )
-    } catch (ex) {
-        throw ex
-    }
-}
-
-const deleteBookedition = async bookeditionId => {
-    try {
-        return await fetchRequest(
-            "DELETE",
-            `http://localhost:8080/general-catalog/delete-bookedition/${bookeditionId}`,
-        )
-    } catch (ex) {
-        throw ex
-    }
-}
-
-const editBookEdition = async (idBookEdition, editedFields) => {
+const editLibrary = async (idBookEdition, editedFields) => {
     try {
         return await fetchRequest(
             "PUT",
@@ -195,29 +157,24 @@ const editBookEdition = async (idBookEdition, editedFields) => {
 }
 
 
-const generateBookEditionsTableContent = () => {
+const generateLibraryTableContent = () => {
     for (let i = 0; i < results.length; i++) {
-        let result = results[i],
-            bookWork = result.bookWork,
-            author = bookWork.author
+        let library = results[i]
 
         let newRow = d.createElement("tr")
         newRow.classList.add("results_row")
 
-        let title = d.createElement("td")
-        title.textContent = bookWork.title
+        let libraryName = d.createElement("td")
+        libraryName.textContent = library.libraryName
 
-        let bookAuthor = d.createElement("td")
-        bookAuthor.textContent = `${author.firstName} ${author.lastName}`
+        let libraryAddress = d.createElement("td")
+        libraryAddress.textContent = library.libraryAddress
 
-        let isbn = d.createElement("td")
-        isbn.textContent = result.isbn
+        let city = d.createElement("td")
+        city.textContent = library.city
 
-        let editor = d.createElement("td")
-        editor.textContent = result.editor
-
-        let editionYear = d.createElement("td")
-        editionYear.textContent = result.editionYear
+        let province = d.createElement("td")
+        province.textContent = library.province
 
         let selectBookedition = d.createElement("td"),
             checkbox = d.createElement("input")
@@ -228,42 +185,29 @@ const generateBookEditionsTableContent = () => {
         checkbox.value = i
         selectBookedition.appendChild(checkbox)
 
-        newRow.appendChild(title)
-        newRow.appendChild(bookAuthor)
-        newRow.appendChild(isbn)
-        newRow.appendChild(editor)
-        newRow.appendChild(editionYear)
+        newRow.appendChild(libraryName)
+        newRow.appendChild(libraryAddress)
+        newRow.appendChild(city)
+        newRow.appendChild(province)
         newRow.appendChild(selectBookedition)
 
         table.querySelector(".results_table_body").appendChild(newRow);
     }
 }
 
-const generateBookEditionCatalogCard = async results => {
-    let bookEdition = results,
-        bookwork = bookEdition.bookWork
-
-    let author = bookwork.author,
-        authorName = `${author.firstName} ${author.lastName}`,
-        editionCopiesMessage, bookEditionCopies,
-        catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
+const generateLibraryCatalogCard = async results => {
+    let library = results,
+        catalogCard = d.querySelector(".catalog_card.library_catalog_card")
 
     catalogCard.classList.remove("hidden")
 
-    catalogCard.querySelector(".bookwork_title").value = bookwork.title
-    catalogCard.querySelector(".bookwork_author").value = authorName
-    catalogCard.querySelector(".bookedition_isbn").value = bookEdition.isbn
-    catalogCard.querySelector(".bookedition_editor").value = bookEdition.editor
-    catalogCard.querySelector(".bookedition_edition_year").value = bookEdition.editionYear
-    catalogCard.querySelector(".bookedition_language").value = bookEdition.language
-
-    try {
-        bookEditionCopies = await getEditionCopies(bookEdition.idBookEdition)
-        editionCopiesMessage = `Book Edition Copies: ${bookEditionCopies.length}`
-    } catch (error) {
-        editionCopiesMessage = error.message
-    }
-    catalogCard.querySelector(".bookedition_copies").value = editionCopiesMessage
+    catalogCard.querySelector(".library_name").value = library.libraryName
+    catalogCard.querySelector(".library_address").value = library.libraryAddress
+    catalogCard.querySelector(".city").value = library.city
+    catalogCard.querySelector(".province").value = library.province
+    catalogCard.querySelector(".postal_code").value = library.postalCode
+    catalogCard.querySelector(".library_phone_number").value = library.libraryPhoneNumber
+    catalogCard.querySelector(".library_email").value = library.libraryEmail
 }
 
 const getLibraryResults = () => {
@@ -272,19 +216,21 @@ const getLibraryResults = () => {
 }
 
 
-const setBookeditionValue = newBookEditionValue => {
-    bookedition = newBookEditionValue
+const setLibraryValue = newLibraryValue => {
+    library = newLibraryValue
+}
+
+const getLibrary = () => {
+    return library
 }
 
 export {
-    sendBookEditionForm,
-    displayBookEditionSelectionTable,
+    sendLibraryForm,
     displayLibrariesSelectionTable,
     selectEditionLibrary,
-    editBookEdition,
-    deleteBookedition,
-    generateBookEditionCatalogCard,
-    generateBookEditionsTableContent,
-    getBrowseBookWork,
-    setBookeditionValue
+    editLibrary,
+    generateLibraryTableContent,
+    generateLibraryCatalogCard,
+    setLibraryValue,
+    getLibrary
 }

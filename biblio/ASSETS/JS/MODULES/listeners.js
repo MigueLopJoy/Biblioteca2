@@ -40,7 +40,10 @@ import {
     seeAccount
 } from "./USERS/user.js"
 
-import { displayLibrariesSelectionTable } from "./LIBRARY/libraries.js"
+import {
+    displayLibrariesSelectionTable,
+    selectEditionLibrary
+} from "./LIBRARY/libraries.js"
 
 const d = document
 

@@ -18,22 +18,22 @@ import jakarta.validation.constraints.Pattern;
 @UniqueISBN
 public class BooksSaveDTOBookEdition {
 
-    @NotBlank(message = "ISBN required")
+    @NotBlank(message = "ISBN Required")
     @Pattern(regexp = "^(978|979)-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$", message = "Invalid ISBN number")
     private String ISBN;
 
-    @NotBlank(message = "Editor name required")
+    @NotBlank(message = "Editor Name Required")
     private String editor;
 
-    @NotNull(message = "Edition year required")
+    @NotNull(message = "Edition Year Required")
     @YearNotGreaterThanCurrent(message = "Edition year should not be greater than current year")
     @Min(value = 1900, message = "Edition year should not be under 1900")
     private Integer editionYear;
 
-    @NotBlank(message = "Language required")
+    @NotBlank(message = "Language Required")
     @Pattern(regexp = "^[a-zA-ZÁÉÍÓÚáéíóúÑñ]+(\\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)*$", message = "Invalid language provided")
     private String language;
 
-    @NotNull(message = "Book work should not be null")
+    @NotNull(message = "Book Work Required")
     private BooksSaveDTOBookWork bookWork;
 }

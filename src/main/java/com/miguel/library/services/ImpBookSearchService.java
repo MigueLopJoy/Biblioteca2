@@ -185,6 +185,7 @@ public class ImpBookSearchService implements IBookSearchService {
 
         Join<BookEdition, BookWork> bookEditionToBookWorkJoin = root.join("bookWork", JoinType.INNER);
         Join<BookEdition, BookCopy> bookEditionToBookCopyJoin = root.join("bookEditionCopies", JoinType.LEFT);
+        Join<BookCopy, Library> bookCopyToLibraryJoin = bookEditionToBookCopyJoin.join("library", JoinType.LEFT);
         Join<BookWork, Author> bookWorkAuthorJoin = bookEditionToBookWorkJoin.join("author");
 
         List<Predicate> predicates = new ArrayList<>();
@@ -194,6 +195,7 @@ public class ImpBookSearchService implements IBookSearchService {
                 root,
                 bookEditionToBookWorkJoin,
                 bookEditionToBookCopyJoin,
+                bookCopyToLibraryJoin,
                 bookWorkAuthorJoin,
                 bookSearchRequest,
                 predicates
@@ -215,6 +217,7 @@ public class ImpBookSearchService implements IBookSearchService {
             Root<BookEdition> root,
             Join<BookEdition, BookWork> bookEditionBookWorkJoin,
             Join<BookEdition, BookCopy> bookEditionBookCopyJoin,
+            Join<BookCopy, Library> bookCopyLibraryJoin,
             Join<BookWork, Author> bookWorkAuthorJoin,
             BookSearchRequestBookEdition bookSearchRequest,
             List<Predicate> predicates
@@ -227,7 +230,7 @@ public class ImpBookSearchService implements IBookSearchService {
         String title = bookSearchRequest.getTitle();
 
         if (Objects.nonNull(idLibrary)) {
-            predicates.add(criteriaBuilder.equal(bookEditionBookCopyJoin.get("idLibrary"), idLibrary));
+            predicates.add(criteriaBuilder.equal(bookCopyLibraryJoin.get("idLibrary"), idLibrary));
         }
 
         if (isValidString(ISBN)) {

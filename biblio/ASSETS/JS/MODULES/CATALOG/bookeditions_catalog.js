@@ -20,6 +20,11 @@ import {
 
 import { getBookWork } from "./bookworks_catalog.js"
 
+import {
+    getLibrary,
+    setLibraryValue
+} from "../LIBRARY/libraries.js"
+
 const d = document
 
 let bookedition, results, error, resultsType, operation, table, catalogCard
@@ -36,6 +41,7 @@ const sendBookEditionForm = async (bookwork, form) => {
     if (!form) form = setFormInputsValues(bookwork)
 
     clearErrorMessages()
+
     await runBookEditionProcess(form)
 
     if (error) {
@@ -70,7 +76,7 @@ const runBookEditionProcess = async form => {
     if (form.classList.contains("search")) {
         table = d.querySelector(".results_table.bookeditions_results_table")
         operation = "search"
-        results = await getBookeditions(form)
+        results = await searchBookEdition(form)
     } else if (form.classList.contains("create")) {
         catalogCard = d.querySelector(".catalog_card.bookedition_catalog_card")
         operation = "create"
@@ -135,12 +141,13 @@ const manageInputValues = () => {
     } else bookworkTitleInput.value = ""
 }
 
-const getBookeditions = async form => {
+const searchBookEdition = async form => {
     try {
         return await fetchRequest(
             "POST",
             "http://localhost:8080/general-catalog/search-bookeditions",
             {
+                idLibrary: getLibrary() ? getLibrary().idLibrary : "",
                 title: form.bookwork_title.value,
                 author: form.author_name.value,
                 isbn: form.bookedition_isbn.value,
@@ -149,6 +156,7 @@ const getBookeditions = async form => {
             }
         )
     } catch (ex) {
+        setLibraryValue(undefined)
         error = ex
     }
 }
@@ -159,9 +167,9 @@ const createBookEdition = async form => {
             "POST",
             "http://localhost:8080/general-catalog/save-bookedition",
             {
-                isbn: form.isbn.value,
-                editor: form.editor_name.value,
+                isbn: form.bookedition_isbn.value,
                 editionYear: form.edition_year.value,
+                editor: form.editor_name.value,
                 language: form.edition_language.value,
                 bookWork: {
                     title: getBookWork() ? getBookWork().title : "",
@@ -174,6 +182,8 @@ const createBookEdition = async form => {
             }
         )
     } catch (ex) {
+        setBookworkValue(undefined)
+        setAuthorValue(undefined)
         error = ex
     }
 }
@@ -182,7 +192,7 @@ const getEditionCopies = async bookEditionId => {
     try {
         return await fetchRequest(
             "GET",
-            `http://localhost:8080/bookcopies/get-bookwork-editions/${bookEditionId}`,
+            `http://localhost:8080/bookcopies/get-edition-copies/${bookEditionId}`,
         )
     } catch (ex) {
         throw ex
@@ -295,9 +305,12 @@ const getBookeditionsResults = () => {
     return results
 }
 
-
 const setBookeditionValue = newBookEditionValue => {
     bookedition = newBookEditionValue
+}
+
+const getBookEdition = () => {
+    return bookedition
 }
 
 export {
@@ -308,5 +321,6 @@ export {
     deleteBookedition,
     generateBookEditionCatalogCard,
     generateBookEditionsTableContent,
-    setBookeditionValue
+    setBookeditionValue,
+    getBookEdition,
 }

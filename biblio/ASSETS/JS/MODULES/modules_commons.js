@@ -60,6 +60,11 @@ import {
     generateLibrariansTableContent
 } from "./USERS/librarians.js"
 
+import {
+    generateLibraryTableContent,
+    generateLibraryCatalogCard
+} from "./LIBRARY/libraries.js"
+
 const d = document
 
 let results, resultsType, operation, resultsContainer
@@ -122,6 +127,8 @@ const generaTableContent = async table => {
         generateReadersTableContent()
     } else if (table.classList.contains("librarians_results_table")) {
         generateLibrariansTableContent()
+    } else if (table.classList.contains("libraries_results_table")) {
+        generateLibraryTableContent()
     }
 }
 

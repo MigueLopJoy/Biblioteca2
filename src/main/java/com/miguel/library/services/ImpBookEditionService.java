@@ -82,19 +82,18 @@ public class ImpBookEditionService implements IBookEditionService{
 
     @Override
     public List<BookEdition> searchBookWorkEditions(Integer bookWorkId) {
+        if (Objects.isNull(bookWorkId)) {
+            throw new ExceptionObjectNotFound("Book Work Should Not Be Null");
+        }
+
         BookWork bookWork = bookWorkService.searchByBookWorkId(bookWorkId);
         if (Objects.isNull(bookWork)) {
-            throw new ExceptionNullObject("No Book Work Found");
+            throw new ExceptionObjectNotFound("Book Work Not Found");
         }
 
-        BookWork fetchedBookWork = bookWorkService.searchByTitleAndAuthor(bookWork);
-        if (Objects.isNull(fetchedBookWork)) {
-            throw new ExceptionObjectNotFound("Book work not found");
-        }
-
-        List<BookEdition> bookWorkEditions = bookEditionRepository.findByBookWork(fetchedBookWork);
+        List<BookEdition> bookWorkEditions = bookEditionRepository.findByBookWork(bookWork);
         if (bookWorkEditions.isEmpty()) {
-            throw new ExceptionNoSearchResultsFound("No Editions were found");
+            throw new ExceptionNoSearchResultsFound("No Editions Were Found");
         }
         return bookWorkEditions;
     }

@@ -103,16 +103,13 @@ public class ImpBookWorkService implements IBookWorkService{
 
     @Override
     public List<BookWork> searchAuthorBookWorks(Integer authorId) {
-
-        Author author = authorService.searchByAuthorId(authorId);
-
-        if (Objects.isNull(author)) {
-            throw new ExceptionNullObject("Author should not be null");
+        if (Objects.isNull(authorId)) {
+            throw new ExceptionNullObject("Author Should Not Be Null");
         }
 
-        Author fetchedAuthor = authorService.searchByAuthorName(author);
-        if (Objects.isNull(fetchedAuthor)) {
-            throw new ExceptionObjectNotFound("Searched author not found");
+        Author author = authorService.searchByAuthorId(authorId);
+        if (Objects.isNull(author)) {
+            throw new ExceptionObjectNotFound("Author Not Found");
         }
 
         List<BookWork> authorBookWorks = bookWorkRepository.findByAuthor(author);

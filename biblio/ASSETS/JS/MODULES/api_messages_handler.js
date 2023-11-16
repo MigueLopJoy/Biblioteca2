@@ -4,6 +4,9 @@ const handleErrorMessages = (error, layer) => {
 
     layer = selectCorrectLayer(layer)
 
+    console.log(error)
+    console.log(layer)
+
     if (error.status === 422) {
         error.validationErrors.forEach(er => {
             console.log(er.field)

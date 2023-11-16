@@ -3,8 +3,8 @@ const fetchRequest = async (method, url, bodyContent) => {
         let options = {
             method: method,
             headers: {
-                "content-type": "application/json; charset=utf-8",
-                "authorization": "Bearer " + localStorage.getItem("jwtToken")
+                "content-type": "application/json; charset=utf-8"
+                //"authorization": "Bearer " + localStorage.getItem("jwtToken")
             },
             body: bodyContent ? JSON.stringify(bodyContent) : null
         }

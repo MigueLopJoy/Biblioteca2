@@ -19,6 +19,8 @@ import {
 
 import { getAuthor } from "./authors_catalog.js"
 
+import { setBookeditionValue } from "./bookeditions_catalog.js"
+
 const d = document
 
 let bookwork, results, error, table, catalogCard, resultsType, operation
@@ -53,8 +55,11 @@ const sendBookWorkForm = async (author, form) => {
 }
 
 const setFormInputsValues = author => {
-    let searchBookWorkForm = d.querySelector(".form.bookwork_form.search")
-    if (author) searchBookWorkForm.author_name.value = `${author.firstName} ${author.lastName}`
+    let searchBookWorkForm = d.querySelector(".form.bookwork_form.search"),
+        authorName = author ? `${author.firstName} ${author.lastName}` : ""
+
+    searchBookWorkForm.author_name.value = author && authorName.firstName ? authorName : author
+
     return searchBookWorkForm
 }
 
@@ -65,7 +70,7 @@ const runBookWorkProcess = async form => {
     if (form.classList.contains("search")) {
         table = d.querySelector(".results_table.bookworks_results_table")
         operation = "search"
-        results = await getBookworks(form)
+        results = await searchBookWorks(form)
     } else if (form.classList.contains("create")) {
         catalogCard = d.querySelector(".catalog_card.bookwork_catalog_card")
         operation = "create"
@@ -123,7 +128,7 @@ const manageInputValues = () => {
     } else bookworkTitleInput.value = ""
 }
 
-const getBookworks = async form => {
+const searchBookWorks = async form => {
     try {
         return await fetchRequest(
             "POST",
@@ -140,11 +145,10 @@ const getBookworks = async form => {
 
 const getBookWorkEditions = async bookWorkId => {
     try {
-        let bookWorkEditions = await fetchRequest(
+        return await fetchRequest(
             "GET",
             `http://localhost:8080/general-catalog/get-bookwork-editions/${bookWorkId}`,
         )
-        return bookWorkEditions
     } catch (ex) {
         throw ex
     }
@@ -165,6 +169,7 @@ const createBookwork = async form => {
             }
         )
     } catch (ex) {
+        setAuthorValue(undefined)
         error = ex
     }
 }
@@ -248,8 +253,8 @@ const generateBookWorkCatalogCard = async results => {
     try {
         bookWorkEditions = await getBookWorkEditions(bookwork.idBookWork)
         bookWorkEditionsMessage = `Book Work Editions: ${bookWorkEditions.length}`
-    } catch (error) {
-        bookWorkEditionsMessage = error.message
+    } catch (ex) {
+        bookWorkEditionsMessage = ex.message
     }
     catalogCard.querySelector(".bookwork_editions").value = bookWorkEditionsMessage
 }

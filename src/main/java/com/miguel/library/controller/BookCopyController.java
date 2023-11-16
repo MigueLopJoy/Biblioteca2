@@ -52,6 +52,12 @@ public class BookCopyController {
         return ResponseEntity.ok(bookSearchService.searchBooks(bookSearchRequest));
     }
 
+    @GetMapping("/get-edition-copies/{bookEditionId}")
+    public ResponseEntity<List<BookCopy>> getAuthorBookWorks(
+            @PathVariable Integer bookEditionId
+    ) {
+        return ResponseEntity.ok(bookCopyService.searchBookEditionCopies(bookEditionId));
+    }
     @PutMapping("/edit-bookcopy/{bookCopyId}")
     public ResponseEntity<BookResponseDTOBookCopy> editBookEdition(
             @PathVariable Integer bookCopyId,

@@ -10,13 +10,13 @@ import lombok.*;
 @AllArgsConstructor
 public class BooksSaveDTOBookWork {
 
-    @NotBlank(message = "Title required")
+    @NotBlank(message = "Title Required")
     private String title;
 
-    @NotNull(message = "Author should not be null")
+    @NotNull(message = "Author Required")
     private AuthorsDTOSaveNewAuthor author;
 
-    @Min(value = 1750, message = "Publication year should not be under 1750")
+    @Min(value = 1750, message = "Publication Year Should Not Ne Under 1750")
     @YearNotGreaterThanCurrent(message = "Publication year should not be greater than current year")
     private Integer publicationYear;
 }

@@ -1,6 +1,7 @@
 package com.miguel.library.controller;
 
 import com.miguel.library.DTO.*;
+import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 import com.miguel.library.repository.IBookEditionRepository;

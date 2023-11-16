@@ -15,6 +15,10 @@ import {
     clearErrorMessages
 } from "../api_messages_handler.js"
 
+import { getAuthor, setAuthorValue } from "./authors_catalog.js"
+import { getBookWork, setBookworkValue } from "./bookworks_catalog.js"
+import { getBookEdition, setBookeditionValue } from "./bookeditions_catalog.js"
+
 const d = document
 
 let bookcopy, results, error, resultsType, operation, table, catalogCard
@@ -71,9 +75,16 @@ const setFormInputsValues = bookCopy => {
 const runBookCopyProcess = async form => {
     bookcopy = ""
     resultsType = "bookcopy"
-    table = d.querySelector(".results_table.bookcopies_results_table")
-    operation = "search"
-    results = await getBookCopies(form)
+
+    if (form.classList.contains("search")) {
+        table = d.querySelector(".results_table.bookcopies_results_table")
+        operation = "search"
+        results = await searchBookCopies(form)
+    } else if (form.classList.contains("create")) {
+        catalogCard = d.querySelector(".catalog_card.bookcopies_catalog_card")
+        operation = "create"
+        results = await createBookCopy(form)
+    }
 }
 
 const displayRegistrationNumberRange = () => {
@@ -88,7 +99,7 @@ const displayRegistrationDateRange = () => {
     d.querySelector(".form > .registration_date_range").classList.add("d-flex")
 }
 
-const getBookCopies = async form => {
+const searchBookCopies = async form => {
     const rangeRegNumContainer = form.querySelector(".registration_number_range"),
         rangeRegDateContainer = form.querySelector(".registration_date_range")
 
@@ -125,29 +136,54 @@ const getBookCopies = async form => {
 
 const createBookCopy = async form => {
     try {
+        console.log(
+            {
+                libraryId: 1,
+                registrationNumber: form.registration_number.value,
+                signature: form.signature.value,
+                bookEdition: {
+                    isbn: getBookEdition() ? getBookEdition.isbn : "",
+                    editor: getBookEdition() ? getBookEdition.editor : "",
+                    editionYear: getBookEdition() ? getBookEdition.editionYear : "",
+                    language: getBookEdition() ? getBookEdition.language : "",
+                    bookWork: {
+                        title: getBookWork() ? getBookWork().title : "",
+                        author: {
+                            firstName: getAuthor() ? getAuthor().firstName : "",
+                            lastName: getAuthor() ? getAuthor().lastName : ""
+                        },
+                        publicationYear: getBookWork() ? getBookWork().publicationYear : "",
+                    }
+                }
+            }
+        )
         return await fetchRequest(
             "POST",
             "http://localhost:8080/bookcopies/save-bookcopy",
             {
+                libraryId: 1,
                 registrationNumber: form.registration_number.value,
                 signature: form.signature.value,
                 bookEdition: {
-                    isbn: bookedition.isbn,
-                    editor: bookedition.editor,
-                    editionYear: bookedition.editionYear,
-                    language: bookedition.language,
+                    isbn: getBookEdition() ? getBookEdition.isbn : "",
+                    editor: getBookEdition() ? getBookEdition.editor : "",
+                    editionYear: getBookEdition() ? getBookEdition.editionYear : "",
+                    language: getBookEdition() ? getBookEdition.language : "",
                     bookWork: {
-                        title: bookedition.bookWork.title,
+                        title: getBookWork() ? getBookWork().title : "",
                         author: {
-                            firstName: bookedition.bookWork.author.firstName,
-                            lastName: bookedition.bookWork.author.lastName
+                            firstName: getAuthor() ? getAuthor().firstName : "",
+                            lastName: getAuthor() ? getAuthor().lastName : ""
                         },
-                        publicationYear: bookedition.bookWork.publicationYear
+                        publicationYear: getBookWork() ? getBookWork().publicationYear : "",
                     }
                 }
             }
         )
     } catch (ex) {
+        setBookeditionValue(undefined)
+        setBookworkValue(undefined)
+        setAuthorValue(undefined)
         error = ex
     }
 }

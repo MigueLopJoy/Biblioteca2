@@ -22,9 +22,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
+/*
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
+
+ */
 
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -120,7 +122,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+    //            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
                         logout
                                 .logoutUrl("/users/logout")

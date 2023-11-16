@@ -27,29 +27,24 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Override
     public BookResponseDTOBookCopy saveNewBookCopy(BookCopy bookCopy) {
-        BookCopy savedBookCopy;
-
         if (Objects.isNull(bookCopy)) {
-            throw new ExceptionNullObject("Book copy should not be null");
+            throw new ExceptionNullObject("Book Copy Should Not Be Null");
         }
 
         BookEdition bookEdition = bookCopy.getBookEdition();
-
         if (Objects.isNull(bookEdition)) {
-            throw new ExceptionNullObject("Book copy's book edition should not be null");
+            throw new ExceptionNullObject("Book copy's Book Edition Should Not Be Null");
         }
 
         BookEdition savedBookEdition = bookEditionService.searchByISBN(bookEdition.getISBN());
-
         if (Objects.isNull(savedBookEdition)) {
-            throw new ExceptionObjectNotFound("Book copy's book edition not found");
+            throw new ExceptionObjectNotFound("Book Copy's Book Edition Not Found");
         }
 
         bookCopy.setBookEdition(savedBookEdition);
         bookCopy.setBarCode(this.generateBarCode());
 
-        savedBookCopy = bookCopyRepository.save(bookCopy);
-
+        BookCopy savedBookCopy = bookCopyRepository.save(bookCopy);
         return new BookResponseDTOBookCopy(
                 "Book Copy Edited Successfully",
                 bookCopyRepository.save(savedBookCopy)
@@ -77,23 +72,19 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Override
     public List<BookCopy> searchBookEditionCopies(Integer bookEditionId) {
+        if (Objects.isNull(bookEditionId)) {
+            throw new ExceptionNullObject("Book Edition Should Not Be Null");
+        }
+
         BookEdition bookEdition = bookEditionService.searchById(bookEditionId);
         if (Objects.isNull(bookEdition)) {
-            throw new ExceptionNullObject("Book edition should not be null");
+            throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
 
-        BookEdition fetchedBookEdition = bookEditionService.searchByISBN(bookEdition.getISBN());
-
-        if (Objects.isNull(fetchedBookEdition)) {
-            throw new ExceptionObjectNotFound("Book edition not found");
-        }
-
-        List<BookCopy> bookEditionCopies = bookCopyRepository.findByBookEdition(fetchedBookEdition);
-
+        List<BookCopy> bookEditionCopies = bookCopyRepository.findByBookEdition(bookEdition);
         if (bookEditionCopies.isEmpty()) {
             throw new ExceptionNoSearchResultsFound("No Copies were found");
         }
-
         return bookEditionCopies;
     }
 

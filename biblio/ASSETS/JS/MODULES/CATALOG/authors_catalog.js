@@ -66,7 +66,7 @@ const runAuthorProcess = async form => {
     if (form.classList.contains("search")) {
         table = d.querySelector(".results_table.authors_results_table")
         operation = "search"
-        results = await getAuthors(form)
+        results = await searchAuthor(form)
     } else if (form.classList.contains("create")) {
         catalogCard = d.querySelector(".catalog_card.author_catalog_card")
         operation = "create"
@@ -121,7 +121,7 @@ const manageInputValues = () => {
     } else authorNameInput.value = ""
 }
 
-const getAuthors = async form => {
+const searchAuthor = async form => {
     try {
         return await fetchRequest(
             "GET",
