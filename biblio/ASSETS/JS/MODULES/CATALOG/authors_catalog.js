@@ -53,9 +53,7 @@ const sendAuthorForm = async (author, form) => {
 
 const setFormInputsValues = author => {
     let searchAuthorForm = d.querySelector(".form.author_form.search")
-    if (author.firstName && author.lastName) {
-        searchAuthorForm.author_name.value = `${author.firstName} ${author.lastName}`
-    } else searchAuthorForm.author_name.value = author
+    if (author) searchAuthorForm.author_name.value = `${author.firstName} ${author.lastName}`
     return searchAuthorForm
 }
 
@@ -102,7 +100,12 @@ const changeSelectBtn = () => {
 
 const selectBookWorkAuthor = () => {
     changeSelectBtn()
-    author = getAuthorResults()[findSelectedResult()]
+    try {
+        author = getAuthorResults()[findSelectedResult()]
+    } catch (error) {
+        error = ex
+        handleErrorMessages(error, d.querySelector(".form.create"))
+    }
     closeModal(d.querySelector(".form.create"))
     manageInputValues()
 }

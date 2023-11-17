@@ -83,6 +83,8 @@ const displayBookWorkSelectionTable = async () => {
     let bookWorkTitle = d.querySelector(".form.create .bookwork_title").value,
         bookWorkAuthor = d.querySelector(".form.create .author_name").value
 
+    console.log("Displaying Book Work Selection Table")
+
     bookworkForm.bookwork_title.value = bookWorkTitle
     bookworkForm.author_name.value = bookWorkAuthor
 
@@ -98,6 +100,8 @@ const displayBookWorkSelectionTable = async () => {
 
 const changeSelectBtn = () => {
     const selectResultBtn = d.querySelector(".select_results_btn")
+
+    console.log("Changing Selection Btn Text r Book Work")
 
     if (selectResultBtn.classList.contains("select_edition_bookwork")) {
         selectResultBtn.textContent = "Select Book Edition"

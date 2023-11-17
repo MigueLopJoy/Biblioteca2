@@ -40,13 +40,13 @@ d.addEventListener("submit", async e => {
 const sendBookEditionForm = async (bookwork, form) => {
     if (!form) form = setFormInputsValues(bookwork)
 
+    error = undefined
     clearErrorMessages()
 
     await runBookEditionProcess(form)
 
     if (error) {
         handleErrorMessages(error, form)
-        error = null
         clearForms()
     } else {
         if (operation === "search") {
@@ -122,6 +122,7 @@ const changeSelectBtn = () => {
 const selectCopyBookEdition = () => {
     changeSelectBtn()
     bookedition = getBookeditionsResults()[findSelectedResult()]
+    console.log(bookedition)
     closeModal(d.querySelector(".form.create"))
     manageInputValues()
 }

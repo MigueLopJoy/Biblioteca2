@@ -143,7 +143,6 @@ d.addEventListener("click", async e => {
         logout()
     }
     if (e.target.matches("#user_popover .see_account")) {
-        console.log(e.target)
         seeAccount()
     }
 
@@ -163,7 +162,6 @@ d.addEventListener("click", async e => {
         toggleLinkActivation("create")
 
         if (d.querySelector(".bookeditions_page")) {
-            console.log(e.target)
             await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/create_bookedition.html")
         } else if (d.querySelector(".bookcopies_page")) {
             await loadPageElementContent("PROGRAM/MODULES/CATALOG/PAGES/create_bookcopy.html")

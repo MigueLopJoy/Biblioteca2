@@ -34,12 +34,13 @@ d.addEventListener("submit", async e => {
 const sendBookCopyForm = async (bookedition, form) => {
     if (!form) form = setFormInputsValues(bookedition)
 
+    error = undefined
     clearErrorMessages()
+
     await runBookCopyProcess(form)
 
     if (error) {
         handleErrorMessages(error, form)
-        error = null
         clearForms()
     } else {
         if (operation === "search") {
@@ -135,6 +136,7 @@ const searchBookCopies = async form => {
 }
 
 const createBookCopy = async form => {
+    console.log(getBookEdition())
     try {
         console.log(
             {
@@ -142,10 +144,10 @@ const createBookCopy = async form => {
                 registrationNumber: form.registration_number.value,
                 signature: form.signature.value,
                 bookEdition: {
-                    isbn: getBookEdition() ? getBookEdition.isbn : "",
-                    editor: getBookEdition() ? getBookEdition.editor : "",
-                    editionYear: getBookEdition() ? getBookEdition.editionYear : "",
-                    language: getBookEdition() ? getBookEdition.language : "",
+                    isbn: getBookEdition() ? getBookEdition().isbn : "",
+                    editor: getBookEdition() ? getBookEdition().editor : "",
+                    editionYear: getBookEdition() ? getBookEdition().editionYear : "",
+                    language: getBookEdition() ? getBookEdition().language : "",
                     bookWork: {
                         title: getBookWork() ? getBookWork().title : "",
                         author: {
