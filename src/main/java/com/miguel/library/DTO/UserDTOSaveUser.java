@@ -39,10 +39,5 @@ public class UserDTOSaveUser {
     private String email;
 
     @NotBlank(message = "Password Required")
-    @Size(min = 8, message = "Password must contain at least 8 characters")
-    @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).*$",
-            message = "Password must contain at least one digit, one uppercase letter, and one special character"
-    )
     private String password;
 }

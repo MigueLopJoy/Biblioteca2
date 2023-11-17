@@ -1,12 +1,10 @@
 package com.miguel.library.services;
 
-import com.miguel.library.DTO.BookResponseDTOBookCopy;
-import com.miguel.library.DTO.BooksEditDTOBookCopy;
-import com.miguel.library.DTO.BooksSaveDTOBookCopy;
-import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
+import com.miguel.library.DTO.*;
 import com.miguel.library.Exceptions.*;
 import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
+import com.miguel.library.model.Library;
 import com.miguel.library.repository.IBookCopyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,9 @@ public class ImpBookCopyService implements IBookCopyService {
 
     @Autowired
     private IBookEditionService bookEditionService;
+
+    @Autowired
+    private ILibraryService libraryService;
 
     @Override
     public BookResponseDTOBookCopy saveNewBookCopy(BookCopy bookCopy) {
@@ -45,8 +46,9 @@ public class ImpBookCopyService implements IBookCopyService {
         bookCopy.setBarCode(this.generateBarCode());
 
         BookCopy savedBookCopy = bookCopyRepository.save(bookCopy);
+
         return new BookResponseDTOBookCopy(
-                "Book Copy Edited Successfully",
+                "Book Copy Created Successfully",
                 bookCopyRepository.save(savedBookCopy)
         );
     }
@@ -86,6 +88,24 @@ public class ImpBookCopyService implements IBookCopyService {
             throw new ExceptionNoSearchResultsFound("No Copies were found");
         }
         return bookEditionCopies;
+    }
+
+    @Override
+    public List<BookCopy> searchLibraryCopies(Integer libraryId) {
+        if (Objects.isNull(libraryId)) {
+            throw new ExceptionNullObject("Library Should Not Be Null");
+        }
+
+        Library library = libraryService.searchByLibraryId(libraryId);
+        if (Objects.isNull(library)) {
+            throw new ExceptionObjectNotFound("Library Not Found");
+        }
+
+        List<BookCopy> libraryCopies = bookCopyRepository.findByLibrary(library);
+        if (libraryCopies.isEmpty()) {
+            throw new ExceptionNoSearchResultsFound("No Copies were found");
+        }
+        return libraryCopies;
     }
 
     @Override
@@ -129,6 +149,7 @@ public class ImpBookCopyService implements IBookCopyService {
     @Override
     public BookCopy createBookCopyFromBookSaveDTO(BooksSaveDTOBookCopy bookCopy) {
         return BookCopy.builder()
+                .library(libraryService.searchByLibraryId(bookCopy.getLibraryId()))
                 .barCode(this.generateBarCode())
                 .registrationNumber(bookCopy.getRegistrationNumber())
                 .registrationDate(LocalDate.now())

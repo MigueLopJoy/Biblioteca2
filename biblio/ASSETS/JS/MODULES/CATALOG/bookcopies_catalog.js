@@ -48,7 +48,7 @@ const sendBookCopyForm = async (bookedition, form) => {
             setSearchValues(results, resultsType, operation, table)
         } else if (operation === "create") {
             showCatalogCard(results, resultsType, catalogCard)
-            setCreationValues()
+            setCreationValues(results, resultsType, catalogCard)
         }
     }
 }
@@ -82,7 +82,7 @@ const runBookCopyProcess = async form => {
         operation = "search"
         results = await searchBookCopies(form)
     } else if (form.classList.contains("create")) {
-        catalogCard = d.querySelector(".catalog_card.bookcopies_catalog_card")
+        catalogCard = d.querySelector(".catalog_card.bookcopy_catalog_card")
         operation = "create"
         results = await createBookCopy(form)
     }
@@ -136,9 +136,10 @@ const searchBookCopies = async form => {
 }
 
 const createBookCopy = async form => {
-    console.log(getBookEdition())
     try {
-        console.log(
+        return await fetchRequest(
+            "POST",
+            "http://localhost:8080/bookcopies/save-bookcopy",
             {
                 libraryId: 1,
                 registrationNumber: form.registration_number.value,
@@ -148,29 +149,6 @@ const createBookCopy = async form => {
                     editor: getBookEdition() ? getBookEdition().editor : "",
                     editionYear: getBookEdition() ? getBookEdition().editionYear : "",
                     language: getBookEdition() ? getBookEdition().language : "",
-                    bookWork: {
-                        title: getBookWork() ? getBookWork().title : "",
-                        author: {
-                            firstName: getAuthor() ? getAuthor().firstName : "",
-                            lastName: getAuthor() ? getAuthor().lastName : ""
-                        },
-                        publicationYear: getBookWork() ? getBookWork().publicationYear : "",
-                    }
-                }
-            }
-        )
-        return await fetchRequest(
-            "POST",
-            "http://localhost:8080/bookcopies/save-bookcopy",
-            {
-                libraryId: 1,
-                registrationNumber: form.registration_number.value,
-                signature: form.signature.value,
-                bookEdition: {
-                    isbn: getBookEdition() ? getBookEdition.isbn : "",
-                    editor: getBookEdition() ? getBookEdition.editor : "",
-                    editionYear: getBookEdition() ? getBookEdition.editionYear : "",
-                    language: getBookEdition() ? getBookEdition.language : "",
                     bookWork: {
                         title: getBookWork() ? getBookWork().title : "",
                         author: {
@@ -274,7 +252,7 @@ const generateBookCopiesTableContent = () => {
 
 const generateBookCopyCatalogCard = async results => {
     const catalogCard = d.querySelector(".bookcopy_catalog_card")
-
+    
     let bookCopy = results,
         bookEdition = bookCopy.bookEdition,
         bookWork = bookEdition.bookWork,

@@ -97,7 +97,7 @@ const displayBookEditionSelectionTable = async () => {
     bookeditionForm.bookwork_title.value = bookWorkTitle
     bookeditionForm.author_name.value = bookWorkAuthor
 
-    await sendBookEditionForm(bookWorkTitle, bookeditionForm)
+    await sendBookEditionForm(undefined, bookeditionForm)
     try {
         getBookeditionsResults()
         changeSelectBtn()
@@ -122,7 +122,6 @@ const changeSelectBtn = () => {
 const selectCopyBookEdition = () => {
     changeSelectBtn()
     bookedition = getBookeditionsResults()[findSelectedResult()]
-    console.log(bookedition)
     closeModal(d.querySelector(".form.create"))
     manageInputValues()
 }
@@ -228,7 +227,6 @@ const editBookEdition = async (idBookEdition, editedFields) => {
         throw ex
     }
 }
-
 
 const generateBookEditionsTableContent = () => {
     for (let i = 0; i < results.length; i++) {

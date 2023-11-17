@@ -1,15 +1,16 @@
 package com.miguel.library.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -32,9 +33,11 @@ public class BookCopy {
 
     @ManyToOne
     @JoinColumn(name = "id_book_edition")
+    @JsonIgnoreProperties("bookEditionCopies")
     private BookEdition bookEdition;
 
     @ManyToOne
-    @JoinColumn(name="id_library", nullable=false)
+    @JoinColumn(name="id_library")
+    @JsonIgnoreProperties("libraryBookCopies")
     private Library library;
 }

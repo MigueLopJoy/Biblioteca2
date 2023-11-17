@@ -148,8 +148,10 @@ const generateCatalogCard = async (results, resultsType) => {
             break
         case "reader":
             await generateReadersCatalogCard(results)
+            break
         case "librarian":
             await generateLibrarianCatalogCard(results)
+            break
         default:
             break
     }

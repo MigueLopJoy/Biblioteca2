@@ -12,7 +12,8 @@ const handleErrorMessages = (error, layer) => {
             console.log(er.field)
             let validationErrorMessage = layer.querySelector(`.error_message.${er.field}`)
             validationErrorMessage.classList.add("active")
-            validationErrorMessage.textContent = er.message
+            validationErrorMessage.textContent = ""
+            validationErrorMessage.textContent += er.message
         })
     } else {
         let generalErrorMessage = layer.querySelector('.error_message.general_error')

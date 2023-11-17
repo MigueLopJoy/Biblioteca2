@@ -85,8 +85,8 @@ const displayReadersMainPage = async () => {
 }
 
 const displayLibrariansMainPage = async () => {
-    await loadContent("./USERS/librarians.html", d.getElementById("main-content"))
-    await loadContent("./USERS/PAGES/search_librarian.html", d.querySelector(".page_element_container"))
+    await loadContent("./PROGRAM/MODULES/USERS/librarians.html", d.getElementById("main-content"))
+    await loadContent("./PROGRAM/MODULES/USERS/PAGES/search_librarian.html", d.querySelector(".page_element_container"))
     await loadJsFiles(
         "./../JS/MODULES/USERS/librarians.js",
         "./../JS/MODULES/modules_commons.js")

@@ -15,7 +15,7 @@ import java.util.Comparator;
 public class ULibrarian extends User implements Comparator<ULibrarian> {
 
     @ManyToOne
-    @JoinColumn(name="id_library", nullable=false)
+    @JoinColumn(name="id_library")
     private Library library;
 
     public ULibrarian(String firstName,

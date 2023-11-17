@@ -43,7 +43,7 @@ const sendReaderForm = async (reader, form) => {
             setSearchValues(results, resultsType, table)
         } else if (operation === "create") {
             showCatalogCard(results, resultsType, catalogCard)
-            setCreationValues(results.reader, resultsType, catalogCard)
+            setCreationValues(results, resultsType, catalogCard)
         }
     }
 }
@@ -66,6 +66,7 @@ const runReaderProcess = async form => {
         catalogCard = d.querySelector(".catalog_card.reader_catalog_card")
         operation = "create"
         results = await createReader(form)
+        console.log(results)
     }
 }
 
@@ -118,7 +119,6 @@ const containerContainsClass = inputContainer =>
 
 const createReader = async form => {
     const genderSelect = form.querySelector(".reader_gender")
-
     try {
         return await fetchRequest(
             "POST",
@@ -130,6 +130,7 @@ const createReader = async form => {
                 phoneNumber: form.reader_phone_number.value,
                 birthYear: form.birth_year.value,
                 gender: genderSelect.options[genderSelect.selectedIndex].value,
+                password: form.password.value
             }
         )
     } catch (ex) {
@@ -205,11 +206,7 @@ const generateReadersCatalogCard = async results => {
     let reader = results,
         catalogCard = d.querySelector(".catalog_card.reader_catalog_card")
 
-    console.log(reader)
-
     catalogCard.classList.remove("hidden")
-
-    console.log(catalogCard)
 
     catalogCard.querySelector(".reader_firstname").value = reader.firstName
     catalogCard.querySelector(".reader_lastname").value = reader.lastName

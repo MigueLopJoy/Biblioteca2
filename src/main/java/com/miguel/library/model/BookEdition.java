@@ -1,5 +1,8 @@
 package com.miguel.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,11 +32,7 @@ public class BookEdition {
     @JoinColumn(name = "id_Book_Work")
     private BookWork bookWork;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name="edition_copies_junction",
-            joinColumns = {@JoinColumn(name="id_bookEdition")},
-            inverseJoinColumns = {@JoinColumn(name="id_bookCopy")}
-    )
+    @OneToMany(mappedBy = "bookEdition")
+    @JsonManagedReference
     private List<BookCopy> bookEditionCopies;
 }

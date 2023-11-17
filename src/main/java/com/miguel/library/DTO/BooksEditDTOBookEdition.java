@@ -3,16 +3,14 @@ package com.miguel.library.DTO;
 import com.miguel.library.Validations.EditionYearNotBeforePublicationYear;
 import com.miguel.library.Validations.UniqueISBN;
 import com.miguel.library.Validations.YearNotGreaterThanCurrent;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 @Getter @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EditionYearNotBeforePublicationYear

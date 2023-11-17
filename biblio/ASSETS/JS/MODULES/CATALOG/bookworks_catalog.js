@@ -80,6 +80,7 @@ const runBookWorkProcess = async form => {
 
 const displayBookWorkSelectionTable = async () => {
     const bookworkForm = d.querySelector(".form.bookwork_form.search")
+    
     let bookWorkTitle = d.querySelector(".form.create .bookwork_title").value,
         bookWorkAuthor = d.querySelector(".form.create .author_name").value
 

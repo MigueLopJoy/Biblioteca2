@@ -4,6 +4,7 @@ import com.miguel.library.DTO.BookResponseDTOBookEdition;
 import com.miguel.library.DTO.BooksEditDTOBookEdition;
 import com.miguel.library.DTO.BooksSaveDTOBookEdition;
 import com.miguel.library.DTO.SuccessfulObjectDeletionDTO;
+import com.miguel.library.model.BookCopy;
 import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.BookWork;
 

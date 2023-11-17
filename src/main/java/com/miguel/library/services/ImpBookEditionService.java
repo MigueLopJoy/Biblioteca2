@@ -105,13 +105,10 @@ public class ImpBookEditionService implements IBookEditionService{
         Integer editionYear = bookEdit.getEditionYear();
         String language = bookEdit.getLanguage();
 
-        Optional<BookEdition> optionalBookEdition = bookEditionRepository.findById(bookEditionId);
-
-        if (!optionalBookEdition.isPresent()) {
-            throw new ExceptionObjectNotFound("Book edition not found");
+        BookEdition savedBookEdition = this.searchById(bookEditionId);
+        if (Objects.isNull(savedBookEdition)) {
+            throw new ExceptionObjectNotFound("Book Edition Not Found");
         }
-
-        BookEdition savedBookEdition = optionalBookEdition.get();
 
         if (!StringUtils.isEmpty(isbn) && !isbn.trim().isBlank()) {
             savedBookEdition.setISBN(isbn);

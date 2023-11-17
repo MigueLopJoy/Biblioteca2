@@ -90,11 +90,14 @@ const createLibrarian = async form => {
             "POST",
             "http://localhost:8080/librarians/save-librarian",
             {
+                idLibrary: 1,
                 firstName: form.librarian_firstname.value,
                 lastName: form.librarian_lastname.value,
                 email: form.librarian_email.value,
                 phoneNumber: form.librarian_phone_number.value,
-                password: form.password.value,
+                password: form.provisional_password.value,
+                gender: form.librarian_gender.value,
+                birthYear: form.birth_year.value,
                 authorities: getRoleSet()
             }
         )

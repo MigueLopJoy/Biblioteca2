@@ -1,5 +1,7 @@
 package com.miguel.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -50,12 +52,8 @@ public class Library {
     )
     private List<ULibrarian> librarians;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name="library_bookcopies_junction",
-            joinColumns = {@JoinColumn(name="id_library")},
-            inverseJoinColumns = {@JoinColumn(name="id_bookCopy")}
-    )
+    @OneToMany(mappedBy = "library")
+    @JsonManagedReference
     private List<BookCopy> libraryBookCopies;
     public Library(String libraryName,
                    String libraryPhoneNumber,

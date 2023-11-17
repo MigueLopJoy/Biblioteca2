@@ -9,6 +9,8 @@ import com.miguel.library.Exceptions.ExceptionNullObject;
 import com.miguel.library.Exceptions.ExceptionObjectAlreadyExists;
 import com.miguel.library.Exceptions.ExceptionObjectNotFound;
 import com.miguel.library.model.Author;
+import com.miguel.library.model.BookCopy;
+import com.miguel.library.model.BookEdition;
 import com.miguel.library.model.Library;
 import com.miguel.library.repository.ILibraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class ImpLibraryService implements ILibraryService{
 
     @Autowired
     private ILibraryRepository libraryRepository;
+
+    @Autowired IBookCopyService bookCopyService;
 
     @Override
     public LibraryResponseDTO saveNewLibrary(Library library) {

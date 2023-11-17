@@ -24,24 +24,34 @@
                 <input type="text" name="librarian_email" placeholder="Librarian's Email">
             </div>
             <div class="col-6 ps-1">
-                <input type="password" name="provisional_password" placeholder="provisional_password">
+                <input type="password" name="provisional_password" placeholder="Provisional Password">
             </div>
         </div>
     </div>
 
-    <input type="text" name="librarian_phone_number" placeholder="Librarian's Phone Number">
-
     <div class="col-12">
         <div class="d-flex justify-content-between">
-            <div class="col-6 pe-1 mb-3">
-                <div class="input-group">
-                    <input type="text" name="librarian_library" class="mb-0" placeholder="Librarian's Library" readonly>
-                    <span class="input-group-text search_related_objects">
-                        <i class="bi bi-search"></i>
-                    </span>
-                </div>
+            <div class="col-6 pe-1">
+                <input type="text" name="librarian_phone_number" placeholder="Librarian's Phone Number">
             </div>
+            <div class="col-6 pe-1 single_birth_year">
+                <input type="number" name="birth_year" class="birth_year mb-0" placeholder="Birth Year">
+            </div>
+        </div>
+    </div>
 
+    <div class="col-12">
+        <p class="error_message gender"></p>
+        <p class="error_message role"></p>
+        <div class="d-flex justify-content-between">
+            <div class="col-6 ps-1">
+                <select name="librarian_gender" class="librarian_gender">
+                    <option value="">Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            
             <div class="col-6 ps-1">
                 <select name="librarian_role" class="librarian_role">
                     <option value="">Select Role</option>

@@ -17,6 +17,4 @@ public class UserDTOEditReader extends UserDTOEditUser {
 
     @Pattern(regexp = "^L\\d{8}$", message = "Must provide a valid reader number")
     private String readerNumber;
-
-
 }

@@ -20,6 +20,8 @@ public interface IBookCopyService {
 
     public List<BookCopy> searchBookEditionCopies(Integer bookEditionId);
 
+    public List<BookCopy> searchLibraryCopies(Integer libraryId);
+
     public BookResponseDTOBookCopy editBookCopy(Integer bookCopyId, BooksEditDTOBookCopy bookEdit);
 
     public SuccessfulObjectDeletionDTO deleteBookCopy(Integer bookCopyId);
