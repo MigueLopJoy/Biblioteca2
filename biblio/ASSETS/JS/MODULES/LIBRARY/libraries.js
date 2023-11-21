@@ -58,7 +58,7 @@ const setFormInputsValues = library => {
         city = library.city,
         province = library.province
 
-    searchLibraryForm.library_name.value = libraryName ? libraryName : library
+    searchLibraryForm.library_name.value = libraryName ? libraryName : ""
     searchLibraryForm.city.value = city ? city : ""
     searchLibraryForm.province.value = province ? province : ""
 
@@ -77,15 +77,19 @@ const runLibraryProcess = async form => {
 }
 
 const displayLibrariesSelectionTable = async () => {
-    const libraryForm = d.querySelector(".form.library_form.search")
+    const libraryForm = d.querySelector(".form.library_form.search"),
+        bookEditionForm = d.querySelector(".bookedition_form.search"),
+        librarianForm = d.querySelector(".librarian_form.search")
 
-    let libraryName = d.querySelector(".bookedition_form.search .edition_library").value
+    let libraryName
+    if (librarianForm) libraryName = librarianForm.querySelector(".librarian_library").value
+    else if (bookEditionForm) libraryName = bookEditionForm.querySelector(".edition_library").value
 
     libraryForm.library_name.value = libraryName
     libraryForm.province.value = ""
     libraryForm.city.value = ""
 
-    await sendLibraryForm(libraryName, libraryForm)
+    await sendLibraryForm(undefined, libraryForm)
     try {
         getLibraryResults()
         changeSelectBtn()
@@ -98,16 +102,27 @@ const displayLibrariesSelectionTable = async () => {
 const changeSelectBtn = () => {
     const selectResultBtn = d.querySelector(".select_results_btn")
 
-    if (selectResultBtn.classList.contains("select_edition_library")) {
-        selectResultBtn.textContent = "Select Book Edition"
-        selectResultBtn.classList.remove("select_edition_library")
+    if (selectResultBtn.classList.contains("select_edition_library") ||
+        selectResultBtn.classList.contains("select_librarian_library")
+    ) {
+        if (selectResultBtn.classList.contains("bookeditions_results")) {
+            selectResultBtn.textContent = "Select Book Edition"
+            selectResultBtn.classList.remove("select_edition_library")
+        } else if (selectResultBtn.classList.contains("librarians_results")) {
+            selectResultBtn.textContent = "Select Librarian"
+            selectResultBtn.classList.remove("select_librarian_library")
+        }
     } else {
         selectResultBtn.textContent = "Select Library"
-        selectResultBtn.classList.add("select_edition_library")
+        if (selectResultBtn.classList.contains("bookeditions_results")) {
+            selectResultBtn.classList.add("select_edition_library")
+        } else if (selectResultBtn.classList.contains("librarians_results")) {
+            selectResultBtn.classList.add("select_librarian_library")
+        }
     }
 }
 
-const selectEditionLibrary = () => {
+const selectEditionOrLibrarianLibrary = () => {
     changeSelectBtn()
     library = getLibraryResults()[findSelectedResult()]
     closeModal(d.querySelector(".form.create"))
@@ -115,7 +130,12 @@ const selectEditionLibrary = () => {
 }
 
 const manageInputValues = () => {
-    const libraryNameInput = d.querySelector(".form.search .edition_library")
+    const bookEditionForm = d.querySelector(".bookedition_form.search"),
+        librarianForm = d.querySelector(".librarian_form.search")
+
+    let libraryNameInput
+    if (librarianForm) libraryNameInput = librarianForm.querySelector(".librarian_library")
+    else if (bookEditionForm) libraryNameInput = bookEditionForm.querySelector(".edition_library")
 
     if (library) {
         libraryNameInput.value = library.libraryName
@@ -123,6 +143,7 @@ const manageInputValues = () => {
 }
 
 const searchLibrary = async form => {
+    console.log(form)
     try {
         return await fetchRequest(
             "POST",
@@ -227,7 +248,7 @@ const getLibrary = () => {
 export {
     sendLibraryForm,
     displayLibrariesSelectionTable,
-    selectEditionLibrary,
+    selectEditionOrLibrarianLibrary,
     editLibrary,
     generateLibraryTableContent,
     generateLibraryCatalogCard,

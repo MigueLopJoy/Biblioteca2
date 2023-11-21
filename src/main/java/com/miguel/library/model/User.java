@@ -55,7 +55,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
     public User(
             String firstName,
             String lastName,

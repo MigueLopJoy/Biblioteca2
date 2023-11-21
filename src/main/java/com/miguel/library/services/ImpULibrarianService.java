@@ -67,12 +67,13 @@ public class ImpULibrarianService implements  IULibrarianService {
     }
 
     @Override
-    public UserDTOLibrarianResponse editLibrarian(Integer librarianId, UserDTOEditUser librarianEdit) {
+    public UserDTOLibrarianResponse editLibrarian(Integer librarianId, UserDTOEditLibrarian librarianEdit) {
         String firstName = librarianEdit.getFirstName();
         String lastName = librarianEdit.getLastName();
         String email = librarianEdit.getEmail();
         String phoneNumber = librarianEdit.getPhoneNumber();
         String password = librarianEdit.getPassword();
+        Role newRole = librarianEdit.getNewRole();
 
         ULibrarian fetchedLibrarian = this.searchById(librarianId);
 
@@ -98,6 +99,10 @@ public class ImpULibrarianService implements  IULibrarianService {
 
         if (Objects.nonNull(password)) {
             fetchedLibrarian.setPassword(password);
+        }
+
+        if (Objects.nonNull(newRole)) {
+            fetchedLibrarian.setRole(newRole);
         }
 
         return new UserDTOLibrarianResponse(

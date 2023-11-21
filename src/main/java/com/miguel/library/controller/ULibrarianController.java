@@ -23,6 +23,30 @@ public class ULibrarianController {
     private IUSearchService searchService;
 
     @PostMapping("/save-librarian")
+    public ResponseEntity<UserDTOLibrarianResponse> saveNewLibraryManager(
+            @Valid @RequestBody UserDTOSaveLibrarian librarian
+    ) {
+        return ResponseEntity.ok(
+                librarianService.saveLibraryManager(
+                        librarianService.createLibrarianFromDTO(librarian)
+                )
+        );
+    }
+
+
+    @PostMapping("/save-librarian")
+    public ResponseEntity<UserDTOLibrarianResponse> saveNewCataloger(
+            @Valid @RequestBody UserDTOSaveLibrarian librarian
+    ) {
+        return ResponseEntity.ok(
+                librarianService.saveNewCataloger(
+                        librarianService.createLibrarianFromDTO(librarian)
+                )
+        );
+    }
+
+
+    @PostMapping("/save-librarian")
     public ResponseEntity<UserDTOLibrarianResponse> saveNewLibrarian(
             @Valid @RequestBody UserDTOSaveLibrarian librarian
     ) {
@@ -32,7 +56,6 @@ public class ULibrarianController {
                 )
         );
     }
-
     @GetMapping("/get-all")
     public ResponseEntity<List<ULibrarian>> getAllReaders() {
         return ResponseEntity.ok(librarianService.findAll());
@@ -48,7 +71,7 @@ public class ULibrarianController {
     @PutMapping("/edit-librarian/{librarianId}")
     public ResponseEntity<UserDTOLibrarianResponse> editLibrarian(
             @PathVariable Integer librarianId,
-            @Valid @RequestBody UserDTOEditUser librarianEdit
+            @Valid @RequestBody UserDTOEditLibrarian librarianEdit
     ) {
         return ResponseEntity.ok(librarianService.editLibrarian(librarianId, librarianEdit));
     }

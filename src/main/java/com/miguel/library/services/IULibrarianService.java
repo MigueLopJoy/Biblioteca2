@@ -16,7 +16,7 @@ public interface IULibrarianService {
 
     public List<ULibrarian> findAll();
 
-    public UserDTOLibrarianResponse editLibrarian(Integer librarianId, UserDTOEditUser librarianEdit);
+    public UserDTOLibrarianResponse editLibrarian(Integer librarianId, UserDTOEditLibrarian librarianEdit);
 
     public SuccessfulObjectDeletionDTO deleteLibrarian(Integer librarianId);
 

@@ -18,7 +18,7 @@ const logout = async () => {
 const seeAccount = async () => {
     let user = await fetchRequest(
         "GET",
-        "http://localhost:8080/test/get-authorization-header",
+        "http://localhost:8080/users/me",
     )
     console.log(user)
 }

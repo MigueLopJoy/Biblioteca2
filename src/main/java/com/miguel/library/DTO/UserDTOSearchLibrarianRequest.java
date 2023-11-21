@@ -17,4 +17,5 @@ public class UserDTOSearchLibrarianRequest {
 
     private String mainRole;
 
+    private Integer idLibrary;
 }

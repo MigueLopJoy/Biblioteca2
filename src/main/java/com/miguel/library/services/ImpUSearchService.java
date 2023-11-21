@@ -62,7 +62,6 @@ public class ImpUSearchService implements IUSearchService {
         Integer maxBirthYear = searchRequest.getMaxBirthYear();
         Character gender = searchRequest.getGender();
 
-
         if (isValidString(name)) {
             Expression<String> readerName = this.getUserNameExpression(criteriaBuilder, root);
             predicates.add(
@@ -113,15 +112,14 @@ public class ImpUSearchService implements IUSearchService {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ULibrarian> criteriaQuery = criteriaBuilder.createQuery(ULibrarian.class);
         Root<ULibrarian> root = criteriaQuery.from(ULibrarian.class);
-
-        Join<ULibrarian, Role> librarialToRoleJoin = root.join("authorities");
+        Join<ULibrarian, Library> librarianToLibraryJoin = root.join("library", JoinType.INNER);
 
         List<Predicate> predicates = new ArrayList<>();
 
         this.addLibrarianPredicates(
                 criteriaBuilder,
                 root,
-                librarialToRoleJoin,
+                librarianToLibraryJoin,
                 searchRequest,
                 predicates
         );
@@ -141,13 +139,14 @@ public class ImpUSearchService implements IUSearchService {
     private void addLibrarianPredicates(
             CriteriaBuilder criteriaBuilder,
             Root<ULibrarian> root,
-            Join<ULibrarian, Role> librarianToRoleJoin,
+            Join<ULibrarian, Library> librarianToLibraryJoin,
             UserDTOSearchLibrarianRequest searchRequest,
             List<Predicate> predicates
     ) {
         String name = searchRequest.getLibrarianName();
         String email = searchRequest.getEmail();
         String mainRole = searchRequest.getMainRole();
+        Integer idLibrary = searchRequest.getIdLibrary();
 
         if (isValidString(name)) {
             Expression<String> librarianName = this.getUserNameExpression(criteriaBuilder, root);
@@ -162,14 +161,18 @@ public class ImpUSearchService implements IUSearchService {
         if (isValidString(mainRole)) {
             predicates.add(
                     criteriaBuilder.equal(
-                            librarianToRoleJoin.get("authority"),
-                            mainRole
+                            root.get("role"),
+                            Role.valueOf(mainRole)
                     )
             );
         }
 
         if (isValidString(email)) {
             predicates.add(criteriaBuilder.equal(root.get("email"), email));
+        }
+
+        if (Objects.nonNull(idLibrary)) {
+            predicates.add(criteriaBuilder.equal(librarianToLibraryJoin.get("idLibrary"), idLibrary));
         }
     }
 

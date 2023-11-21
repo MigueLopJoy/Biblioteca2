@@ -14,6 +14,7 @@ import {
     handleErrorMessages,
     clearErrorMessages
 } from "./../api_messages_handler.js"
+import { getLibrary } from "../LIBRARY/libraries.js"
 
 const d = document
 
@@ -73,10 +74,12 @@ const getLibrarians = async form => {
     try {
         return await fetchRequest(
             "POST",
-            "http://localhost:8080/librarians/search-librarians",
+            "http://localhost:8080/librarians/search-librarian",
             {
                 librarianName: form.librarian_name.value,
                 email: form.librarian_email.value,
+                mainRole: form.librarian_role.value,
+                idLibrary: getLibrary() ? getLibrary().idLibrary : ""
             }
         )
     } catch (ex) {
@@ -106,38 +109,35 @@ const createLibrarian = async form => {
     }
 }
 
+const getLibrarianCreationUrl = role => {
+    switch (role) {
+        case MANAGER:
+            return "http://localhost:8080/librarians/save-librarian"
+        case CATALOGER:
+            return "http://localhost:8080/librarians/save-librarian"
+        case LIBRARIAN:
+            return "http://localhost:8080/librarians/save-librarian"
+        default:
+            break;
+    }
+}
+
 const editLibrarian = async (idLibrarian, editedFields) => {
     try {
         return await fetchRequest(
             "PUT",
             `http://localhost:8080/librarians/edit-librarian/${idLibrarian}`,
             {
-                originalLibrarianId: idLibrarian,
+                originalUserId: idLibrarian,
                 firstName: editedFields[0],
                 lastName: editedFields[1],
                 email: editedFields[3],
                 phoneNumber: editedFields[4],
-                authorities: getRoleSet()
+                //                authorities: getRoleSet()
             }
         )
     } catch (ex) {
         throw ex
-    }
-}
-
-const getRoleSet = () => {
-    const roleSelect = d.querySelector(".librarian_role"),
-        roleSet = []
-
-    if (roleSelect.selectedIndex === 0) {
-        roleSet.push(roleSelect.options[0])
-        roleSet.push(roleSelect.options[1])
-        roleSet.push(roleSelect.options[2])
-    } else if (roleSelect.selectedIndex === 1) {
-        roleSet.push(roleSelect.options[1])
-        roleSet.push(roleSelect.options[2])
-    } else if (roleSelect.selectedIndex === 2) {
-        roleSet.push(roleSelect.options[2])
     }
 }
 
@@ -163,10 +163,13 @@ const generateLibrariansTableContent = () => {
         librarianName.textContent = `${result.firstName} ${result.lastName}`
 
         let librarianEmail = d.createElement("td")
-        email.textContent = result.email
+        librarianEmail.textContent = result.email
+
+        let libraryName = d.createElement("td")
+        libraryName.textContent = result.library.libraryName
 
         let mainAuthority = d.createElement("td")
-        mainAuthority.textContent = result.authorities[0]
+        mainAuthority.textContent = result.authorities[result.authorities.length - 1].authority
 
         let selectLibrarian = d.createElement("td"),
             checkbox = d.createElement("input")
@@ -179,8 +182,8 @@ const generateLibrariansTableContent = () => {
         newRow.appendChild(librarianName)
         newRow.appendChild(librarianEmail)
         newRow.appendChild(mainAuthority)
+        newRow.appendChild(libraryName)
         newRow.appendChild(selectLibrarian)
-        newRow.appendChild(d.createElement("td")) // Library
         table.querySelector(".results_table_body").appendChild(newRow)
     }
 }
@@ -195,7 +198,8 @@ const generateLibrarianCatalogCard = async results => {
     catalogCard.querySelector(".librarian_lastname").value = librarian.lastName
     catalogCard.querySelector(".librarian_email").value = librarian.email
     catalogCard.querySelector(".librarian_phone_number").value = librarian.phoneNumber
-    catalogCard.querySelector(".librarian_role").value = librarian.role[0]
+    catalogCard.querySelector(".librarian_library").value = librarian.library.libraryName
+    catalogCard.querySelector(".librarian_role").value = librarian.role
 
     return catalogCard
 }

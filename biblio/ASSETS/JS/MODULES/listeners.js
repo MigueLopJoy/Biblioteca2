@@ -42,7 +42,7 @@ import {
 
 import {
     displayLibrariesSelectionTable,
-    selectEditionLibrary
+    selectEditionOrLibrarianLibrary
 } from "./LIBRARY/libraries.js"
 
 const d = document
@@ -65,7 +65,7 @@ d.addEventListener("click", async e => {
 
     if (e.target.matches(".select_results_btn")) {
         if (!e.target.hasAttribute("disabled")) {
-            let flux = e.target.classList[2]
+            let flux = e.target.classList.item(e.target.classList.length - 1)
             switch (flux) {
                 case "select_bookwork_author":
                     selectBookWorkAuthor()
@@ -77,7 +77,8 @@ d.addEventListener("click", async e => {
                     selectCopyBookEdition()
                     break
                 case "select_edition_library":
-                    selectEditionLibrary()
+                case "select_librarian_library":
+                    selectEditionOrLibrarianLibrary()
                     break
                 default:
                     executeSelectResultBtnListener()
@@ -111,7 +112,8 @@ d.addEventListener("click", async e => {
         displayBookWorkSelectionTable()
     }
 
-    if (e.target.matches(".search_edition_library")) {
+    if (e.target.matches(".search_edition_library") ||
+        e.target.matches(".search_librarian_library")) {
         displayLibrariesSelectionTable()
     }
 
